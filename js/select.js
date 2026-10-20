@@ -76,6 +76,17 @@
       setActive(-1);
     }
 
+    function choose(i) {
+      if (i < 0 || !items[i]) return;
+      items.forEach(function (it, n) {
+        it.setAttribute("aria-selected", n === i ? "true" : "false");
+      });
+      var value = button.querySelector(".select__value");
+      if (value) value.textContent = items[i].textContent.trim();
+      close();
+      button.focus();
+    }
+
     menu.addEventListener("toggle", function (e) {
       // 用户点外部或按 Esc 时浏览器会自己关掉，这里只同步状态
       if (e.newState === "closed") {
