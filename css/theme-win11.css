@@ -121,6 +121,21 @@
   --slider-thumb-border-w: 1.5px;
   --slider-thumb-shadow: none;
 
+  --menu-bg: #fbfbfb;
+  --menu-border: rgba(0, 0, 0, 0.06);
+  --menu-border-w: 1px;
+  --menu-radius: 8px;
+  --menu-shadow: 0 8px 16px rgba(0, 0, 0, 0.14);
+  --menu-pad: 4px;
+  --menu-item-h: 32px;
+  --menu-item-radius: 4px;
+  --menu-item-pad-x: 11px;
+  --menu-item-hover-bg: rgba(0, 0, 0, 0.04);
+  --menu-item-selected-bg: rgba(0, 0, 0, 0.03);
+  --menu-item-selected-fg: #1a1a1a;
+  --menu-item-marker: #005fb8;
+  --menu-item-font-size: 14px;
+
   --textarea-py: 6px;
   --switch-duration: 167ms;
   --switch-ease: cubic-bezier(0, 0, 0, 1);
@@ -195,4 +210,12 @@
   --slider-fill: #60cdff;
   --slider-thumb-bg: #1e1e1e;
   --slider-thumb-border: #60cdff;
+
+  --menu-bg: #2c2c2c;
+  --menu-border: rgba(255, 255, 255, 0.07);
+  --menu-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --menu-item-hover-bg: rgba(255, 255, 255, 0.06);
+  --menu-item-selected-bg: rgba(255, 255, 255, 0.04);
+  --menu-item-selected-fg: #ffffff;
+  --menu-item-marker: #60cdff;
 }

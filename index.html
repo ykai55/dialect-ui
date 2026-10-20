@@ -158,13 +158,21 @@
           </label>
 
           <div class="row">
-            <button type="button" class="select">
-              <span>Option A</span>
-              <span class="select__chevron">
-                <span class="select__chevron-up"></span>
-                <span class="select__chevron-down"></span>
-              </span>
-            </button>
+            <div class="select" data-select>
+              <button type="button" class="select__button">
+                <span class="select__value">Option A</span>
+                <span class="select__chevron">
+                  <span class="select__chevron-up"></span>
+                  <span class="select__chevron-down"></span>
+                </span>
+              </button>
+              <ul class="menu" popover>
+                <li class="menu__item" aria-selected="true">Option A</li>
+                <li class="menu__item" aria-selected="false">Option B</li>
+                <li class="menu__item" aria-selected="false">Option C — longer label</li>
+                <li class="menu__item" aria-selected="false">Option D</li>
+              </ul>
+            </div>
           </div>
 
           <div class="slider-row">
@@ -176,5 +184,6 @@
     </template>
 
     <script src="js/app.js"></script>
+    <script src="js/select.js"></script>
   </body>
 </html>

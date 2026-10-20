@@ -125,6 +125,21 @@
   --slider-thumb-border-w: 0px;
   --slider-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
 
+  --menu-bg: rgba(255, 255, 255, 0.97);
+  --menu-border: rgba(0, 0, 0, 0.08);
+  --menu-border-w: 1px;
+  --menu-radius: 6px;
+  --menu-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  --menu-pad: 4px;
+  --menu-item-h: 22px;
+  --menu-item-radius: 4px;
+  --menu-item-pad-x: 10px;
+  --menu-item-hover-bg: #095df8;
+  --menu-item-hover-fg: #ffffff;
+  --menu-item-selected-bg: #095df8;
+  --menu-item-selected-fg: #ffffff;
+  --menu-item-font-size: 13px;
+
   --textarea-py: 5px;
   --switch-duration: 140ms;
   --switch-ease: cubic-bezier(0.32, 0.72, 0, 1);
@@ -193,4 +208,10 @@
 
   --slider-track: #333234;
   --slider-fill: #1064fe;
+
+  --menu-bg: #2c2c2e;
+  --menu-border: rgba(255, 255, 255, 0.1);
+  --menu-hover-bg: #1064fe;
+  --menu-item-hover-bg: #1064fe;
+  --menu-item-selected-bg: #1064fe;
 }

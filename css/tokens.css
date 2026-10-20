@@ -156,6 +156,26 @@
   --select-chevron: currentColor;
   --select-chevron-up: none;   /* macOS 是上下双箭头 */
 
+  /* 下拉菜单（展开层） */
+  --menu-min-w: 140px;
+  --menu-bg: #ffffff;
+  --menu-fg: inherit;
+  --menu-border: rgba(0, 0, 0, 0.12);
+  --menu-border-w: 1px;
+  --menu-radius: 8px;
+  --menu-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --menu-pad: 4px;
+  --menu-item-h: 30px;
+  --menu-item-radius: 4px;
+  --menu-item-pad-x: 10px;
+  --menu-item-hover-bg: rgba(0, 0, 0, 0.05);
+  --menu-item-hover-fg: inherit;
+  --menu-item-selected-bg: var(--ui-accent);
+  --menu-item-selected-fg: #ffffff;
+  --menu-item-marker: transparent;   /* 选中项左侧竖条，Windows 用 */
+  --menu-offset: 4px;
+  --menu-item-font-size: 13px;
+
   /* 滑块 */
   --slider-h: 24px;
   --slider-track-h: 4px;

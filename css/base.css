@@ -208,7 +208,6 @@ body.is-compare .stage {
   background: #fff;
   border: 1px solid #e4e4e7;
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
     0 16px 32px -24px rgba(0, 0, 0, 0.25);
 }
@@ -224,6 +223,7 @@ body.mode-dark .board {
 
 .board__cap {
   display: flex;
+  border-radius: 12px 12px 0 0;
   align-items: center;
   gap: 7px;
   padding: 9px 13px;
@@ -275,6 +275,7 @@ body.mode-dark .board__cap b {
   flex: 1;
   display: flex;
   flex-direction: column;
+  border-radius: 0 0 12px 12px;
 }
 
 .board__body > .panel {

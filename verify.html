@@ -49,9 +49,10 @@
           '<span class="radio__dot"></span><span class="radio__label">Label</span></label>';
       }
       function select() {
-        return '<button type="button" class="select"><span>Option A</span>' +
+        return '<div class="select"><button type="button" class="select__button">' +
+          '<span class="select__value">Option A</span>' +
           '<span class="select__chevron"><span class="select__chevron-up"></span>' +
-          '<span class="select__chevron-down"></span></span></button>';
+          '<span class="select__chevron-down"></span></span></button></div>';
       }
       function slider() {
         return '<input class="slider" type="range" min="0" max="100" value="40" ' +

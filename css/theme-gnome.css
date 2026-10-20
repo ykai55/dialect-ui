@@ -120,9 +120,29 @@
   --slider-track-h: 6px;
   --slider-track: rgba(50, 50, 55, 0.15);
   --slider-fill: #3584e4;
+
+  --menu-bg: #36363a;
+  --menu-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  --menu-item-hover-bg: rgba(255, 255, 255, 0.08);
+  --menu-item-selected-bg: rgba(255, 255, 255, 0.12);
+  --menu-item-selected-fg: #ffffff;
   --slider-thumb-bg: #ffffff;
   --slider-thumb-border-w: 0px;
   --slider-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+  --menu-bg: #ffffff;
+  --menu-border: transparent;
+  --menu-border-w: 0px;
+  --menu-radius: 12px;
+  --menu-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  --menu-pad: 6px;
+  --menu-item-h: 34px;
+  --menu-item-radius: 6px;
+  --menu-item-pad-x: 12px;
+  --menu-item-hover-bg: rgba(0, 0, 0, 0.06);
+  --menu-item-selected-bg: rgba(0, 0, 0, 0.1);
+  --menu-item-selected-fg: #241f31;
+  --menu-item-font-size: 14px;
 
   --textarea-py: 7px;
   --switch-duration: 120ms;
@@ -168,4 +188,10 @@
 
   --slider-track: rgba(255, 255, 255, 0.15);
   --slider-fill: #3584e4;
+
+  --menu-bg: #36363a;
+  --menu-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  --menu-item-hover-bg: rgba(255, 255, 255, 0.08);
+  --menu-item-selected-bg: rgba(255, 255, 255, 0.12);
+  --menu-item-selected-fg: #ffffff;
 }

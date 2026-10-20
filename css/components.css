@@ -429,14 +429,20 @@
   resize: vertical;
 }
 
-/* ---------------- 下拉框（收起态） ---------------- */
+/* ---------------- 下拉框 ---------------- */
 
 .select {
+  position: relative;
+  display: inline-block;
+}
+
+.select__button {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   box-sizing: border-box;
+  width: 100%;
   height: var(--select-h);
   min-width: 140px;
   padding: 0 var(--select-px);
@@ -451,7 +457,7 @@
   user-select: none;
 }
 
-.select:is(:focus-visible, .s-focus) {
+.select__button:is(:focus-visible, .s-focus) {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
   box-shadow: var(--focus-ring);
@@ -548,4 +554,67 @@
   color: var(--ui-text-2);
   font-variant-numeric: tabular-nums;
   min-width: 2.5em;
+}
+
+
+/* ---------------- 下拉菜单 ---------------- */
+
+.menu {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  box-sizing: border-box;
+  min-width: max(var(--menu-min-w), 100%);
+  max-height: 260px;
+  margin: 0;
+  padding: var(--menu-pad);
+  overflow-y: auto;
+  list-style: none;
+  border: var(--menu-border-w) solid var(--menu-border);
+  border-radius: var(--menu-radius);
+  background: var(--menu-bg);
+  color: var(--menu-fg);
+  box-shadow: var(--menu-shadow);
+  font-size: var(--menu-item-font-size);
+  user-select: none;
+}
+
+.menu__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--menu-item-h);
+  padding: 0 var(--menu-item-pad-x) 0 calc(var(--menu-item-pad-x) + 12px);
+  border-radius: var(--menu-item-radius);
+  color: inherit;
+  white-space: nowrap;
+  cursor: default;
+}
+
+/* 选中项左侧的小竖条：Windows 用，其它平台 token 里是透明 */
+.menu__item::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  width: 3px;
+  height: calc(var(--menu-item-h) - 14px);
+  border-radius: 2px;
+  background: transparent;
+  transform: translateY(-50%);
+}
+
+.menu__item[aria-selected="true"]::before {
+  background: var(--menu-item-marker);
+}
+
+.menu__item:is(.is-active, :hover) {
+  background: var(--menu-item-hover-bg);
+  color: var(--menu-item-hover-fg, inherit);
+}
+
+.menu__item[aria-selected="true"] {
+  background: var(--menu-item-selected-bg);
+  color: var(--menu-item-selected-fg);
 }
