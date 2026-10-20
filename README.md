@@ -5,6 +5,8 @@
 
 同一个组件，换一个 `data-theme` 就换成另一个平台的样子；明暗、强调色、密度都跟着主题走。
 
+在线示例：<https://ykai55.github.io/platform-ui/>
+
 ## 跑起来
 
 ```bash
