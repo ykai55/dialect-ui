@@ -61,11 +61,16 @@
         return it.getAttribute("aria-selected") === "true";
       });
       setActive(selected >= 0 ? selected : 0);
+      // 菜单位置是打开时算一次的，滚动或缩放后就不准了，直接关掉
+      window.addEventListener("resize", close);
+      window.addEventListener("scroll", close, true);
     }
 
     function close() {
       if (!isOpen()) return;
       menu.hidePopover();
+      window.removeEventListener("resize", close);
+      window.removeEventListener("scroll", close, true);
       button.classList.remove("is-open");
       button.setAttribute("aria-expanded", "false");
       setActive(-1);
