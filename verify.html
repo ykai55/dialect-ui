@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/theme-win11.css" />
+    <link rel="stylesheet" href="css/theme-macos.css" />
+    <link rel="stylesheet" href="css/theme-gnome.css" />
+    <style>
+      body { margin: 0; }
+      .cell {
+        width: 324px; height: 48px;
+        display: flex; align-items: center;
+        padding-left: 12px;
+        box-sizing: border-box;
+      }
+      .btn { width: 200px; }
+      .cell .field { width: 300px; }
+      /* 原生 NSSwitch 没有文字，比对时先把我们这一侧的标签藏掉 */
+      .switch__label { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="panel" id="wrap" data-theme="macos" data-mode="light" style="padding: 0; gap: 0; display: block">
+      <div id="rows"></div>
+    </div>
+    <script>
+      var params = new URLSearchParams(location.search);
+      var mode = params.get("mode") === "dark" ? "dark" : "light";
+      document.getElementById("wrap").dataset.mode = mode;
+
+      function cell(html) { return '<div class="cell">' + html + "</div>"; }
+      function field(value) {
+        return '<label class="field"><span class="field__wrap"><input class="field__input" type="text" ' +
+          (value ? 'value="' + value + '"' : 'placeholder="name@example.com"') + ' autocomplete="off"></span></label>';
+      }
+      function check(state, disabled) {
+        return '<label class="check ' + (disabled ? "s-disabled" : "") + '">' +
+          '<input type="checkbox" class="check__input" ' + (state ? "checked" : "") + (disabled ? " disabled" : "") + ">" +
+          '<span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>' +
+          '<span class="check__label">Label</span></label>';
+      }
+      function radio(state) {
+        return '<label class="radio">' +
+          '<input type="radio" class="radio__input" name="v1" ' + (state ? "checked" : "") + ">" +
+          '<span class="radio__dot"></span><span class="radio__label">Label</span></label>';
+      }
+      function toggle(state) {
+        return '<label class="switch">' +
+          '<input type="checkbox" class="switch__input" ' + (state ? "checked" : "") + ">" +
+          '<span class="switch__track"><span class="switch__knob"></span></span>' +
+          '<span class="switch__label">Label</span></label>';
+      }
+
+      var rows = [
+        cell('<button class="btn">Save changes</button>'),
+        cell('<button class="btn btn--primary">Save changes</button>'),
+        cell('<button class="btn" disabled>Save changes</button>'),
+        cell(field("")),
+        cell(field("name@example.com")),
+        cell(check(false, false)),
+        cell(check(true, false)),
+        cell(check(true, true)),
+        cell(radio(false)),
+        cell(radio(true)),
+        cell(toggle(false)),
+        cell(toggle(true))
+      ];
+      document.getElementById("rows").innerHTML = rows.join("");
+    </script>
+  </body>
+</html>

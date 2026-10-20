@@ -1,0 +1,172 @@
+/* ============================================================
+   theme-win11.css — Windows 11 / Fluent (WinUI 3)
+   特征：4px 圆角、无投影、底部一层深色内描边、按下时文字转灰。
+   ============================================================ */
+
+[data-theme="win11"] {
+  --ui-surface: #f3f3f3;
+  --ui-text: #1a1a1a;
+  --ui-text-2: rgba(0, 0, 0, 0.61);
+  --ui-text-disabled: rgba(0, 0, 0, 0.36);
+
+  --ui-font: "Segoe UI Variable Text", "Segoe UI", "Selawik", -apple-system,
+    "Helvetica Neue", Arial, sans-serif;
+  --ui-font-size: 14px;
+  --ui-control-h: 32px;
+
+  --ui-accent: #005fb8;
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #1969b8;
+  --ui-accent-active: #0f5ca8;
+
+  --ui-duration: 83ms;
+  --ui-ease: cubic-bezier(0, 0, 0, 1);
+
+  /* 焦点是 2px 硬描边，外扩 1px */
+  --focus-ring: 0 0 0 0 transparent;
+  --focus-outline: 2px solid #000000;
+  --focus-outline-offset: 1px;
+
+  --btn-bg: #fbfbfb;
+  --btn-bg-hover: #f6f6f6;
+  --btn-bg-active: #f2f2f2;
+  --btn-fg: #1a1a1a;
+  --btn-fg-active: rgba(0, 0, 0, 0.61);
+  --btn-border: rgba(0, 0, 0, 0.06);
+  --btn-border-hover: rgba(0, 0, 0, 0.06);
+  --btn-border-w: 1px;
+  --btn-radius: 4px;
+  --btn-h: 32px;
+  --btn-px: 12px;
+  --btn-font-size: 14px;
+  --btn-font-weight: 400;
+  --btn-shadow: none;
+  --btn-bottom-stroke: rgba(0, 0, 0, 0.16);
+
+  --primary-bg: #005fb8;
+  --primary-bg-hover: #1969b8;
+  --primary-bg-active: #0f5ca8;
+  --primary-fg: #ffffff;
+  --primary-border: transparent;
+  --primary-shadow: none;
+  --primary-bottom-stroke: rgba(0, 0, 0, 0.12);
+
+  --disabled-bg: #f4f4f4;
+  --disabled-fg: rgba(0, 0, 0, 0.36);
+  --disabled-border: rgba(0, 0, 0, 0.06);
+
+  --field-bg: #fbfbfb;
+  --field-border: rgba(0, 0, 0, 0.08);
+  --field-border-w: 1px;
+  --field-radius: 4px;
+  --field-h: 32px;
+  --field-px: 11px;
+  --field-font-size: 14px;
+  --field-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  --field-placeholder: rgba(0, 0, 0, 0.42);
+  --field-focus-border: rgba(0, 0, 0, 0.08);
+  --field-focus-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  --field-underline-w: 2px;
+  /* WinUI 的输入框聚焦只画强调色下划线，不画焦点矩形 */
+  --field-focus-outline: none;
+  --field-label-size: 12px;
+
+  --check-size: 20px;
+  --check-radius: 4px;
+  --check-bg: #fbfbfb;
+  --check-border: rgba(0, 0, 0, 0.45);
+  --check-border-hover: rgba(0, 0, 0, 0.72);
+  --check-border-w: 1px;
+  --check-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  --check-bg-checked: #005fb8;
+  --check-border-checked: #005fb8;
+  --check-mark: #ffffff;
+  --check-stroke: 2.2;
+
+  --radio-size: 20px;
+  --radio-bg: #fbfbfb;
+  --radio-border: rgba(0, 0, 0, 0.45);
+  --radio-border-hover: rgba(0, 0, 0, 0.72);
+  --radio-border-w: 1px;
+  --radio-bg-checked: transparent;
+  --radio-border-checked: #005fb8;
+  --radio-dot: 10px;
+  --radio-dot-color: #005fb8;
+
+  --switch-w: 40px;
+  --switch-h: 20px;
+  --switch-knob: 12px;
+  --switch-pad: 3px;
+  --switch-border-w: 1px;
+  --switch-bg: transparent;
+  --switch-border: rgba(0, 0, 0, 0.45);
+  --switch-bg-on: #005fb8;
+  --switch-border-on: #005fb8;
+  --switch-knob-bg: rgba(0, 0, 0, 0.45);
+  --switch-knob-on-bg: #ffffff;
+  --switch-knob-shadow: none;
+  --switch-duration: 167ms;
+  --switch-ease: cubic-bezier(0, 0, 0, 1);
+}
+
+[data-theme="win11"][data-mode="dark"] {
+  --ui-surface: #202020;
+  --ui-text: rgba(255, 255, 255, 0.9);
+  --ui-text-2: rgba(255, 255, 255, 0.61);
+  --ui-text-disabled: rgba(255, 255, 255, 0.36);
+
+  --ui-accent: #60cdff;
+  --ui-accent-text: #000000;
+  --ui-accent-hover: #57c8f5;
+  --ui-accent-active: #4ab8e8;
+
+  --focus-outline: 2px solid #ffffff;
+
+  --btn-bg: #2c2c2c;
+  --btn-bg-hover: #2e2e2e;
+  --btn-bg-active: #292929;
+  --btn-fg: rgba(255, 255, 255, 0.9);
+  --btn-fg-active: rgba(255, 255, 255, 0.61);
+  --btn-border: rgba(255, 255, 255, 0.07);
+  --btn-border-hover: rgba(255, 255, 255, 0.07);
+  --btn-shadow: none;
+  --btn-bottom-stroke: rgba(255, 255, 255, 0.09);
+
+  --primary-bg: #60cdff;
+  --primary-bg-hover: #57c8f5;
+  --primary-bg-active: #4ab8e8;
+  --primary-fg: #000000;
+  --primary-border: transparent;
+  --primary-bottom-stroke: rgba(0, 0, 0, 0.16);
+
+  --disabled-bg: #262626;
+  --disabled-fg: rgba(255, 255, 255, 0.36);
+  --disabled-border: rgba(255, 255, 255, 0.07);
+
+  --field-bg: #2c2c2c;
+  --field-border: rgba(255, 255, 255, 0.07);
+  --field-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.09);
+  --field-placeholder: rgba(255, 255, 255, 0.42);
+  --field-focus-border: rgba(255, 255, 255, 0.07);
+  --field-focus-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.09);
+
+  --check-bg: #2c2c2c;
+  --check-border: rgba(255, 255, 255, 0.55);
+  --check-border-hover: rgba(255, 255, 255, 0.8);
+  --check-shadow: none;
+  --check-bg-checked: #60cdff;
+  --check-border-checked: #60cdff;
+  --check-mark: #000000;
+
+  --radio-bg: #2c2c2c;
+  --radio-border: rgba(255, 255, 255, 0.55);
+  --radio-border-hover: rgba(255, 255, 255, 0.8);
+  --radio-border-checked: #60cdff;
+  --radio-dot-color: #60cdff;
+
+  --switch-border: rgba(255, 255, 255, 0.55);
+  --switch-bg-on: #60cdff;
+  --switch-border-on: #60cdff;
+  --switch-knob-bg: rgba(255, 255, 255, 0.55);
+  --switch-knob-on-bg: #000000;
+}

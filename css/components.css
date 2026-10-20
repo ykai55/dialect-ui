@@ -1,0 +1,419 @@
+/* ============================================================
+   components.css — 组件结构与状态机
+   只消费令牌，不判断平台。状态类 .s-hover / .s-active / .s-focus /
+   .s-disabled 用于把状态静态定格下来，方便截图比对。
+   ============================================================ */
+
+.panel {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font-family: var(--ui-font);
+  font-size: var(--ui-font-size);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------- Button ---------------- */
+
+.btn {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--btn-h);
+  margin: 0;
+  padding: 0 var(--btn-px);
+  border: var(--btn-border-w) solid var(--btn-border);
+  border-radius: var(--btn-radius);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: inherit;
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+  box-shadow: var(--btn-shadow), inset 0 -1px 0 var(--btn-bottom-stroke);
+  transition:
+    background-color var(--ui-duration) var(--ui-ease),
+    border-color var(--ui-duration) var(--ui-ease),
+    color var(--ui-duration) var(--ui-ease),
+    box-shadow var(--ui-duration) var(--ui-ease);
+}
+
+.btn:is(:hover, .s-hover) {
+  background: var(--btn-bg-hover);
+  border-color: var(--btn-border-hover);
+}
+
+.btn:is(:active, .s-active) {
+  background: var(--btn-bg-active);
+  color: var(--btn-fg-active, var(--btn-fg));
+}
+
+.btn:is(:focus-visible, .s-focus) {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow:
+    var(--btn-shadow),
+    inset 0 -1px 0 var(--btn-bottom-stroke),
+    var(--focus-ring);
+}
+
+.btn:is(:disabled, .s-disabled) {
+  background: var(--disabled-bg);
+  border-color: var(--disabled-border);
+  color: var(--disabled-fg);
+  box-shadow: none;
+}
+
+/* 主按钮：整块覆盖，所以放在普通状态之后 */
+.btn--primary {
+  background: var(--primary-bg);
+  border-color: var(--primary-border);
+  color: var(--primary-fg);
+  box-shadow: var(--primary-shadow), inset 0 -1px 0 var(--primary-bottom-stroke);
+}
+
+.btn--primary:is(:hover, .s-hover) {
+  background: var(--primary-bg-hover);
+  border-color: var(--primary-border);
+}
+
+.btn--primary:is(:active, .s-active) {
+  background: var(--primary-bg-active);
+  color: var(--primary-fg);
+}
+
+.btn--primary:is(:disabled, .s-disabled) {
+  background: var(--disabled-bg);
+  border-color: var(--disabled-border);
+  color: var(--disabled-fg);
+  box-shadow: none;
+}
+
+/* ---------------- Text field ---------------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__label {
+  font-size: var(--field-label-size);
+  color: var(--ui-text-2);
+  line-height: 1.2;
+}
+
+.field__wrap {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.field__input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  height: var(--field-h);
+  margin: 0;
+  padding: 0 var(--field-px);
+  border: var(--field-border-w) solid var(--field-border);
+  border-radius: var(--field-radius);
+  background: var(--field-bg);
+  color: var(--ui-text);
+  font-family: inherit;
+  font-size: var(--field-font-size);
+  line-height: normal;
+  box-shadow: var(--field-shadow);
+  transition:
+    background-color var(--ui-duration) var(--ui-ease),
+    border-color var(--ui-duration) var(--ui-ease),
+    box-shadow var(--ui-duration) var(--ui-ease);
+}
+
+.field__input::placeholder {
+  color: var(--field-placeholder);
+  opacity: 1;
+}
+
+/* Win11 的强调色下划线：其他平台 --field-underline-w 为 0，不显示 */
+.field__wrap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--field-underline-w);
+  border-radius: 0 0 3px 3px;
+  background: var(--field-underline-color);
+  pointer-events: none;
+}
+
+.field:is(:focus-within, .s-focus) .field__input {
+  border-color: var(--field-focus-border);
+  box-shadow: var(--field-focus-shadow), var(--focus-ring);
+  outline: var(--field-focus-outline, var(--focus-outline));
+  outline-offset: var(--focus-outline-offset);
+}
+
+.field:is(:focus-within, .s-focus) .field__wrap::after {
+  background: var(--ui-accent);
+}
+
+.field__input:disabled {
+  background: var(--disabled-bg);
+  border-color: var(--disabled-border);
+  color: var(--disabled-fg);
+  box-shadow: none;
+}
+
+.field:has(.field__input:disabled) .field__label {
+  color: var(--ui-text-disabled);
+}
+
+/* ---------------- Checkbox ---------------- */
+
+.check,
+.radio,
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--ui-font-size);
+  color: var(--ui-text);
+  cursor: default;
+  user-select: none;
+}
+
+.check__input,
+.radio__input,
+.switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.check__box {
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--check-size);
+  height: var(--check-size);
+  margin: var(--check-pad, 0px);
+  border: var(--check-border-w) solid var(--check-border);
+  border-radius: var(--check-radius);
+  background: var(--check-bg);
+  box-shadow: var(--check-shadow);
+  transition:
+    background-color var(--ui-duration) var(--ui-ease),
+    border-color var(--ui-duration) var(--ui-ease);
+}
+
+.check__mark {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--check-mark);
+  /* 数值是 viewBox（20×20）里的单位，跟着控件一起缩放 */
+  stroke-width: var(--check-stroke, 2.4);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 17;
+  stroke-dashoffset: 17;
+  transition: stroke-dashoffset var(--check-duration, 140ms) var(--ui-ease);
+  pointer-events: none;
+}
+
+.check__input:checked + .check__box {
+  background: var(--check-bg-checked);
+  border-color: var(--check-border-checked);
+  box-shadow: var(--check-shadow-checked, var(--check-shadow));
+}
+
+.check__input:checked + .check__box .check__mark {
+  stroke-dashoffset: 0;
+}
+
+.check:is(:hover, .s-hover) .check__box {
+  border-color: var(--check-border-hover, var(--check-border));
+}
+
+.check__input:disabled + .check__box,
+.check.s-disabled .check__box {
+  background: var(--disabled-bg);
+  border-color: var(--disabled-border);
+}
+
+.check__input:disabled:checked + .check__box,
+.check.s-disabled .check__box {
+  background: var(--check-bg-disabled, var(--disabled-bg));
+  border-color: var(--check-border-disabled, var(--disabled-border));
+}
+
+.check__input:disabled:checked + .check__box .check__mark,
+.check.s-disabled .check__box .check__mark {
+  stroke: var(--check-mark-disabled, var(--ui-text-disabled));
+}
+
+.check:has(.check__input:disabled) .check__label,
+.check.s-disabled .check__label {
+  color: var(--ui-text-disabled);
+}
+
+.check:is(:focus-visible, .s-focus) .check__box,
+.radio:is(:focus-visible, .s-focus) .radio__dot {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow: var(--focus-ring);
+}
+
+/* ---------------- Radio ---------------- */
+
+.radio__dot {
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  margin: var(--radio-pad, 0px);
+  box-shadow: var(--radio-shadow, none);
+  border: var(--radio-border-w) solid var(--radio-border);
+  border-radius: 50%;
+  background: var(--radio-bg);
+  transition:
+    background-color var(--ui-duration) var(--ui-ease),
+    border-color var(--ui-duration) var(--ui-ease);
+}
+
+.radio__dot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--radio-dot);
+  height: var(--radio-dot);
+  border-radius: 50%;
+  background: var(--radio-dot-color);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 90ms var(--ui-ease);
+}
+
+.radio__input:checked + .radio__dot {
+  background: var(--radio-bg-checked);
+  border-color: var(--radio-border-checked);
+  box-shadow: var(--radio-shadow-checked, var(--radio-shadow, none));
+}
+
+.radio__input:checked + .radio__dot::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.radio:is(:hover, .s-hover) .radio__dot {
+  border-color: var(--radio-border-hover, var(--radio-border));
+}
+
+.radio__input:disabled + .radio__dot {
+  background: var(--disabled-bg);
+  border-color: var(--disabled-border);
+}
+
+.radio__input:disabled + .radio__dot::after {
+  background: var(--ui-text-disabled);
+}
+
+.radio:has(.radio__input:disabled) .radio__label,
+.radio.s-disabled .radio__label {
+  color: var(--ui-text-disabled);
+}
+
+/* ---------------- Switch ---------------- */
+
+.switch__track {
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
+  width: var(--switch-w);
+  height: var(--switch-h);
+  padding: 0;
+  border: var(--switch-border-w) solid var(--switch-border);
+  border-radius: calc(var(--switch-h) / 2);
+  background: var(--switch-bg);
+  transition:
+    background-color var(--switch-duration) var(--switch-ease),
+    border-color var(--switch-duration) var(--switch-ease);
+}
+
+.switch__knob {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--switch-pad) + var(--switch-border-w));
+  /* macOS 26 的滑块是「胶囊」不是圆：宽高可以分开给 */
+  width: var(--switch-knob-w, var(--switch-knob));
+  height: var(--switch-knob);
+  border-radius: calc(var(--switch-knob) / 2);
+  background: var(--switch-knob-bg);
+  box-shadow: var(--switch-knob-shadow);
+  transform: translateY(-50%) translateX(0);
+  transition:
+    transform var(--switch-duration) var(--switch-ease),
+    background-color var(--switch-duration) var(--switch-ease);
+}
+
+.switch__input:checked + .switch__track {
+  background: var(--switch-bg-on);
+  border-color: var(--switch-border-on);
+}
+
+.switch__input:checked + .switch__track .switch__knob {
+  transform: translateY(-50%) translateX(
+    calc(
+      var(--switch-w) - var(--switch-knob-w, var(--switch-knob)) - 2 *
+        var(--switch-pad) - 2 * var(--switch-border-w)
+    )
+  );
+  background: var(--switch-knob-on-bg);
+}
+
+.switch:is(:focus-visible, .s-focus) .switch__track {
+  outline: var(--focus-outline);
+  outline-offset: var(--switch-focus-outline-offset, var(--focus-outline-offset));
+  box-shadow: var(--focus-ring);
+}
+
+.switch__input:disabled + .switch__track {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.switch:has(.switch__input:disabled) .switch__label,
+.switch.s-disabled .switch__label {
+  color: var(--ui-text-disabled);
+}
+
+
+/* ---------------- 文本选择 ----------------
+   控件标签、按钮文字不该能选中；输入框内部照旧可以选、可以拖。 */
+.panel :not(input):not(textarea) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.field__input {
+  -webkit-user-select: text;
+  user-select: text;
+}

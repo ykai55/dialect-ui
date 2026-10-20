@@ -1,0 +1,401 @@
+/* ============================================================
+   base.css — 验证台的外壳（与平台无关的中性外壳）
+   故意做得素，别抢控件本身的风头。
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #f4f4f5;
+  color: #18181b;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 180ms ease;
+}
+
+body.mode-dark {
+  background: #18181a;
+  color: #e4e4e7;
+}
+
+/* ---------------- 顶栏 ---------------- */
+
+.bar,
+.board__cap,
+.hcard__cap {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid #e4e4e7;
+  backdrop-filter: saturate(180%) blur(14px);
+}
+
+body.mode-dark .bar {
+  background: rgba(24, 24, 26, 0.86);
+  border-bottom-color: #2a2a2e;
+}
+
+.bar__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.bar__brand span {
+  font-weight: 400;
+  font-size: 11.5px;
+  color: #8a8a93;
+}
+
+.bar__group {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  background: #ececee;
+  border-radius: 8px;
+}
+
+body.mode-dark .bar__group {
+  background: #26262a;
+}
+
+.seg {
+  appearance: none;
+  border: 0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: transparent;
+  color: #52525b;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+body.mode-dark .seg {
+  color: #a1a1aa;
+}
+
+.seg:hover {
+  color: #18181b;
+}
+
+body.mode-dark .seg:hover {
+  color: #fff;
+}
+
+.seg[aria-pressed="true"] {
+  background: #fff;
+  color: #18181b;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+body.mode-dark .seg[aria-pressed="true"] {
+  background: #3a3a40;
+  color: #fff;
+}
+
+.bar__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #52525b;
+  cursor: pointer;
+  user-select: none;
+}
+
+body.mode-dark .bar__toggle {
+  color: #a1a1aa;
+}
+
+.bar__toggle input {
+  margin: 0;
+  accent-color: #18181b;
+}
+
+.bar__spacer {
+  flex: 1;
+}
+
+.bar__hint,
+a.bar__hint {
+  text-decoration: none;
+  font-size: 11.5px;
+  color: #8a8a93;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .bar__brand span,
+  .bar__hint {
+    display: none;
+  }
+}
+
+/* ---------------- 舞台 ---------------- */
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 460px);
+  justify-content: center;
+  gap: 18px;
+  padding: 24px 20px 48px;
+}
+
+body.is-compare .stage {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-content: stretch;
+  max-width: 1560px;
+  margin: 0 auto;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
+    0 16px 32px -24px rgba(0, 0, 0, 0.25);
+}
+
+body.mode-dark .board {
+  border-color: #2a2a2e;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.board[hidden] {
+  display: none;
+}
+
+.board__cap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border-bottom: 1px solid #efeff1;
+  background: #fafafa;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+  color: #8a8a93;
+  letter-spacing: 0.01em;
+}
+
+body.mode-dark .board__cap {
+  background: #1f1f23;
+  border-bottom-color: #2a2a2e;
+}
+
+body.mode-dark .hcard {
+  background: #1f1f23;
+  border-color: #2a2a2e;
+}
+
+body.mode-dark .hcard__cap {
+  background: #232327;
+  border-bottom-color: #2a2a2e;
+  color: #d4d4d8;
+}
+
+body.mode-dark .hcard__cap small {
+  color: #8a8a93;
+}
+
+.board__cap b {
+  font-weight: 600;
+  font-size: 11.5px;
+  color: #3f3f46;
+}
+
+body.mode-dark .board__cap b {
+  color: #d4d4d8;
+}
+
+.board__cap code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10.5px;
+  color: #a1a1aa;
+}
+
+.board__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.board__body > .panel {
+  flex: 1;
+}
+
+/* ---------------- 面板内容 ---------------- */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 22px 22px 26px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.group__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ui-text-2);
+  letter-spacing: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.row--tight {
+  gap: 14px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+/* ---------------- 状态矩阵（harness.html） ---------------- */
+
+.harness {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  padding: 20px;
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+.harness--single {
+  grid-template-columns: minmax(0, 560px);
+  justify-content: center;
+}
+
+.hcard {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hcard__cap {
+  padding: 10px 14px;
+  border-bottom: 1px solid #efeff1;
+  background: #fafafa;
+  font-family: system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #3f3f46;
+}
+
+.hcard__cap small {
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+  font-size: 10.5px;
+  color: #8a8a93;
+}
+
+.hbody {
+  padding: 14px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.hgroup {
+  padding: 12px 0 0;
+}
+
+.hgroup:first-child {
+  padding-top: 0;
+}
+
+.hgroup__title {
+  margin: 0 0 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ui-text) 45%, transparent);
+}
+
+.hrow {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid color-mix(in srgb, var(--ui-text) 8%, transparent);
+}
+
+.hrow:first-of-type {
+  border-top: 0;
+}
+
+.hrow__label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 9.5px;
+  color: color-mix(in srgb, var(--ui-text) 42%, transparent);
+}
+
+.hrow__slot {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hrow__slot .field {
+  width: 100%;
+}

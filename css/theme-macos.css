@@ -1,0 +1,173 @@
+/* ============================================================
+   theme-macos.css — macOS (Big Sur / Monterey / Ventura / Sonoma)
+   只声明变量。桌面壳里把 <html data-theme="macos"> 一换即可。
+   ============================================================ */
+
+[data-theme="macos"] {
+  --ui-surface: #ececec;
+  --ui-text: #1d1d1f;
+  --ui-text-2: rgba(0, 0, 0, 0.55);
+  --ui-text-disabled: rgba(0, 0, 0, 0.25);
+
+  --ui-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
+    Arial, sans-serif;
+  --ui-font-size: 13px;
+  --ui-control-h: 24px;
+
+  --ui-accent: #007aff;
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #0071eb;
+  --ui-accent-active: #0068d9;
+
+  --ui-duration: 120ms;
+  --ui-ease: ease-out;
+
+  /* 焦点是外发光，不是硬描边 */
+  --focus-ring: 0 0 0 3.5px rgba(0, 122, 255, 0.32);
+  --focus-outline: none;
+  --focus-outline-offset: 0px;
+
+  /* 普通按钮：白底 + 极淡描边 + 1px 落影 */
+  /* 实测：窗口上是 #D5D5D5 的灰胶囊，无描边、无投影 */
+  --btn-bg: rgba(0, 0, 0, 0.1);
+  --btn-bg-hover: rgba(0, 0, 0, 0.14);
+  --btn-bg-active: rgba(0, 0, 0, 0.19);
+  --btn-fg: #212121;
+  --btn-fg-active: #212121;
+  --btn-border: transparent;
+  --btn-border-hover: transparent;
+  --btn-border-w: 0px;
+  --btn-radius: 5px;
+  --btn-h: 24px;
+  --btn-px: 12px;
+  --btn-font-size: 13px;
+  --btn-font-weight: 500;
+  --btn-shadow: none;
+
+  --primary-bg: #0a60fe;
+  --primary-bg-hover: #2a72fe;
+  --primary-bg-active: #084fd6;
+  --primary-fg: #ffffff;
+  --primary-border: transparent;
+  --primary-shadow: none;
+
+  --disabled-bg: rgba(0, 0, 0, 0.055);
+  --disabled-fg: #a5a5a5;
+  --disabled-border: transparent;
+
+  /* 未聚焦：白底、圆角、没有描边，只靠一道 0.5px 的描边阴影收边；
+     聚焦时才冒出蓝色描边 + 外发光 */
+  --field-bg: #ffffff;
+  --field-border: rgba(0, 0, 0, 0.18);
+  --field-border-w: 1px;
+  --field-radius: 6px;
+  --field-h: 24px;
+  --field-px: 7px;
+  --field-font-size: 13px;
+  --field-shadow: none;
+  --field-placeholder: rgba(0, 0, 0, 0.42);
+  --field-focus-border: #007aff;
+  --field-focus-shadow: none;
+  --field-underline-w: 0px;
+  --field-label-size: 11px;
+
+  --check-size: 16px;
+  --check-radius: 4px;
+  --check-bg: #d0d0d0;
+  --check-shadow: none;
+  --check-border: transparent;
+  --check-border-hover: transparent;
+  --check-border-w: 0px;
+  --check-bg-checked: #095df8;
+  --check-border-checked: transparent;
+  --check-bg-disabled: #85a9ed;
+  --check-mark: #ffffff;
+  --check-mark-disabled: #ffffff;
+  --check-stroke: 3;
+
+  --radio-size: 16px;
+  --radio-bg: #d0d0d0;
+  --radio-border: transparent;
+  --radio-border-hover: transparent;
+  --radio-border-w: 0px;
+  --radio-bg-checked: #095df8;
+  --radio-border-checked: transparent;
+  --radio-dot: 6px;
+  --radio-dot-color: #ffffff;
+
+  --switch-w: 54px;
+  --switch-h: 24px;
+  --switch-knob: 20px;
+  --switch-knob-w: 32px;
+  --switch-pad: 2px;
+  --switch-border-w: 0px;
+  --switch-bg: #d0d0d0;
+  --switch-border: transparent;
+  --switch-bg-on: #095df8;
+  --switch-border-on: transparent;
+  --switch-knob-bg: #ffffff;
+  --switch-knob-on-bg: #ffffff;
+  --switch-knob-shadow: 0 1px 3px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  --switch-duration: 140ms;
+  --switch-ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[data-theme="macos"][data-mode="dark"] {
+  --ui-surface: #1e1d1f;
+  --ui-text: #f5f5f7;
+  --ui-text-2: rgba(255, 255, 255, 0.55);
+  --ui-text-disabled: rgba(255, 255, 255, 0.25);
+
+  --ui-accent: #0a84ff;
+  --ui-accent-hover: #1a8cff;
+  --ui-accent-active: #0077ea;
+
+  --focus-ring: 0 0 0 3.5px rgba(10, 132, 255, 0.4);
+
+  --btn-bg: rgba(255, 255, 255, 0.07);
+  --btn-bg-hover: rgba(255, 255, 255, 0.11);
+  --btn-bg-active: rgba(255, 255, 255, 0.05);
+  --btn-fg: #dfdfdf;
+  --btn-fg-active: #dfdfdf;
+  --btn-border: transparent;
+  --btn-border-hover: transparent;
+  --btn-shadow: none;
+
+  --primary-bg: #1064fe;
+  --primary-bg-hover: #2a74fe;
+  --primary-bg-active: #0a56e0;
+  --primary-fg: #ffffff;
+  --primary-border: transparent;
+  --primary-shadow: none;
+
+  --disabled-bg: rgba(255, 255, 255, 0.04);
+  --disabled-fg: #8a8a8a;
+  --disabled-border: transparent;
+
+  --field-bg: #171717;
+  --field-border: rgba(255, 255, 255, 0.12);
+  --field-shadow: none;
+  --field-placeholder: rgba(255, 255, 255, 0.38);
+  --field-focus-border: #0a84ff;
+  --field-focus-shadow: none;
+
+  --check-bg: #333234;
+  --check-border: transparent;
+  --check-border-hover: transparent;
+  --check-shadow: none;
+  --check-bg-checked: #1064fe;
+  --check-border-checked: transparent;
+  --check-bg-disabled: #193d81;
+
+  --radio-bg: #333234;
+  --radio-border: transparent;
+  --radio-border-hover: transparent;
+  --radio-bg-checked: #1064fe;
+  --radio-border-checked: transparent;
+
+  --switch-bg: #333234;
+  --switch-bg-on: #1064fe;
+  --switch-knob-bg: #e1e0e1;
+  --switch-knob-on-bg: #dbe8ff;
+}

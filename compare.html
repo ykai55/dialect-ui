@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>参考图 vs 复刻 · Platform UI</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <style>
+      .cmp-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 26px 20px 60px;
+      }
+      .cmp-page h1 {
+        margin: 0 0 6px;
+        font-size: 20px;
+        letter-spacing: -0.01em;
+      }
+      .cmp-page > p {
+        margin: 0 0 26px;
+        color: #71717a;
+        font-size: 12.5px;
+      }
+      .plat {
+        margin-bottom: 34px;
+      }
+      .plat h2 {
+        margin: 0 0 12px;
+        font-size: 14px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .plat h2 small {
+        font-weight: 400;
+        color: #8a8a93;
+        font-size: 11.5px;
+      }
+      .cmp {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 460px;
+        gap: 16px;
+        align-items: start;
+      }
+      .cmp__box {
+        border: 1px solid #e4e4e7;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .cmp__box > h3 {
+        margin: 0;
+        padding: 8px 12px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #52525b;
+        background: #fafafa;
+        border-bottom: 1px solid #efeff1;
+        display: flex;
+        justify-content: space-between;
+      }
+      .cmp__box > h3 span {
+        font-weight: 400;
+        color: #a1a1aa;
+      }
+      .refs {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1px;
+        background: #efeff1;
+      }
+      .refs figure {
+        margin: 0;
+        background: #fff;
+        padding: 8px;
+      }
+      .refs img {
+        display: block;
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        object-position: center;
+        background: #fafafa;
+        border-radius: 4px;
+      }
+      .refs figcaption {
+        margin-top: 6px;
+        font-size: 10px;
+        color: #8a8a93;
+        word-break: break-all;
+      }
+      .cmp__box > img {
+        display: block;
+        width: 100%;
+      }
+      .empty {
+        padding: 18px;
+        color: #a1a1aa;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bar">
+      <div class="bar__brand">参考图 vs 复刻 <span>左：系统原生截图 · 右：HTML + CSS 复刻</span></div>
+      <div class="bar__spacer"></div>
+      <a class="bar__hint" href="index.html">交互版 →</a>
+      <a class="bar__hint" href="harness.html">状态矩阵 →</a>
+    </header>
+
+    <main class="cmp-page">
+      <h1>参考图 vs HTML 复刻</h1>
+      <p>
+        左边是从官方文档 / 系统截图里收来的原生控件，右边是同一套 HTML 渲出来的结果。
+        参考图只做肉眼比对用，来源见 <code>reference/MANIFEST.md</code>。
+      </p>
+      <div id="sections"></div>
+    </main>
+
+    <script src="reference/manifest.js"></script>
+    <script>
+      (function () {
+        var PLATS = [
+          { id: "win11", name: "Windows 11", sub: "Fluent / WinUI 3", shot: "shots/play-win11-light.png" },
+          { id: "macos", name: "macOS", sub: "Tahoe (26) 起", shot: "shots/play-macos-light.png" },
+          { id: "gnome", name: "GNOME", sub: "Adwaita / GTK4", shot: "shots/play-gnome-light.png" }
+        ];
+        var data = window.REFERENCE || {};
+        var root = document.getElementById("sections");
+
+        PLATS.forEach(function (p) {
+          var refs = data[p.id] || [];
+          var box = document.createElement("section");
+          box.className = "plat";
+          box.innerHTML =
+            "<h2>" + p.name + " <small>" + p.sub + "</small></h2>" +
+            '<div class="cmp">' +
+            '<div class="cmp__box"><h3>原生参考<span>' + refs.length + " 张</span></h3>" +
+            (refs.length ? '<div class="refs"></div>' : '<div class="empty">还没收到参考图，跑 tools/index-refs.sh</div>') +
+            "</div>" +
+            '<div class="cmp__box"><h3>HTML 复刻<span>play-' + p.id + "-light</span></h3>" +
+            '<img src="' + p.shot + '" alt="' + p.name + ' HTML 复刻" />' +
+            "</div></div>";
+
+          var refsBox = box.querySelector(".refs");
+          if (refsBox) {
+            refs.forEach(function (src) {
+              var fig = document.createElement("figure");
+              fig.innerHTML =
+                '<img loading="lazy" src="' + src + '" alt="">' +
+                "<figcaption>" + src.split("/").pop() + "</figcaption>";
+              refsBox.appendChild(fig);
+            });
+          }
+
+          root.appendChild(box);
+        });
+      })();
+    </script>
+  </body>
+</html>

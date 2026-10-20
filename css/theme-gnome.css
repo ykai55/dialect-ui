@@ -1,0 +1,149 @@
+/* ============================================================
+   theme-gnome.css — GNOME / libadwaita（GTK4，GNOME 47 / libadwaita 1.7）
+   数值取自上游 SCSS（见 reference/adwaita-tokens.md），不是估的：
+   - 按钮是「当前文字色 10%」的半透明填充，无边框、无投影，字重 bold
+   - 圆角 9px，控件高度 34px，焦点环在控件内侧（offset -2px）
+   - 复选框 / 单选框的可见方块只有 14px，外面还有 3px 留白
+   ============================================================ */
+
+[data-theme="gnome"] {
+  --ui-surface: #fafafb;
+  --ui-text: #323237;
+  --ui-text-2: rgba(50, 50, 55, 0.62);
+  --ui-text-disabled: rgba(50, 50, 55, 0.4);
+
+  --ui-font: "Cantarell Local", "Cantarell", "Noto Sans", system-ui, sans-serif;
+  --ui-font-size: 14.67px;
+  --ui-control-h: 34px;
+
+  --ui-accent: #3584e4;
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #2f7ad6;
+  --ui-accent-active: #2a6fc7;
+
+  --ui-duration: 160ms;
+  --ui-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* GTK4 的焦点环画在控件里面：2px，offset -2px */
+  --focus-ring: 0 0 0 0 transparent;
+  --focus-outline: 2px solid rgba(53, 132, 228, 0.5);
+  --focus-outline-offset: -2px;
+  --switch-focus-outline-offset: 2px;
+
+  --btn-bg: rgba(50, 50, 55, 0.1);
+  --btn-bg-hover: rgba(50, 50, 55, 0.15);
+  --btn-bg-active: rgba(50, 50, 55, 0.3);
+  --btn-fg: #323237;
+  --btn-fg-active: #323237;
+  --btn-border: transparent;
+  --btn-border-hover: transparent;
+  --btn-border-w: 0px;
+  --btn-radius: 9px;
+  --btn-h: 34px;
+  --btn-px: 10px;
+  --btn-font-size: 14.67px;
+  --btn-font-weight: 700;
+  --btn-shadow: none;
+
+  --primary-bg: #3584e4;
+  --primary-bg-hover: #2f7ad6;
+  --primary-bg-active: #2a6fc7;
+  --primary-fg: #ffffff;
+  --primary-border: transparent;
+  --primary-shadow: none;
+
+  --disabled-bg: rgba(50, 50, 55, 0.06);
+  --disabled-fg: rgba(50, 50, 55, 0.4);
+  --disabled-border: transparent;
+
+  --field-bg: rgba(50, 50, 55, 0.1);
+  --field-border: transparent;
+  --field-border-w: 0px;
+  --field-radius: 9px;
+  --field-h: 34px;
+  --field-px: 9px;
+  --field-font-size: 14.67px;
+  --field-shadow: none;
+  --field-placeholder: rgba(50, 50, 55, 0.55);
+  --field-focus-border: transparent;
+  --field-focus-shadow: none;
+  --field-underline-w: 0px;
+  --field-label-size: 12px;
+
+  --check-size: 14px;
+  --check-pad: 3px;
+  --check-radius: 4px;
+  --check-bg: transparent;
+  --check-border: transparent;
+  --check-border-hover: transparent;
+  --check-border-w: 0px;
+  --check-shadow: inset 0 0 0 2px rgba(50, 50, 55, 0.15);
+  --check-shadow-checked: none;
+  --check-bg-checked: #3584e4;
+  --check-border-checked: #3584e4;
+  --check-mark: #ffffff;
+  --check-stroke: 2.6;
+
+  --radio-size: 14px;
+  --radio-pad: 3px;
+  --radio-bg: transparent;
+  --radio-border: transparent;
+  --radio-border-hover: transparent;
+  --radio-border-w: 0px;
+  --radio-shadow: inset 0 0 0 2px rgba(50, 50, 55, 0.15);
+  --radio-shadow-checked: inset 0 0 0 2px #3584e4;
+  --radio-bg-checked: transparent;
+  --radio-border-checked: transparent;
+  --radio-dot: 8px;
+  --radio-dot-color: #3584e4;
+
+  --switch-w: 46px;
+  --switch-h: 26px;
+  --switch-knob: 20px;
+  --switch-pad: 3px;
+  --switch-border-w: 0px;
+  --switch-bg: rgba(50, 50, 55, 0.15);
+  --switch-border: transparent;
+  --switch-bg-on: #3584e4;
+  --switch-border-on: transparent;
+  --switch-knob-bg: #ffffff;
+  --switch-knob-on-bg: #ffffff;
+  --switch-knob-shadow: 0 2px 4px rgba(0, 0, 6, 0.2);
+  --switch-duration: 120ms;
+  --switch-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-theme="gnome"][data-mode="dark"] {
+  --ui-surface: #222226;
+  --ui-text: #ffffff;
+  --ui-text-2: rgba(255, 255, 255, 0.62);
+  --ui-text-disabled: rgba(255, 255, 255, 0.4);
+
+  --ui-accent: #3584e4;
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #3f8ce8;
+  --ui-accent-active: #2f7ad6;
+
+  --focus-outline: 2px solid rgba(129, 208, 255, 0.5);
+
+  --btn-bg: rgba(255, 255, 255, 0.1);
+  --btn-bg-hover: rgba(255, 255, 255, 0.15);
+  --btn-bg-active: rgba(255, 255, 255, 0.3);
+  --btn-fg: #ffffff;
+  --btn-fg-active: #ffffff;
+
+  --disabled-bg: rgba(255, 255, 255, 0.06);
+  --disabled-fg: rgba(255, 255, 255, 0.4);
+
+  --field-bg: rgba(255, 255, 255, 0.1);
+  --field-placeholder: rgba(255, 255, 255, 0.55);
+
+  --check-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+  --radio-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+  --radio-shadow-checked: inset 0 0 0 2px #3584e4;
+
+  --switch-bg: rgba(255, 255, 255, 0.15);
+  --switch-bg-on: #3584e4;
+  --switch-knob-bg: #d2d2d2;
+  --switch-knob-on-bg: #d2d2d2;
+}

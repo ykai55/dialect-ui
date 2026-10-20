@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Platform UI · 跨平台原生观感组件库</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/theme-win11.css" />
+    <link rel="stylesheet" href="css/theme-macos.css" />
+    <link rel="stylesheet" href="css/theme-gnome.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <div class="bar__brand">Platform UI <span>跨平台原生观感组件库</span></div>
+
+      <div class="bar__group" role="group" aria-label="平台主题">
+        <button class="seg" type="button" data-pick-theme="win11">Windows 11</button>
+        <button class="seg" type="button" data-pick-theme="macos">macOS</button>
+        <button class="seg" type="button" data-pick-theme="gnome">GNOME</button>
+      </div>
+
+      <div class="bar__group" role="group" aria-label="明暗">
+        <button class="seg" type="button" data-pick-mode="light">浅色</button>
+        <button class="seg" type="button" data-pick-mode="dark">深色</button>
+      </div>
+
+      <label class="bar__toggle">
+        <input type="checkbox" id="compare" />
+        三平台并排
+      </label>
+
+      <div class="bar__spacer"></div>
+      <div class="bar__hint" id="hint"></div>
+    </header>
+
+    <main class="stage" id="stage">
+      <section class="board" data-board="win11">
+        <div class="board__cap">
+          <b>Windows 11</b> Fluent / WinUI 3
+          <code>data-theme="win11"</code>
+        </div>
+        <div class="board__body" data-slot></div>
+      </section>
+
+      <section class="board" data-board="macos">
+        <div class="board__cap">
+          <b>macOS</b> Tahoe (26) 起
+          <code>data-theme="macos"</code>
+        </div>
+        <div class="board__body" data-slot></div>
+      </section>
+
+      <section class="board" data-board="gnome">
+        <div class="board__cap">
+          <b>GNOME</b> Adwaita / GTK4
+          <code>data-theme="gnome"</code>
+        </div>
+        <div class="board__body" data-slot></div>
+      </section>
+    </main>
+
+    <template id="specimen">
+      <div class="panel">
+        <section class="group">
+          <h3 class="group__title">Buttons</h3>
+          <div class="row">
+            <button type="button" class="btn">Cancel</button>
+            <button type="button" class="btn btn--primary">Save changes</button>
+            <button type="button" class="btn" disabled>Disabled</button>
+            <button type="button" class="btn btn--primary" disabled>Disabled</button>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Text field</h3>
+          <label class="field">
+            <span class="field__label">Email address</span>
+            <span class="field__wrap">
+              <input
+                class="field__input"
+                type="text"
+                placeholder="name@example.com"
+                autocomplete="off"
+              />
+            </span>
+          </label>
+          <label class="field">
+            <span class="field__label">Disabled</span>
+            <span class="field__wrap">
+              <input class="field__input" type="text" value="Not editable" disabled />
+            </span>
+          </label>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Selection</h3>
+
+          <div class="stack">
+            <label class="check">
+              <input type="checkbox" class="check__input" checked />
+              <span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>
+              <span class="check__label">Send me a copy</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" class="check__input" />
+              <span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>
+              <span class="check__label">Remember this device</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" class="check__input" checked disabled />
+              <span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>
+              <span class="check__label">Disabled</span>
+            </label>
+          </div>
+
+          <div class="row row--tight">
+            <label class="radio">
+              <input type="radio" class="radio__input" name="appearance" checked />
+              <span class="radio__dot"></span>
+              <span class="radio__label">Light</span>
+            </label>
+            <label class="radio">
+              <input type="radio" class="radio__input" name="appearance" />
+              <span class="radio__dot"></span>
+              <span class="radio__label">Dark</span>
+            </label>
+            <label class="radio">
+              <input type="radio" class="radio__input" name="appearance" disabled />
+              <span class="radio__dot"></span>
+              <span class="radio__label">Auto</span>
+            </label>
+          </div>
+
+          <div class="stack">
+            <label class="switch">
+              <input type="checkbox" class="switch__input" checked />
+              <span class="switch__track"><span class="switch__knob"></span></span>
+              <span class="switch__label">Wi-Fi</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" class="switch__input" />
+              <span class="switch__track"><span class="switch__knob"></span></span>
+              <span class="switch__label">Bluetooth</span>
+            </label>
+          </div>
+        </section>
+      </div>
+    </template>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

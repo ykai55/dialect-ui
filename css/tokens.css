@@ -1,0 +1,148 @@
+/* ============================================================
+   tokens.css — 设计令牌的默认值 + 字体
+   每个平台主题文件只覆盖 [data-theme="..."] 下的同名变量，
+   组件 CSS 一个平台判断都不写。
+   ============================================================ */
+
+@font-face {
+  font-family: "Cantarell Local";
+  src: url("../fonts/cantarell-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cantarell Local";
+  src: url("../fonts/cantarell-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Selawik：微软官方的 Segoe UI 等宽度替代字体（SIL OFL），
+   非 Windows 机器上用它来顶替 Segoe UI，避免整块面板看着像 macOS。 */
+@font-face {
+  font-family: "Selawik";
+  src: url("../fonts/selawik-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Selawik";
+  src: url("../fonts/selawik-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* 中性兜底：平台识别失败时用这一套，不会出现丑的默认样式 */
+  --ui-surface: #fafafa;
+  --ui-text: #1f2328;
+  --ui-text-2: #5c6370;
+  --ui-text-disabled: #9aa0a8;
+
+  --ui-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ui-font-size: 14px;
+  --ui-control-h: 32px;
+
+  --ui-accent: #3584e4;
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #2f78d0;
+  --ui-accent-active: #2a6cbd;
+
+  --ui-duration: 160ms;
+  --ui-ease: ease;
+
+  /* 焦点：两套机制，主题二选一，另一边留空 */
+  --focus-ring: 0 0 0 0 transparent;
+  --focus-outline: none;
+  --focus-outline-offset: 0px;
+
+  /* 普通按钮 */
+  --btn-bg: #ffffff;
+  --btn-bg-hover: #f5f5f5;
+  --btn-bg-active: #ececec;
+  --btn-fg: #1f2328;
+  --btn-border: rgba(0, 0, 0, 0.12);
+  --btn-border-hover: var(--btn-border);
+  --btn-border-w: 1px;
+  --btn-radius: 6px;
+  --btn-h: 32px;
+  --btn-px: 12px;
+  --btn-font-size: 14px;
+  --btn-font-weight: 400;
+  --btn-shadow: none;
+  --btn-bottom-stroke: transparent;
+
+  /* 主按钮 */
+  --primary-bg: var(--ui-accent);
+  --primary-bg-hover: var(--ui-accent-hover);
+  --primary-bg-active: var(--ui-accent-active);
+  --primary-fg: var(--ui-accent-text);
+  --primary-border: transparent;
+  --primary-shadow: none;
+  --primary-bottom-stroke: transparent;
+
+  /* 禁用 */
+  --disabled-bg: rgba(0, 0, 0, 0.05);
+  --disabled-fg: var(--ui-text-disabled);
+  --disabled-border: rgba(0, 0, 0, 0.05);
+
+  /* 输入框 */
+  --field-bg: #ffffff;
+  --field-border: rgba(0, 0, 0, 0.14);
+  --field-border-w: 1px;
+  --field-radius: 6px;
+  --field-h: 32px;
+  --field-px: 10px;
+  --field-font-size: 14px;
+  --field-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.04);
+  --field-placeholder: #9aa0a8;
+  --field-focus-border: var(--ui-accent);
+  --field-focus-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.04);
+  --field-underline-w: 0px;
+  --field-underline-color: transparent;
+  --field-label-size: 12px;
+
+  /* 复选框 */
+  --check-size: 20px;
+  --check-radius: 4px;
+  --check-bg: #ffffff;
+  --check-border: rgba(0, 0, 0, 0.4);
+  --check-border-w: 1px;
+  --check-shadow: none;
+  --check-bg-checked: var(--ui-accent);
+  --check-border-checked: var(--ui-accent);
+  --check-mark: #ffffff;
+  /* 实测：macOS 的勾是一帧切换，没有描边动画。想加动画改这个值即可 */
+  --check-duration: 0ms;
+  --check-stroke: 2.4;
+
+  /* 单选框 */
+  --radio-size: 20px;
+  --radio-bg: #ffffff;
+  --radio-border: rgba(0, 0, 0, 0.4);
+  --radio-border-w: 1px;
+  --radio-bg-checked: transparent;
+  --radio-border-checked: var(--ui-accent);
+  --radio-dot: 10px;
+  --radio-dot-color: var(--ui-accent);
+
+  /* 开关 */
+  --switch-w: 40px;
+  --switch-h: 20px;
+  --switch-knob: 12px;
+  --switch-pad: 3px;
+  --switch-border-w: 1px;
+  --switch-bg: transparent;
+  --switch-border: rgba(0, 0, 0, 0.45);
+  --switch-bg-on: var(--ui-accent);
+  --switch-border-on: var(--ui-accent);
+  --switch-knob-bg: rgba(0, 0, 0, 0.45);
+  --switch-knob-on-bg: #ffffff;
+  --switch-knob-shadow: none;
+  --switch-duration: var(--ui-duration);
+  --switch-ease: var(--ui-ease);
+}

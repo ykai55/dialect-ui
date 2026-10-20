@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/theme-win11.css" />
+    <link rel="stylesheet" href="css/theme-macos.css" />
+    <link rel="stylesheet" href="css/theme-gnome.css" />
+    <style>
+      body { margin: 0; background: #fff; }
+      .cell {
+        width: 200px; height: 64px;
+        display: flex; align-items: center;
+        padding-left: 16px; box-sizing: border-box;
+      }
+      .cell .t {
+        margin-left: 10px;
+        font: 10px ui-monospace, Menlo, monospace;
+        color: #8a8a93;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel" id="wrap" data-theme="macos" data-mode="light">
+      <div id="rows"></div>
+    </div>
+    <script>
+      var params = new URLSearchParams(location.search);
+      var config = {
+        theme: params.get("theme") || "macos",
+        mode: params.get("mode") || "light",
+        n: parseInt(params.get("n") || "6", 10),
+        target: params.get("target") || "check"
+      };
+      var wrap = document.getElementById("wrap");
+      wrap.dataset.theme = config.theme;
+      wrap.dataset.mode = config.mode;
+      wrap.style.padding = "0";
+      wrap.style.display = "block";
+
+      function checkCell(i) {
+        return '<div class="cell" data-i="' + i + '">' +
+          '<label class="check"><input type="checkbox" class="check__input">' +
+          '<span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true">' +
+          '<path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span></label>' +
+          '<span class="t" data-t="' + i + '"></span></div>';
+      }
+
+      var rows = [];
+      for (var i = 0; i < config.n; i++) rows.push(checkCell(i));
+      document.getElementById("rows").innerHTML = rows.join("");
+
+      // 不用真实的 transition（headless 下虚拟时间会把它直接跑完），
+      // 直接按组件的时长和缓动造一条等价动画，再逐帧定格。
+      document.querySelectorAll(".check__input").forEach(function (el) { el.checked = true; });
+      var marks = Array.prototype.slice.call(document.querySelectorAll(".check__mark"));
+      var cs = getComputedStyle(marks[0]);
+      var duration = parseFloat(cs.transitionDuration) * 1000;
+      if (isNaN(duration)) duration = 140;
+      var easing = cs.transitionTimingFunction || "ease";
+
+      marks.forEach(function (mark, i) {
+        var anim = mark.animate(
+          [{ strokeDashoffset: 17 }, { strokeDashoffset: 0 }],
+          { duration: duration, easing: easing, fill: "both" }
+        );
+        anim.pause();
+        anim.currentTime = duration * (i / (config.n - 1));
+      });
+      document.querySelectorAll(".t").forEach(function (el) {
+        var i = parseInt(el.dataset.t, 10);
+        el.textContent = Math.round(duration * (i / (config.n - 1))) + "ms";
+      });
+      document.title = "frames-ready;" + Math.round(duration) + ";" + easing;
+    </script>
+  </body>
+</html>
