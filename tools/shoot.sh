@@ -31,7 +31,7 @@ if [ "$WHAT" = "all" ] || [ "$WHAT" = "play" ]; then
   echo "playground"
   for theme in win11 macos gnome; do
     for mode in light dark; do
-      shot "index.html?theme=${theme}&mode=${mode}" "play-${theme}-${mode}.png" 860 740
+      shot "index.html?theme=${theme}&mode=${mode}" "play-${theme}-${mode}.png" 860 1080
     done
   done
   shot "index.html?theme=macos&mode=light&compare=1" "play-compare-light.png" 1560 760

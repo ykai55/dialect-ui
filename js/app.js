@@ -19,8 +19,26 @@
     });
 
     slot.appendChild(frag);
+    initSliders(slot);
     board.setAttribute("data-theme", id);
   });
+
+  /* ---------- 滑块：把值写进 --slider-pct，轨道才会有填充 ---------- */
+
+  function initSliders(root) {
+    root.querySelectorAll(".slider").forEach(function (el) {
+      var update = function () {
+        var min = Number(el.min) || 0;
+        var max = Number(el.max) || 100;
+        var pct = ((Number(el.value) - min) / (max - min)) * 100;
+        el.style.setProperty("--slider-pct", pct + "%");
+        var out = el.parentElement.querySelector(".slider__value");
+        if (out) out.textContent = el.value;
+      };
+      el.addEventListener("input", update);
+      update();
+    });
+  }
 
   /* ---------- 2. 平台识别（只是给个默认值，可手动改） ---------- */
 

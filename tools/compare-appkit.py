@@ -17,6 +17,7 @@ ROWS = [
     "check-off", "check-on", "check-disabled",
     "radio-off", "radio-on",
     "switch-off", "switch-on",
+    "select", "slider",
 ]
 MODES = ("light", "dark")
 PAD = 14

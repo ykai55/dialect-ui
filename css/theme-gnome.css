@@ -109,6 +109,22 @@
   --switch-knob-bg: #ffffff;
   --switch-knob-on-bg: #ffffff;
   --switch-knob-shadow: 0 2px 4px rgba(0, 0, 6, 0.2);
+  --select-h: 34px;
+  --select-radius: 9px;
+  --select-bg: rgba(50, 50, 55, 0.1);
+  --select-border: transparent;
+  --select-border-w: 0px;
+  --select-px: 12px;
+  --select-chevron: #323237;
+
+  --slider-track-h: 6px;
+  --slider-track: rgba(50, 50, 55, 0.15);
+  --slider-fill: #3584e4;
+  --slider-thumb-bg: #ffffff;
+  --slider-thumb-border-w: 0px;
+  --slider-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+  --textarea-py: 7px;
   --switch-duration: 120ms;
   --switch-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -146,4 +162,10 @@
   --switch-bg-on: #3584e4;
   --switch-knob-bg: #d2d2d2;
   --switch-knob-on-bg: #d2d2d2;
+
+  --select-bg: rgba(255, 255, 255, 0.1);
+  --select-chevron: #ffffff;
+
+  --slider-track: rgba(255, 255, 255, 0.15);
+  --slider-fill: #3584e4;
 }

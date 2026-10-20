@@ -18,6 +18,7 @@
       }
       .btn { width: 200px; }
       .cell .field { width: 300px; }
+      .cell .select { width: 180px; }
       /* 原生 NSSwitch 没有文字，比对时先把我们这一侧的标签藏掉 */
       .switch__label { display: none; }
     </style>
@@ -47,6 +48,15 @@
           '<input type="radio" class="radio__input" name="v1" ' + (state ? "checked" : "") + ">" +
           '<span class="radio__dot"></span><span class="radio__label">Label</span></label>';
       }
+      function select() {
+        return '<button type="button" class="select"><span>Option A</span>' +
+          '<span class="select__chevron"><span class="select__chevron-up"></span>' +
+          '<span class="select__chevron-down"></span></span></button>';
+      }
+      function slider() {
+        return '<input class="slider" type="range" min="0" max="100" value="40" ' +
+          'style="--slider-pct:40%" aria-label="slider">';
+      }
       function toggle(state) {
         return '<label class="switch">' +
           '<input type="checkbox" class="switch__input" ' + (state ? "checked" : "") + ">" +
@@ -66,7 +76,9 @@
         cell(radio(false)),
         cell(radio(true)),
         cell(toggle(false)),
-        cell(toggle(true))
+        cell(toggle(true)),
+        cell(select()),
+        cell(slider())
       ];
       document.getElementById("rows").innerHTML = rows.join("");
     </script>

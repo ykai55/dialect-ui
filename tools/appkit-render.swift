@@ -89,6 +89,21 @@ func radio(_ state: NSControl.StateValue) -> NSButton {
     return b
 }
 
+func popup() -> NSPopUpButton {
+    let p = NSPopUpButton(frame: .zero, pullsDown: false)
+    p.addItems(withTitles: ["Option A", "Option B", "Option C"])
+    p.font = .systemFont(ofSize: 13)
+    p.sizeToFit()
+    p.frame.size = NSSize(width: 180, height: p.frame.height)
+    return p
+}
+
+func slider() -> NSSlider {
+    let s = NSSlider(value: 0.4, minValue: 0, maxValue: 1, target: nil, action: nil)
+    s.frame = NSRect(x: 0, y: 0, width: 220, height: 24)
+    return s
+}
+
 func toggle(_ state: NSControl.StateValue) -> NSView {
     let s = NSSwitch()
     s.state = state
@@ -109,6 +124,8 @@ let specs: [Spec] = [
     Spec(row: "radio-on") { _ in radio(.on) },
     Spec(row: "switch-off") { _ in toggle(.off) },
     Spec(row: "switch-on") { _ in toggle(.on) },
+    Spec(row: "select") { _ in popup() },
+    Spec(row: "slider") { _ in slider() },
 ]
 
 for dark in [false, true] {

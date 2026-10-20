@@ -109,6 +109,23 @@
   --switch-knob-on-bg: #ffffff;
   --switch-knob-shadow: 0 1px 3px rgba(0, 0, 0, 0.2),
     0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  --select-h: 24px;
+  --select-radius: 6px;
+  --select-bg: rgba(0, 0, 0, 0.1);
+  --select-border: transparent;
+  --select-border-w: 0px;
+  --select-px: 10px;
+  --select-chevron: #212121;
+  --select-chevron-up: block;
+
+  --slider-track-h: 6px;
+  --slider-track: #d0d0d0;
+  --slider-fill: #095df8;
+  --slider-thumb-bg: #ffffff;
+  --slider-thumb-border-w: 0px;
+  --slider-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+
+  --textarea-py: 5px;
   --switch-duration: 140ms;
   --switch-ease: cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -170,4 +187,10 @@
   --switch-bg-on: #1064fe;
   --switch-knob-bg: #e1e0e1;
   --switch-knob-on-bg: #dbe8ff;
+
+  --select-bg: rgba(255, 255, 255, 0.07);
+  --select-chevron: #dfdfdf;
+
+  --slider-track: #333234;
+  --slider-fill: #1064fe;
 }

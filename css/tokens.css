@@ -144,5 +144,30 @@
   --switch-knob-on-bg: #ffffff;
   --switch-knob-shadow: none;
   --switch-duration: var(--ui-duration);
+
+  /* 下拉框（收起态） */
+  --select-h: 32px;
+  --select-radius: 4px;
+  --select-bg: #ffffff;
+  --select-fg: inherit;
+  --select-border: rgba(0, 0, 0, 0.12);
+  --select-border-w: 1px;
+  --select-px: 10px;
+  --select-chevron: currentColor;
+  --select-chevron-up: none;   /* macOS 是上下双箭头 */
+
+  /* 滑块 */
+  --slider-h: 24px;
+  --slider-track-h: 4px;
+  --slider-track: rgba(0, 0, 0, 0.15);
+  --slider-fill: var(--ui-accent);
+  --slider-thumb: 20px;
+  --slider-thumb-bg: #ffffff;
+  --slider-thumb-border: rgba(0, 0, 0, 0.12);
+  --slider-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+  /* 多行输入 */
+  --textarea-min-h: 76px;
+  --textarea-py: 6px;
   --switch-ease: var(--ui-ease);
 }
