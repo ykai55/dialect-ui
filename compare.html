@@ -140,7 +140,9 @@
               '<a href="https://github.com/ykai55/platform-ui/blob/main/reference/MANIFEST.md" target="_blank" rel="noreferrer">reference/MANIFEST.md</a></div>') +
             "</div>" +
             '<div class="cmp__box"><h3>HTML 复刻<span>play-' + p.id + "-light</span></h3>" +
-            '<img src="' + p.shot + '" alt="' + p.name + ' HTML 复刻" />' +
+            '<img src="' + p.shot + '" alt="' + p.name + ' HTML 复刻" ' +
+            'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'" />' +
+            '<div class="empty" style="display:none">截图是本地生成物，没入库。跑 tools/shoot.sh 就有了。</div>' +
             "</div></div>";
 
           var refsBox = box.querySelector(".refs");
