@@ -24,11 +24,21 @@ GNOME 像 GNOME。出现「把三个平台对齐成一套」的改动，就是�
 - 状态：默认、悬停、按下、焦点、禁用；明暗两套。
 - 手段：CSS 自定义属性做设计令牌，主题文件只赋值，组件不判断平台。
 
+## 参考图
+
+- 找到有用的图就直接提交进 `reference/shots/<平台>/`，不要留在临时目录或对话里。
+- 命名 `{平台}-{控件}-{状态}-{明暗}.png`；官方素材加来源前缀（`hig-` / `ms-` / `gnome-`）。
+- 每张图在 `reference/MANIFEST.md` 记四件事：来源页、直链、像素尺寸、能看什么。
+- 只收能支撑判断的：控件够大、看得出圆角描边和状态。营销图、图标、缩略图不收。
+- `reference/manifest.js` 由 `tools/index-refs.sh` 生成，不提交。
+- 仓库目前是私有的，因为这些图是第三方版权素材。要转公开，先把 `reference/shots/` 移出版本库，
+  只留 MANIFEST 里的来源链接。
+
 ## 目录约定
 
 - `css/theme-*.css` 只允许声明自定义属性，不许写选择器逻辑。
 - `css/components.css` 不许出现平台名，只读令牌。
-- `reference/` 放原生参考图和来源清单；`docs/verification.md` 写对齐方法与实测值。
+- `docs/verification.md` 写对齐方法与实测值。
 - `shots/` 是生成物，随时可以删掉重跑 `tools/shoot.sh`。
 
 ## 不属于这里的东西
