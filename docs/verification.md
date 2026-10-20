@@ -168,3 +168,22 @@ python3 tools/anim-strip.py /tmp/native-rec check-light
 3. 在 `verify.html` 的 `rows` 里加同样的一行（顺序必须一致）；
 4. 看 `shots/verify/macos/{控件}-{mode}.png`，差在哪就改 `css/theme-macos.css` 里的令牌；
 5. 值有变化的话，回头更新上面那张表。
+
+## Windows 侧：还没有实测值（2026-10-20 调研）
+
+上面「只管 macOS」那条说的就是这件事。2026-10-20 在 `ssh box-win` 上补了一轮可行性验证，
+先说前提：**那台机器是 Windows 10 Enterprise 22H2（build 19045），不是 Windows 11**。
+
+- **Win32/uxtheme 离屏管线能跑**：`tools/win32-render.cs` 出了七类控件（开关在 Win32/uxtheme 里
+  没有对应部件）× 五状态 × 明暗的状态矩阵。但抓到的是 Win10 Aero 主题——方角、按钮 `#E1E1E1`、
+  输入框 `#ABADB3` 全边框、accent `#0078D7`——和 Win11 的代差太大，一个值都不能搬。
+- **目标是 WinUI 3（Fluent 2）**：它的控件模板在 Windows App SDK 框架包里，不随 OS 走，所以理论上
+  Win10 也能渲染出 Win11 的控件本体。实测：现成 WinUI 3 应用的窗口抓不到（PrintWindow 黑图，
+  同一工具抓 UWP/WinUI 2 的窗口正常）；从 Mac 备料搬到 box-win 的离线 WinUI 3 构建成功了，
+  但程序卡在 unpackaged 应用的框架资源解析。所以本机目前**没有任何一张「系统本身」级的 WinUI 3
+  控件像素**，`theme-win11.css` 里的 Windows 数值仍然只有文档/源码/估计三档。
+- **有一台 Win11 主机之后**，上面两条管线都能直接复用，再回填本页的实测表。
+
+细节、死因和复跑命令：`docs/windows-win10-notes.md`（Win32 管线）、
+`docs/windows-winui3-notes.md`（WinUI 3 抓取性）、`docs/windows-evidence-options.md`
+（Win11 来源与 Win10/11 代差量化）。产物在 `reference/shots/windows/`（不入库）。

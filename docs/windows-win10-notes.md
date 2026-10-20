@@ -10,7 +10,7 @@
    那里 `OpenThemeData` 对所有 class 都返回 `NULL`、`GetCurrentThemeName` 返回
    `0x80070490`，画不出任何主题。必须用 `schtasks /IT` 投到 Administrator 的 session 2（RDP 断开态也行）。
 2. 机器是 **Windows 10 Enterprise 22H2 / build 19045 / x64**，不是 Windows 11。
-   抓到的是 Win10 的 Aero（aero2）主题，不是 Fluent/Win11。**不能拿这些像素直接当 Win11 依据**，
+   抓到的是 Win10 的 Aero 主题（`Aero.msstyles`；`aero2.msstyles` 在这台机上实测不存在），不是 Fluent/Win11。**不能拿这些像素直接当 Win11 依据**，
    能搬和不能搬的见文末对照表。
 3. 会话的实际显示 DPI 是 **96 / 缩放 100%**（`AppliedDPI` 注册表里写着 192 是旧值，不可信）。
    所以没有原生 2 倍栅格：`-96dpi.png` 是系统真正画出来的 1x 像素，

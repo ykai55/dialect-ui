@@ -37,6 +37,7 @@ bash tools/shoot.sh          # 各平台 × 明暗的整页截图
 bash tools/verify-macos.sh   # 原生 vs CSS 的单组件对照图
 bash tools/frames.sh         # 动效胶片图（CSS 侧）
 bash tools/record-native.sh  # 录原生控件动画（需要屏幕录制权限）
+bash tools/test.sh           # 交互测试
 ```
 
 产物在 `shots/`，2 倍像素密度。
@@ -56,6 +57,16 @@ tools/               截图、原生渲染对照、录制与抽帧
 docs/verification.md 对齐方法与实测值
 reference/            原生参考图（不入库）与来源清单
 ```
+
+## 测试
+
+`bash tools/test.sh` 跑所有 `test/*.test.html`。没有测试框架，也没有依赖：
+每个测试页在自己的 DOM 上跑断言，把结果写进 `<pre id="result">`，脚本用
+`--dump-dom` 读出来，有 `FAIL` 就非零退出。
+
+现在只覆盖下拉框：打开、选值、关闭、`aria-selected`、方向键、回车、Esc。
+这部分最容易出现「画得出来但点不动」的问题——之前就漏过一次 `choose` 函数，
+页面看起来完全正常。
 
 ## 切换是怎么做到的
 

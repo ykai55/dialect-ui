@@ -38,6 +38,7 @@ GNOME 像 GNOME。出现「把三个平台对齐成一套」的改动，就是�
 - `css/components.css` 不许出现平台名，只读令牌。
 - `docs/verification.md` 写对齐方法与实测值。
 - `shots/` 是生成物，随时可以删掉重跑 `tools/shoot.sh`。
+- `test/*.test.html` 是交互测试，跑 `tools/test.sh`。新增有行为的组件时一起补。
 
 ## 不属于这里的东西
 

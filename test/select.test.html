@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>select test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+  </head>
+  <body>
+    <div data-theme="macos" data-mode="light">
+      <div class="select" data-select>
+        <button type="button" class="select__button">
+          <span class="select__value">Option A</span>
+          <span class="select__chevron">
+            <span class="select__chevron-up"></span>
+            <span class="select__chevron-down"></span>
+          </span>
+        </button>
+        <ul class="menu" popover>
+          <li class="menu__item" aria-selected="true">Option A</li>
+          <li class="menu__item" aria-selected="false">Option B</li>
+          <li class="menu__item" aria-selected="false">Option C</li>
+          <li class="menu__item" aria-selected="false">Option D</li>
+        </ul>
+      </div>
+    </div>
+
+    <pre id="result">RUNNING</pre>
+
+    <script src="../js/select.js"></script>
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+        function wait(ms) {
+          return new Promise(function (r) { setTimeout(r, ms || 30); });
+        }
+        function key(el, k) {
+          el.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
+        }
+
+        var sel = document.querySelector("[data-select]");
+        var btn = sel.querySelector(".select__button");
+        var menu = sel.querySelector(".menu");
+        var items = menu.querySelectorAll(".menu__item");
+        var value = btn.querySelector(".select__value");
+
+        (async function () {
+          try {
+            btn.click();
+            await wait();
+            check("点击打开菜单", function () {
+              return menu.matches(":popover-open") && btn.getAttribute("aria-expanded") === "true";
+            });
+
+            items[2].click();
+            await wait();
+            check("点选项更新值", function () { return value.textContent === "Option C"; });
+            check("选中后关闭菜单", function () { return !menu.matches(":popover-open"); });
+            check("aria-selected 跟随", function () {
+              return items[2].getAttribute("aria-selected") === "true" &&
+                     items[0].getAttribute("aria-selected") === "false";
+            });
+
+            btn.focus();
+            key(btn, "ArrowDown");
+            await wait();
+            check("方向键打开菜单", function () { return menu.matches(":popover-open"); });
+            check("打开时高亮当前项", function () { return items[2].classList.contains("is-active"); });
+
+            key(btn, "ArrowDown");
+            await wait();
+            check("方向键移动高亮", function () { return items[3].classList.contains("is-active"); });
+
+            key(btn, "Enter");
+            await wait();
+            check("回车选中", function () { return value.textContent === "Option D"; });
+            check("回车后关闭", function () { return !menu.matches(":popover-open"); });
+
+            btn.click();
+            await wait();
+            key(btn, "Escape");
+            await wait();
+            check("Esc 关闭", function () { return !menu.matches(":popover-open"); });
+          } catch (e) {
+            lines.push("FAIL 测试中断 — " + e.message);
+          }
+
+          var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+          document.getElementById("result").textContent =
+            lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+          document.title = failed ? "FAIL" : "PASS";
+        })();
+      })();
+    </script>
+  </body>
+</html>

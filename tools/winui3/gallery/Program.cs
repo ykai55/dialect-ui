@@ -87,6 +87,12 @@ namespace GalleryProbe
             Program.Log("OnLaunched");
             UnhandledException += (s, e) => { Program.Log("XAML UNHANDLED " + e.Message + " " + e.Exception); };
 
+            try
+            {
+                Application.Current.Resources.MergedDictionaries.Add(new Microsoft.UI.Xaml.Controls.XamlControlsResources());
+                Program.Log("step: XamlControlsResources merged");
+            }
+            catch (Exception ex) { Program.Log("XamlControlsResources fail " + ex.GetType().Name + ": " + ex.Message); }
             _panel = new StackPanel { Spacing = 0 };
             _root = new Grid { RequestedTheme = ElementTheme.Light };
             _pageBrush = new SolidColorBrush(Microsoft.UI.ColorHelper.FromArgb(255, 0xF3, 0xF3, 0xF3));
