@@ -3,5 +3,8 @@
 # 生成物：截图、动效胶片图、对照图，随时可以用 tools/ 里的脚本重跑
 /shots/
 
+# 参考图不入库：版权素材，公开仓库不发布。来源见 reference/MANIFEST.md
+/reference/shots/
+
 # 由 tools/index-refs.sh 从 reference/shots 生成
 /reference/manifest.js

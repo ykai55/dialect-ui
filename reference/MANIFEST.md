@@ -1,3 +1,5 @@
+> 这些图不入库：它们是第三方版权素材，仓库是公开的。下表给出直链，按需下载到 `reference/shots/<平台>/` 即可。
+
 # Reference image manifest — native platform UI controls
 
 Ground-truth screenshots for the CSS recreation project. Everything listed below was

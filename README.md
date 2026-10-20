@@ -51,7 +51,7 @@ js/app.js             平台识别 + 主题切换
 js/harness.js         状态矩阵生成
 tools/               截图、原生渲染对照、录制与抽帧
 docs/verification.md 对齐方法与实测值
-reference/            原生参考图与来源清单
+reference/            原生参考图（不入库）与来源清单
 ```
 
 ## 切换是怎么做到的
