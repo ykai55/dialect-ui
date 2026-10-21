@@ -169,21 +169,82 @@ python3 tools/anim-strip.py /tmp/native-rec check-light
 4. 看 `shots/verify/macos/{控件}-{mode}.png`，差在哪就改 `css/theme-macos.css` 里的令牌；
 5. 值有变化的话，回头更新上面那张表。
 
-## Windows 侧：还没有实测值（2026-10-20 调研）
+## Windows 10：拿系统自己当像素参考
 
-上面「只管 macOS」那条说的就是这件事。2026-10-20 在 `ssh box-win` 上补了一轮可行性验证，
-先说前提：**那台机器是 Windows 10 Enterprise 22H2（build 19045），不是 Windows 11**。
+Win10 这套主题不是估的。2026-10-20 在 `ssh box-win`（Windows 10 Enterprise 22H2 / build 19045，
+Aero.msstyles，主题字体 Microsoft YaHei UI 9pt，会话实际 96 dpi）上用 uxtheme 的
+`DrawThemeBackground` 把每个控件、每个状态离屏渲染成 PNG，`css/theme-win10.css` 的数值逐一取自
+这批图。**注意：那台机器不是 Windows 11**，所以这套值只对 Win10 有效，不能搬进 `theme-win11.css`。
 
-- **Win32/uxtheme 离屏管线能跑**：`tools/win32-render.cs` 出了七类控件（开关在 Win32/uxtheme 里
-  没有对应部件）× 五状态 × 明暗的状态矩阵。但抓到的是 Win10 Aero 主题——方角、按钮 `#E1E1E1`、
-  输入框 `#ABADB3` 全边框、accent `#0078D7`——和 Win11 的代差太大，一个值都不能搬。
-- **目标是 WinUI 3（Fluent 2）**：它的控件模板在 Windows App SDK 框架包里，不随 OS 走，所以理论上
-  Win10 也能渲染出 Win11 的控件本体。实测：现成 WinUI 3 应用的窗口抓不到（PrintWindow 黑图，
-  同一工具抓 UWP/WinUI 2 的窗口正常）；从 Mac 备料搬到 box-win 的离线 WinUI 3 构建成功了，
-  但程序卡在 unpackaged 应用的框架资源解析。所以本机目前**没有任何一张「系统本身」级的 WinUI 3
-  控件像素**，`theme-win11.css` 里的 Windows 数值仍然只有文档/源码/估计三档。
-- **有一台 Win11 主机之后**，上面两条管线都能直接复用，再回填本页的实测表。
+### 一条命令
 
-细节、死因和复跑命令：`docs/windows-win10-notes.md`（Win32 管线）、
-`docs/windows-winui3-notes.md`（WinUI 3 抓取性）、`docs/windows-evidence-options.md`
-（Win11 来源与 Win10/11 代差量化）。产物在 `reference/shots/windows/`（不入库）。
+```bash
+# 前置：本地静态服务在跑（见 README）
+PYTHON=/path/to/python3 bash tools/verify-win10.sh
+```
+
+产物是 `shots/verify/win10/{行}-{light,dark}.png`，每张上半是原生矩阵、下半是 CSS 复刻，
+按内容包围盒裁齐、2 倍放大。原生图源是 `reference/shots/windows/win10-uxtheme/matrix/`。
+复跑原生矩阵本身要用 `tools/win32-render.cs`：ssh 的进程落在 session 0，那里 `OpenThemeData`
+返回 NULL，必须用 `schtasks /IT` 投到 Administrator 的交互会话（RDP 断开态也行）再渲染，
+命令细节在 `docs/windows-win10-notes.md`。
+
+### 实测值（96 dpi，浅色）
+
+| 控件 | 值 |
+| --- | --- |
+| 按钮 | 23px 高、方角；填充 `#E1E1E1`、1px `#ADADAD`；悬停 `#E5F1FB` + 蓝边 `#0078D7`；按下 `#CCE4F7` + `#005499`；禁用 `#CCCCCC` + `#BFBFBF`，文字 `#838383` |
+| 默认按钮（主按钮） | 灰底不变，2px 蓝边 `#0078D7`（1px 边框 + 1px 内阴影） |
+| 输入框 | 白底、1px `#ABADB3` 全边框、方角；聚焦外观不变，只有插入符；禁用底色 `#F0F0F0` |
+| 多行输入 | 描边 `#7A7A7A`（原生 EP_EDITBORDER_NOSCROLL，比单行深），悬停 `#171717`，聚焦 `#0078D7`，禁用 `#CCCCCC` |
+| 下拉框 | 灰底 `#E1E1E1` + `#ADADAD`，右侧 17px 箭头格 + 1px 分隔线；悬停 / 按下同按钮色系；禁用 `#CCCCCC` 底、`#BFBFBF` 边、箭头 `#8B8B8B` |
+| 下拉菜单 | 白底、1px `#7A7A7A`、方角、项高 16px；悬停 / 选中整行 `#0078D7` + 白字 |
+| 复选框 / 单选框 | 13×13；白底 1px `#333333`；勾 / 圆点深色 `#333333`（圆点直径 7px）；悬停描边转 `#0078D7`；按下底 `#CCE4F7`、边 `#005499`；禁用底 `#E2E2E2`、边 `#CCCCCC` |
+| 滑块 | 轨道 4px（`#E7EAEA` + 1px `#D6D6D6` 边）、方端；滑块 11×19 圆角竖条 `#0078D7`；悬停 thumb `#171717`、按下 / 禁用 `#CCCCCC`；经典 trackbar 没有强调色填充 |
+| 开关 | Win32/uxtheme 没有此部件，取 Win10 UWP ToggleSwitch 的深色实测：轨道 44×20（含 2px 描边）、圆角 10、滑块 10×10、行程 24px；开态填充 `#0078D7` + 白滑块，关态透明 + `#CCCCCC` 描边和滑块。浅色态没有实测，按同一套中性值推。详见 `docs/win10-switch-evidence.md` |
+| 中性色 | 底色 `#F0F0F0`、文字 `#000`、次要文字 `#6D6D6D`、强调色 `#0078D7` |
+
+暗色（系统只把按钮、输入框、多行输入、下拉框变暗）：按钮 `#333333` / `#454545` / `#666666` + 1px
+`#9B9B9B`；输入框 `#383838` 底 + `#9B9B9B` 边，聚焦边 `#FFFFFF`；下拉框 `#333` / `#454` / `#666`
++ `#9B9B9B` 边、禁用边 `#404040`。暗色矩阵里**默认按钮和普通按钮画法一样**（没有蓝圈），主题照抄。
+勾选框 / 单选框 / 滑块原生没有暗色变体，矩阵里就是浅色那套，主题也不覆盖，暗色下只让标签文字
+跟随前景色变白——真实 Win10 暗色应用就是「浅色控件 + 白标签」这个组合。
+
+### 跑完这一轮的结论
+
+84 张对比图（42 行 × 明暗）全部出图，行序没有错位。对得上的：按钮六态、默认按钮 2px 蓝环、
+输入框 `#ABADB3`、多行输入 `#7A7A7A / #0078D7 / #CCCCCC`、下拉框三态、下拉菜单、勾选框 / 单选框
+的盒子与状态色、滑块轨道（`#E7EAEA` + 1px `#D6D6D6`）。
+
+已知差异，按性质分三类：
+
+- **绘制惯例差**：原生按钮 / 输入框 / 下拉在 200×23 的格子里只画 198×21 的墨迹，CSS 用满 23px，
+  对比图里每边多 1px；行内居中还带来 0.5–1.5px 的纵向差。
+- **形状差**：滑块 thumb 原生是 11×15 方体 + 4px 下尖指针，CSS 是 11×19 圆角竖条，没有指针；
+  下拉框箭头原生是 8×4、1px 线，CSS 是 4px 见方、1px 线（很接近，但抗锯齿不同）。
+- **焦点框范围**：原生按钮 / 勾选框 / 单选框的焦点点线框住整行，下拉框只框文本区；CSS 统一框在
+  控件本体（勾选框是 13×13 的盒子）。焦点颜色见下面的估计说明。
+- **字体差**（不算主题 bug）：Selawik 回退让字宽窄 2–3px、基线低 2px，行距也因此略有差别；
+  这部分单独归到字体档，不进几何 / 颜色档。
+
+### 依据等级和已知差距
+
+- 颜色、尺寸、描边、状态色、控件高度：**系统本身**（uxtheme 离屏渲染）。
+- 焦点框：**估计**。原生焦点框由 `DrawFocusRect` 画，离屏抓出来是近白点线（`#F2F4F3`），
+  和真实 Win10 的深色点线不一致，判断为 XOR 采集伪影，所以主题按深色点线做。
+- 下拉菜单的暗色、开关的过渡时长：**估计**（原生没有可采样的资源）。
+- 勾选框 / 单选框 / 滑块没有暗色变体，主题沿用浅色外观（实测行为，不是估计）。对比页在暗色下把
+  这两类标签强制成黑色，因为原生矩阵里那是采集器画的黑色文字、底也是白的；真实应用里标签是白的。
+- 原生主题部件在 200×23 的格子里只画出 198×21 的墨迹（外侧 1px 未着色），CSS 用满 23px，
+  对比图里会有 2px 左右的高度差，属于绘制惯例差。
+- 字体是 Selawik 回退（非 Windows 机器没有 Segoe UI / Microsoft YaHei UI），字宽和基线差异
+  单独归到字体档，不进几何 / 颜色档。
+- 滑块底部那个小三角缺口没有画；下拉菜单的阴影是估的（原生由 DWM 合成）。
+
+### Windows 11 仍然没有实测
+
+Win11 的 Win32 主题是另一份二进制，Win10 的值不能推过去。WinUI 3 的控件模板在 Windows App SDK
+框架包里、理论上 Win10 也能渲染，但这次没跑通（现成 WinUI 3 应用窗口抓不到，自建库卡在
+unpackaged 资源解析）。死因和下一步：`docs/windows-winui3-notes.md`；Win11 像素来源评估：
+`docs/windows-evidence-options.md`。`theme-win11.css` 里的 Windows 数值仍然只有文档 / 上游源码 /
+估计三档。

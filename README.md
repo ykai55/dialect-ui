@@ -1,6 +1,8 @@
 # Platform UI
 
-一套用 HTML + CSS 实现各平台原生观感的 UI 组件库：Windows 11（Fluent）、macOS（Tahoe）、GNOME（Adwaita）。
+一套用 HTML + CSS 实现各平台原生观感的 UI 组件库：Windows 11（Fluent）、Windows 10（Aero）、
+macOS（Tahoe）、GNOME（Adwaita）。Windows 10 这一套的数值来自原生状态矩阵实测，
+不是估值（见 `docs/verification.md`）。
 目前覆盖按钮、输入框、多行输入、下拉框、滑块、复选框、单选框、开关。
 纯静态，没有构建步骤，不依赖任何框架。
 
@@ -18,23 +20,25 @@ python3 -m http.server 4173 --bind 127.0.0.1
 然后打开 <http://127.0.0.1:4173/index.html>。
 
 > 必须用 HTTP 打开。直接双击 `index.html` 走 `file://` 时，浏览器会因为跨源策略拒绝加载
-> `fonts/` 里的 woff2，三个平台会退化成同一个系统字体，平台差异就看不出来了。
+> `fonts/` 里的 woff2，几个平台会退化成同一个系统字体，平台差异就看不出来了。
 
 页面：
 
 | 页面 | 用途 |
 | --- | --- |
-| `index.html` | 交互版。切平台、切明暗、三平台并排；悬停 / 按下 / 焦点是真的，可以直接点。 |
+| `index.html` | 交互版。切平台、切明暗、四平台并排；悬停 / 按下 / 焦点是真的，可以直接点。 |
 | `harness.html` | 状态矩阵。把 hover / active / focus / disabled 用类名定格，一屏看全。 |
 | `compare.html` | 参考图画廊：左边系统原生截图，右边复刻结果。 |
 | `verify.html` | 对齐页：和 AppKit 渲染出来的原生控件逐行对齐，给 `tools/verify-macos.sh` 用。 |
+| `verify-win10.html` | 对齐页：和 Win32/uxtheme 渲染出来的原生控件逐行对齐，给 `tools/verify-win10.sh` 用。 |
 | `frames.html` | 动效逐帧定格页，给 `tools/frames.sh` 用。 |
 
 生成物：
 
 ```bash
 bash tools/shoot.sh          # 各平台 × 明暗的整页截图
-bash tools/verify-macos.sh   # 原生 vs CSS 的单组件对照图
+bash tools/verify-macos.sh   # 原生 vs CSS 的单组件对照图（AppKit）
+bash tools/verify-win10.sh   # 原生 vs CSS 的单组件对照图（Win32 / uxtheme）
 bash tools/frames.sh         # 动效胶片图（CSS 侧）
 bash tools/record-native.sh  # 录原生控件动画（需要屏幕录制权限）
 bash tools/test.sh           # 交互测试
@@ -48,6 +52,7 @@ bash tools/test.sh           # 交互测试
 css/tokens.css        兜底令牌 + 两个 Web 字体（Selawik / Cantarell）
 css/components.css    组件结构与状态机，只读令牌，没有任何平台判断
 css/theme-win11.css   只声明变量
+css/theme-win10.css   只声明变量（数值来自原生状态矩阵实测）
 css/theme-macos.css   只声明变量
 css/theme-gnome.css   只声明变量
 css/base.css          演示页外壳（中性，不参与平台主题）
@@ -80,12 +85,12 @@ reference/            原生参考图（不入库）与来源清单
 主题文件只负责给这些属性赋值。所以：
 
 - **组件不认识平台**。加第四个平台只是多一个变量文件。
-- **同一个页面里可以并存**。`index.html` 的并排模式就是三个容器各带一套属性，互不干扰。
+- **同一个页面里可以并存**。`index.html` 的并排模式就是四个容器各带一套属性，互不干扰。
 - **桌面壳接管很简单**。Electron 里拿到 `nativeTheme.themeSource` 和系统信息后，改 `<html>`
   上的这两个属性即可；Tauri 同理。组件层一行都不用动。
 
 ```js
-document.documentElement.dataset.theme = platform; // 'win11' | 'macos' | 'gnome'
+document.documentElement.dataset.theme = platform; // 'win11' | 'win10' | 'macos' | 'gnome'
 document.documentElement.dataset.mode = dark ? 'dark' : 'light';
 ```
 
@@ -93,15 +98,15 @@ document.documentElement.dataset.mode = dark ? 'dark' : 'light';
 
 这些参数决定「一眼像不像」，比配色更关键：
 
-| | Windows 11 | macOS | GNOME |
-| --- | --- | --- | --- |
-| 控件高度 | 32px | 24px | 34px |
-| 圆角 | 4px | 按钮 5px，输入框 6px | 9px |
-| 字体 | Segoe UI Variable 14px | SF Pro 13px | Cantarell 14.67px / bold |
-| 按钮底色 | 近白 + 底部 1px 深色内描边 | 灰胶囊（`rgba(0,0,0,.1)`），无描边 | 文字色 10% 半透明，无边框 |
-| 焦点 | 2px 硬描边，外扩 1px | 3.5px 半透明蓝色外发光 | 2px 半透明描边，内缩 2px |
-| 按下反馈 | 背景变浅，文字转灰 | 背景压暗 | 填充加深到 30% |
-| 输入框聚焦 | 只加一条 2px 强调色下划线 | 描边变蓝 + 外发光 | 内侧 2px 强调色描边 |
+| | Windows 10 | Windows 11 | macOS | GNOME |
+| --- | --- | --- | --- | --- |
+| 控件高度 | 23px | 32px | 24px | 34px |
+| 圆角 | 0（方角） | 4px | 按钮 5px，输入框 6px | 9px |
+| 字体 | Segoe UI 12px | Segoe UI Variable 14px | SF Pro 13px | Cantarell 14.67px / bold |
+| 按钮底色 | `#E1E1E1` + 1px `#ADADAD` 全描边 | 近白 + 底部 1px 深色内描边 | 灰胶囊（`rgba(0,0,0,.1)`），无描边 | 文字色 10% 半透明，无边框 |
+| 焦点 | 1px 点线，内缩 2px | 2px 硬描边，外扩 1px | 3.5px 半透明蓝色外发光 | 2px 半透明描边，内缩 2px |
+| 按下反馈 | 浅蓝底 `#CCE4F7` | 背景变浅，文字转灰 | 背景压暗 | 填充加深到 30% |
+| 输入框聚焦 | 外观不变，只有插入符 | 只加一条 2px 强调色下划线 | 描边变蓝 + 外发光 | 内侧 2px 强调色描边 |
 
 输入框那条下划线是 Windows 的签名动作，靠一个 `::after` 加 `--field-underline-w` 实现，
 其他平台把这个变量设成 0 就自动消失。
@@ -119,6 +124,12 @@ document.documentElement.dataset.mode = dark ? 'dark' : 'light';
 - **GNOME 按钮**：没有边框，底色是「当前文字色 10%」的半透明填充，字重 bold。
 - **GNOME 复选框**：14px 可见方块，外加 3px 留白；未选中是一条 2px 内描边。
 - **Windows 输入框**：底部内描边要更深，否则整块面板会显得平。
+- **Windows 10 的整套数值是实测的**：按钮 `#E1E1E1` + 1px `#ADADAD`、方角、23px 高；输入框白底
+  1px `#ABADB3`（聚焦只有插入符，外观不变）；下拉框右侧是 17px 箭头格 + 1px 分隔线；多行输入描边
+  用更深的 `#7A7A7A`、聚焦转 `#0078D7`；勾选框 / 单选框 13×13，白底深色勾；滑块轨道 4px、滑块
+  11×19 的竖条。暗色下按钮 `#333` / 输入框 `#383838`，只有一部分控件能被系统变暗。
+- **Windows 10 的开关是借来的**：Win32/uxtheme 没有开关部件，这一颗取 Win10 UWP 的 ToggleSwitch，
+  来源和量值在 `docs/win10-switch-evidence.md`。
 
 复选框的对勾用 SVG 画在 `viewBox` 里，任何尺寸都居中；描边粗细由 `--check-stroke` 控制。
 
@@ -136,8 +147,14 @@ document.documentElement.dataset.mode = dark ? 'dark' : 'light';
 - **动画只有 macOS 量过**。Windows 的 160ms、GNOME 的 200ms 是估的，没有录制依据。
 - **Windows 的 Mica 背景没做**，现在是一条纯色。
 - **Linux 只跟了 Adwaita 默认值**。GNOME 换主题色、KDE、XFCE 不在范围内。
-- **版本只覆盖一代**。macOS 按 26（Tahoe）做的，GNOME 按 47/48 做的；别的版本要另加一套变量。
-- **参考图只有浅色**。深色是照同一套令牌推的，没和真机对过。
+- **版本只覆盖一代**。macOS 按 26（Tahoe）做的，GNOME 按 47/48 做的，Windows 10 按 22H2 做的；
+  别的版本要另加一套变量。
+- **Windows 10 的暗色不完整**。原生 Win32 暗色只覆盖按钮、输入框、多行输入、下拉框，所以那几组
+  按原生暗色值写；勾选框、单选框、滑块在系统里根本没有暗色变体，主题让它们沿用浅色外观（暗色下
+  标签文字变白），跟真实 Win10 暗色应用的行为一致。
+- **Windows 10 的滑块底部小缺口没画**。原生 thumb 是圆角竖条 + 底部一个小三角缺口，CSS 只做了
+  圆角竖条。
+- **参考图只有浅色**。深色是照同一套令牌推的，没和真机对过；Win10 那套的暗色部分有原生截图对照。
 - **没有高 DPI 缩放适配**，依赖浏览器自身的缩放。
 - **不做材质**。玻璃、半透明模糊这类需要合成层的效果不实现。
 
@@ -146,5 +163,6 @@ document.documentElement.dataset.mode = dark ? 'dark' : 'light';
 1. **行为层**：键盘模型（Alt 助记符 / Cmd / 全键访问）、焦点顺序、右键菜单、按下态。
    这是原生体感的大头，现在只是视觉。
 2. **补齐控件**：下拉菜单的展开层、分段控件、标签页、进度条、提示气泡。
-3. **Windows 与 GNOME 的校准**：这两个平台还没有逐帧和逐像素的依据，目前靠官方截图和上游源码。
+3. **Windows 11 的校准**：Win10 已经有原生状态矩阵了，Win11 还没有；需要在 Win11 上跑同一套
+   uxtheme 管线，或者把 WinUI 3 的离屏渲染跑通。GNOME 仍靠官方截图和上游 SCSS。
 4. **抽包**：主题拆成可单独引入的 CSS，组件按需引入，给桌面壳一层薄封装。
