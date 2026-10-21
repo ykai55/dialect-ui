@@ -23,7 +23,7 @@ ROOT="$(pwd)"
 
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 BASE="${BASE:-http://127.0.0.1:4173}"
-WORK="${WORK:-/tmp/platform-ui-probe-verify-winxp}"
+WORK="${WORK:-/tmp/dialect-ui-probe-verify-winxp}"
 PROFILE="$WORK/chrome-profile"
 
 # 页面行数：17 行 × 48 + 1 行 textarea × 104 + 2 行 menu × 112 = 1144（1x 逻辑像素），

@@ -20,7 +20,7 @@ ROOT="$(pwd)"
 
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 BASE="${BASE:-http://127.0.0.1:4173}"
-WORK="${WORK:-/tmp/platform-ui-probe-verify-win10}"
+WORK="${WORK:-/tmp/dialect-ui-probe-verify-win10}"
 PROFILE="$WORK/chrome-profile"
 
 # 页面行数：39 行 × 48 + 3 行 textarea × 120 = 2232（1x 逻辑像素），截图 2x = 648×4464。

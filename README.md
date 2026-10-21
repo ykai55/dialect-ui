@@ -1,4 +1,6 @@
-# Platform UI
+# Dialect
+
+> Dialect（方言）：同一套组件，各平台各代说自己的方言。
 
 一套用 HTML + CSS 实现各平台原生观感的 UI 组件库：Windows 11（Fluent）、Windows 10（Aero）、
 Windows XP（2000 / XP classic）、macOS（26 Tahoe 与 26 之前两套）、GNOME（Adwaita）。
@@ -9,12 +11,12 @@ Windows 10、Windows XP 和 macOS 26 之前这套的数值来自原生状态矩�
 
 同一个组件，换一个 `data-theme` 就换成另一个平台的样子；明暗、强调色、密度都跟着主题走。
 
-在线示例：<https://ykai55.github.io/platform-ui/>
+在线示例：<https://ykai55.github.io/dialect-ui/>
 
 ## 跑起来
 
 ```bash
-cd ~/src/platform-ui
+cd ~/src/dialect-ui
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 

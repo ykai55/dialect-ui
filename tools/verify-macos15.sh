@@ -20,7 +20,7 @@ cd "$(dirname "$0")/.."
 
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 BASE="${BASE:-http://127.0.0.1:4173}"
-WORK="${WORK:-/tmp/platform-ui-macos15-verify}"
+WORK="${WORK:-/tmp/dialect-ui-macos15-verify}"
 PROFILE="$WORK/chrome-profile"
 
 # 页面：14 行 × 48px = 672（1x），截图 2x = 648×1344。

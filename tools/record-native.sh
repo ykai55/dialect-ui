@@ -37,7 +37,7 @@ if [ ! -f "$APP/Contents/Info.plist" ]; then
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
   <key>CFBundleExecutable</key><string>NativeAnim</string>
-  <key>CFBundleIdentifier</key><string>local.platform-ui.nativeanim</string>
+  <key>CFBundleIdentifier</key><string>local.dialect.nativeanim</string>
   <key>CFBundleName</key><string>NativeAnim</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>NSPrincipalClass</key><string>NSApplication</string>

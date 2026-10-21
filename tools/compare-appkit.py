@@ -40,7 +40,7 @@ def content_bbox(im, bg):
 
 
 def main():
-    work = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/platform-ui-probe-verify")
+    work = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/dialect-ui-probe-verify")
     root = pathlib.Path(".")
     out_dir = root / "shots/verify/macos"
     out_dir.mkdir(parents=True, exist_ok=True)

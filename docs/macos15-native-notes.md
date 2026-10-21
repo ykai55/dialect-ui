@@ -219,5 +219,5 @@ knob 20×20 白色圆 + 约 1.5px 落影；可见宽 216（frame 220 左右各�
 
 - 渲染是确定性的：同一个二进制重复跑，PNG 哈希一致（`sdk 14` 和 `sdk 15` 两档也一致）。
 - 渲染过程不显示窗口、不改系统设置、不写仓库外的文件；临时产物都在
-  `/tmp/platform-ui-macos15-render`、`/tmp/platform-ui-macos15-verify`，可以直接删。
+  `/tmp/dialect-ui-macos15-render`、`/tmp/dialect-ui-macos15-verify`，可以直接删。
 - `reference/shots/macos15/appkit/` 和 `shots/verify/macos15/` 都是生成物，不入库。

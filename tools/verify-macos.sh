@@ -11,7 +11,7 @@ cd "$(dirname "$0")/.."
 
 CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 BASE="${BASE:-http://127.0.0.1:4173}"
-WORK="${WORK:-/tmp/platform-ui-probe-verify}"
+WORK="${WORK:-/tmp/dialect-ui-probe-verify}"
 PROFILE="$WORK/chrome-profile"
 
 PYTHON="${PYTHON:-python3}"

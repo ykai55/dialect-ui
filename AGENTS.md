@@ -1,4 +1,4 @@
-# platform-ui
+# dialect-ui
 
 用 HTML + CSS 实现 Windows、macOS、GNOME 各代原生观感的 UI 组件库。
 

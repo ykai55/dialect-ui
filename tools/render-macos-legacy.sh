@@ -26,7 +26,7 @@ cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 
 OUT="${OUT:-$ROOT/reference/shots/macos15/appkit}"
-WORK="${WORK:-/tmp/platform-ui-macos15-render}"
+WORK="${WORK:-/tmp/dialect-ui-macos15-render}"
 SWIFTC="${SWIFTC:-swiftc}"
 
 # 本机 python3 没装 Pillow 时退到内置运行时

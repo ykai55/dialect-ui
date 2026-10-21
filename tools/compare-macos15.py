@@ -132,7 +132,7 @@ def fmt1x(bb):
 
 def main():
     work = pathlib.Path(
-        sys.argv[1] if len(sys.argv) > 1 else "/tmp/platform-ui-macos15-verify"
+        sys.argv[1] if len(sys.argv) > 1 else "/tmp/dialect-ui-macos15-verify"
     )
     root = pathlib.Path(".")
     native_dir = pathlib.Path(os.environ["NATIVE_DIR"]) if os.environ.get("NATIVE_DIR") \

@@ -121,7 +121,7 @@ def content_bbox(im, bg):
 
 
 def main():
-    work = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/platform-ui-probe-verify-winxp")
+    work = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/dialect-ui-probe-verify-winxp")
     root = pathlib.Path(".")
     native_dir, src_name = pick_native_dir(root)
     out_dir = root / "shots/verify/winxp"

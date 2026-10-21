@@ -103,7 +103,7 @@ def content_bbox(im, bg):
 
 
 def main():
-    work = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/platform-ui-probe-verify-win10")
+    work = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/dialect-ui-probe-verify-win10")
     root = pathlib.Path(".")
     native_dir = root / "reference/shots/windows/win10-uxtheme/matrix"
     out_dir = root / "shots/verify/win10"
