@@ -53,6 +53,7 @@
   background: var(--btn-bg-active);
   border-color: var(--btn-border-active, var(--btn-border));
   color: var(--btn-fg-active, var(--btn-fg));
+  box-shadow: var(--btn-shadow-active, var(--btn-shadow)), inset 0 -1px 0 var(--btn-bottom-stroke);
 }
 
 .btn:is(:focus-visible, .s-focus) {
@@ -68,7 +69,7 @@
   background: var(--btn-bg-disabled, var(--disabled-bg));
   border-color: var(--btn-border-disabled, var(--disabled-border));
   color: var(--btn-fg-disabled, var(--disabled-fg));
-  box-shadow: none;
+  box-shadow: var(--btn-shadow-disabled, none);
 }
 
 /* 主按钮：整块覆盖，所以放在普通状态之后 */
@@ -88,13 +89,15 @@
   background: var(--primary-bg-active);
   border-color: var(--primary-border-active, var(--primary-border));
   color: var(--primary-fg);
+  box-shadow: var(--primary-shadow-active, var(--primary-shadow)),
+    inset 0 -1px 0 var(--primary-bottom-stroke);
 }
 
 .btn--primary:is(:disabled, .s-disabled) {
-  background: var(--disabled-bg);
-  border-color: var(--disabled-border);
-  color: var(--disabled-fg);
-  box-shadow: none;
+  background: var(--btn-bg-disabled, var(--disabled-bg));
+  border-color: var(--btn-border-disabled, var(--disabled-border));
+  color: var(--btn-fg-disabled, var(--disabled-fg));
+  box-shadow: var(--btn-shadow-disabled, none);
 }
 
 /* ---------------- Text field ---------------- */
@@ -172,7 +175,7 @@
   background: var(--field-bg-disabled, var(--disabled-bg));
   border-color: var(--field-border-disabled, var(--disabled-border));
   color: var(--field-fg-disabled, var(--disabled-fg));
-  box-shadow: none;
+  box-shadow: var(--field-shadow-disabled, none);
 }
 
 .field:has(.field__input:disabled) .field__label {
@@ -330,11 +333,29 @@
   margin: var(--radio-pad, 0px);
   box-shadow: var(--radio-shadow, none);
   border: var(--radio-border-w) solid var(--radio-border);
+  /* 四边可以给不同颜色（--radio-border-color 是 top right bottom left 四值）；
+     圆环用 1px 外边框 + 1px 内圈伪元素画，比 offset 阴影更接近 GDI 的均匀环 */
+  border-color: var(--radio-border-color, var(--radio-border));
   border-radius: 50%;
   background: var(--radio-bg);
   transition:
     background-color var(--ui-duration) var(--ui-ease),
     border-color var(--ui-duration) var(--ui-ease);
+}
+
+/* 内圈（第二圈）环：默认宽度 0，其他主题不受影响 */
+.radio__dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  /* 拆成三个长写属性：内圈颜色是四值（top right bottom left），
+     直接塞进 border 简写会让整条声明在计算期失效（宽度变 0）。 */
+  border-width: var(--radio-inner-w, 0px);
+  border-style: solid;
+  border-color: var(--radio-inner-color, transparent);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .radio__dot::after {
@@ -347,12 +368,12 @@
   border-radius: 50%;
   background: var(--radio-dot-color);
   transform: translate(-50%, -50%) scale(0);
-  transition: transform 90ms var(--ui-ease);
+  transition: transform var(--radio-dot-duration, 90ms) var(--ui-ease);
 }
 
 .radio__input:checked + .radio__dot {
   background: var(--radio-bg-checked);
-  border-color: var(--radio-border-checked);
+  border-color: var(--radio-border-checked, var(--radio-border-color, var(--radio-border)));
   box-shadow: var(--radio-shadow-checked, var(--radio-shadow, none));
 }
 
@@ -361,7 +382,7 @@
 }
 
 .radio:is(:hover, .s-hover) .radio__dot {
-  border-color: var(--radio-border-hover, var(--radio-border));
+  border-color: var(--radio-border-hover, var(--radio-border-color, var(--radio-border)));
 }
 
 .radio:is(:hover, .s-hover) .radio__dot::after {
@@ -370,7 +391,7 @@
 
 .radio:is(:active, .s-active) .radio__dot {
   background: var(--radio-bg-active, var(--radio-bg));
-  border-color: var(--radio-border-active, var(--radio-border));
+  border-color: var(--radio-border-active, var(--radio-border-color, var(--radio-border)));
 }
 
 .radio:is(:active, .s-active) .radio__dot::after {
@@ -379,7 +400,7 @@
 
 .radio__input:disabled + .radio__dot {
   background: var(--radio-bg-disabled, var(--disabled-bg));
-  border-color: var(--radio-border-disabled, var(--disabled-border));
+  border-color: var(--radio-border-disabled, var(--radio-border-color, var(--radio-border)));
 }
 
 .radio__input:disabled + .radio__dot::after {
@@ -401,8 +422,9 @@
   height: var(--switch-h);
   padding: 0;
   border: var(--switch-border-w) solid var(--switch-border);
-  border-radius: calc(var(--switch-h) / 2);
+  border-radius: var(--switch-radius, calc(var(--switch-h) / 2));
   background: var(--switch-bg);
+  box-shadow: var(--switch-track-shadow, none);
   transition:
     background-color var(--switch-duration) var(--switch-ease),
     border-color var(--switch-duration) var(--switch-ease);
@@ -415,7 +437,7 @@
   /* macOS 26 的滑块是「胶囊」不是圆：宽高可以分开给 */
   width: var(--switch-knob-w, var(--switch-knob));
   height: var(--switch-knob);
-  border-radius: calc(var(--switch-knob) / 2);
+  border-radius: var(--switch-knob-radius, calc(var(--switch-knob) / 2));
   background: var(--switch-knob-bg);
   box-shadow: var(--switch-knob-shadow);
   transform: translateY(-50%) translateX(0);
@@ -514,6 +536,7 @@
   line-height: 1;
   cursor: default;
   user-select: none;
+  box-shadow: var(--select-shadow, none);
   transition:
     background-color var(--ui-duration) var(--ui-ease),
     border-color var(--ui-duration) var(--ui-ease);
@@ -555,9 +578,12 @@
   gap: 2px;
   width: var(--select-arrow-w, auto);
   min-width: var(--select-arrow-w, 0px);
-  height: 100%;
+  height: calc(100% - 2 * var(--select-arrow-inset, 0px));
+  margin-right: var(--select-arrow-inset, 0px);
   padding-left: var(--select-arrow-pad, 0px);
   border-left: var(--select-arrow-sep-w, 0px) solid var(--select-arrow-sep, transparent);
+  background: var(--select-arrow-bg, transparent);
+  box-shadow: var(--select-arrow-shadow, none);
   color: var(--select-chevron);
 }
 
@@ -599,7 +625,8 @@
     var(--slider-fill) 0 var(--slider-pct, 40%),
     var(--slider-track) var(--slider-pct, 40%) 100%
   );
-  box-shadow: inset 0 0 0 var(--slider-track-edge-w, 0px) var(--slider-track-edge, transparent);
+  box-shadow: var(--slider-track-shadow, none),
+    inset 0 0 0 var(--slider-track-edge-w, 0px) var(--slider-track-edge, transparent);
 }
 
 .slider::-webkit-slider-thumb {
@@ -631,13 +658,18 @@
   height: var(--slider-track-h);
   border-radius: var(--slider-track-radius, 999px);
   background: var(--slider-track);
-  box-shadow: inset 0 0 0 var(--slider-track-edge-w, 0px) var(--slider-track-edge, transparent);
+  box-shadow: var(--slider-track-shadow, none),
+    inset 0 0 0 var(--slider-track-edge-w, 0px) var(--slider-track-edge, transparent);
 }
 
+/* Firefox 把滑块左边那段单独画在 ::-moz-range-progress 上，
+   斜面阴影必须两边都给，否则左边的进度段会没有立体边、看起来只剩半截。 */
 .slider::-moz-range-progress {
   height: var(--slider-track-h);
   border-radius: var(--slider-track-radius, 999px);
   background: var(--slider-fill);
+  box-shadow: var(--slider-track-shadow, none),
+    inset 0 0 0 var(--slider-track-edge-w, 0px) var(--slider-track-edge, transparent);
 }
 
 .slider::-moz-range-thumb {

@@ -1,0 +1,264 @@
+/* ============================================================
+   theme-winxp.css — Windows XP「经典」外观（2000 / XP classic）
+
+   这套外观是纯 GDI 画的：2px 四色斜面、#C0C0C0 对话框底、Tahoma 8pt。
+   依据：在 box-win 的 session 2 里把系统色调成 classic 调色板，用
+   DrawFrameControl / DrawEdge 离屏渲染的原生图，见
+   reference/shots/windows/classic/ 与 docs/classic-native-notes.md。
+
+   四色斜面（2px，四边不等）：
+     raised   上/左 外 #FFFFFF 内 #DFDFDF，下/右 内 #808080 外 #000000
+     sunken   上/左 外 #808080 内 #000000，下/右 内 #DFDFDF 外 #FFFFFF
+     pressed  上/左 外 #000000 内 #808080，下/右 内 #DFDFDF 外 #FFFFFF
+
+   这套年代没有暗色模式，也没有悬停态；暗色档直接沿用浅色。
+   ============================================================ */
+
+[data-theme="winxp"] {
+  --ui-surface: #c0c0c0; /* COLOR_3DFACE */
+  --ui-text: #000000;
+  --ui-text-2: #808080; /* COLOR_GRAYTEXT */
+  --ui-text-disabled: #808080;
+
+  /* XP classic 对话框字体：Tahoma 8pt（= 11px @96dpi） */
+  --ui-font: "Tahoma", "Microsoft Sans Serif", "MS Sans Serif", Verdana,
+    "Selawik", system-ui, sans-serif;
+  --ui-font-size: 11px;
+  --ui-control-h: 23px;
+
+  /* 选中色是经典方案的深蓝（Windows Standard 配色） */
+  --ui-accent: #0a246a;
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #0a246a;
+  --ui-accent-active: #0a246a;
+
+  /* classic 没有过渡动画 */
+  --ui-duration: 0ms;
+  --ui-ease: linear;
+
+  /* 焦点：1px 点线，画在控件内侧 */
+  --focus-ring: 0 0 0 0 transparent;
+  --focus-outline: 1px dotted #000000;
+  --focus-outline-offset: -3px;
+  --choice-focus-outline: 1px dotted #000000;
+  --choice-focus-offset: 2px;
+  --choice-box-focus-outline: none;
+
+  /* 按钮：23px 高、方角、2px 凸起斜面；没有悬停，按下只把斜面反过来 */
+  --btn-bg: #c0c0c0;
+  --btn-bg-hover: #c0c0c0;
+  --btn-bg-active: #c0c0c0;
+  --btn-fg: #000000;
+  --btn-border-w: 0px;
+  --btn-border: transparent;
+  --btn-border-hover: transparent;
+  --btn-border-active: transparent;
+  --btn-radius: 0px;
+  --btn-h: 23px;
+  --btn-px: 8px;
+  --btn-font-size: 11px;
+  --btn-font-weight: 400;
+  --btn-bottom-stroke: transparent;
+  --btn-shadow: inset 1px 1px 0 #ffffff, inset 2px 2px 0 #dfdfdf,
+    inset -1px -1px 0 #000000, inset -2px -2px 0 #808080;
+  --btn-shadow-active: inset 1px 1px 0 #000000, inset 2px 2px 0 #808080,
+    inset -1px -1px 0 #ffffff, inset -2px -2px 0 #dfdfdf;
+  --btn-shadow-disabled: inset 1px 1px 0 #ffffff, inset 2px 2px 0 #dfdfdf,
+    inset -1px -1px 0 #000000, inset -2px -2px 0 #808080;
+  --btn-bg-disabled: #c0c0c0;
+  --btn-border-disabled: transparent;
+  --btn-fg-disabled: #808080;
+
+  /* 主按钮 = 默认按钮：1px 黑边 + 标准斜面往里挪 1px */
+  --primary-bg: #c0c0c0;
+  --primary-bg-hover: #c0c0c0;
+  --primary-bg-active: #c0c0c0;
+  --primary-fg: #000000;
+  --primary-border: transparent;
+  --primary-border-active: transparent;
+  --primary-bottom-stroke: transparent;
+  --primary-shadow: inset 0 0 0 1px #000000, inset 2px 2px 0 #ffffff,
+    inset 3px 3px 0 #dfdfdf, inset -2px -2px 0 #808080;
+  --primary-shadow-active: inset 0 0 0 1px #000000, inset 2px 2px 0 #000000,
+    inset 3px 3px 0 #808080, inset -2px -2px 0 #dfdfdf;
+
+  /* 输入框：白底、2px 凹陷斜面；聚焦只挪插入符，外观不变 */
+  --field-bg: #ffffff;
+  --field-border-w: 0px;
+  --field-border: transparent;
+  --field-radius: 0px;
+  --field-h: 23px;
+  --field-px: 4px;
+  --field-font-size: 11px;
+  --field-shadow: inset 1px 1px 0 #808080, inset 2px 2px 0 #000000,
+    inset -1px -1px 0 #ffffff, inset -2px -2px 0 #dfdfdf;
+  --field-focus-border: transparent;
+  --field-focus-shadow: var(--field-shadow);
+  --field-focus-outline: none;
+  --field-placeholder: #808080;
+  --field-underline-w: 0px;
+  --field-underline-color: transparent;
+  --field-label-size: 11px;
+  --field-bg-disabled: #c0c0c0;
+  --field-border-disabled: transparent;
+  --field-fg-disabled: #808080;
+  --field-shadow-disabled: var(--field-shadow);
+
+  /* 多行输入：同样的凹陷边框，没有右下缩放手柄 */
+  --textarea-min-h: 80px;
+  --textarea-py: 2px;
+  --textarea-line-height: 1.55; /* 实测行距 17px / 11px 字号 */
+  --textarea-resize: none;
+  --textarea-border: transparent;
+  --textarea-focus-border: transparent;
+  --textarea-disabled-border: transparent;
+
+  /* 复选框：13×13 白底、2px 凹陷斜面、黑色勾 */
+  --choice-gap: 5px;
+  --check-size: 13px;
+  --check-radius: 0px;
+  --check-bg: #ffffff;
+  --check-border-w: 0px;
+  --check-border: transparent;
+  --check-shadow: inset 1px 1px 0 #808080, inset 2px 2px 0 #000000,
+    inset -1px -1px 0 #ffffff, inset -2px -2px 0 #dfdfdf;
+  --check-shadow-checked: var(--check-shadow);
+  --check-bg-checked: #ffffff;
+  --check-border-checked: transparent;
+  --check-mark: #000000;
+  --check-stroke: 2.8;
+  --check-duration: 0ms;
+  --check-bg-hover: #ffffff;
+  --check-border-hover: transparent;
+  --check-mark-hover: #000000;
+  --check-bg-checked-hover: #ffffff;
+  --check-border-checked-hover: transparent;
+  --check-mark-checked-hover: #000000;
+  --check-bg-active: #c0c0c0; /* 实测按下态内部白底变面灰 */
+  --check-border-active: transparent;
+  --check-mark-active: #000000;
+  --check-bg-disabled: #c0c0c0; /* 实测：禁用时盒子内部是对话框灰 */
+  --check-border-disabled: transparent;
+  --check-mark-disabled: #808080;
+
+  /* 单选框：实测 12×12 ink（放在 13×13 空格里，从 (13,17) 起）。
+     2px 环 = 1px 外边框（上/左 #808080、下/右 #FFFFFF）
+              + 1px 内圈伪元素（上/左 #000000、下/右 #DFDFDF）。
+     黑点 4×4；按下 / 禁用时内部白底变面灰；没有勾选动画。 */
+  --radio-size: 12px;
+  --radio-bg: #ffffff;
+  --radio-border-w: 1px;
+  --radio-border: transparent;
+  --radio-border-color: #808080 #ffffff #ffffff #808080; /* top right bottom left */
+  --radio-border-checked: var(--radio-border-color); /* 选中态环色不变 */
+  --radio-inner-w: 1px;
+  --radio-inner-color: #000000 #dfdfdf #dfdfdf #000000;
+  --radio-shadow: none;
+  --radio-shadow-checked: none;
+  --radio-bg-checked: #ffffff;
+  --radio-dot: 4px;
+  --radio-dot-color: #000000;
+  --radio-pad: -2px 0 0 1px;
+  --radio-dot-hover: #000000;
+  --radio-bg-active: #c0c0c0;
+  --radio-dot-active: #000000;
+  --radio-dot-duration: 0ms;
+  --radio-bg-disabled: #c0c0c0;
+  --radio-dot-disabled: #808080;
+
+  /* 下拉框：实测 21px 高（字段 15 + 上下 2px 凹陷边框）、右侧 17×17 凸起箭头格 */
+  --select-h: 21px;
+  --select-radius: 0px;
+  --select-bg: #ffffff;
+  --select-fg: #000000;
+  --select-border-w: 0px;
+  --select-border: transparent;
+  --select-shadow: var(--field-shadow);
+  --select-px: 4px;
+  --select-pr: 0px;
+  --select-chevron: #000000;
+  --select-chevron-size: 4px;
+  --select-chevron-w: 1px;
+  --select-arrow-w: 17px;
+  --select-arrow-inset: 2px; /* 箭头格在 2px 凹陷边框里面 */
+  --select-arrow-sep-w: 0px;
+  --select-arrow-sep: transparent;
+  --select-arrow-bg: #c0c0c0;
+  --select-arrow-shadow: inset 1px 1px 0 #ffffff, inset 2px 2px 0 #dfdfdf,
+    inset -1px -1px 0 #000000, inset -2px -2px 0 #808080;
+  --select-bg-hover: #ffffff;
+  --select-border-hover: transparent;
+  --select-bg-active: #ffffff;
+  --select-border-active: transparent;
+  --select-bg-disabled: #c0c0c0;
+  --select-border-disabled: transparent;
+  --select-chevron-disabled: #808080;
+  --select-fg-disabled: #808080;
+
+  /* 下拉菜单：灰底、2px 凸起边框、项高 18、选中项深蓝底白字 */
+  --menu-min-w: 140px;
+  --menu-bg: #c0c0c0;
+  --menu-fg: #000000;
+  --menu-border-w: 0px;
+  --menu-border: transparent;
+  --menu-radius: 0px;
+  --menu-shadow: inset 1px 1px 0 #dfdfdf, inset 2px 2px 0 #ffffff,
+    inset -1px -1px 0 #000000, inset -2px -2px 0 #808080;
+  --menu-pad: 2px;
+  --menu-item-h: 18px;
+  --menu-item-radius: 0px;
+  --menu-item-pad-x: 8px;
+  --menu-item-marker-space: 0px;
+  --menu-item-hover-bg: #0a246a;
+  --menu-item-hover-fg: #ffffff;
+  --menu-item-selected-bg: #0a246a;
+  --menu-item-selected-fg: #ffffff;
+  --menu-item-marker: transparent;
+  --menu-item-font-size: 11px;
+  --menu-offset: 0px;
+
+  /* 滑块：实测 msctls_trackbar32（主题关闭）：
+     控件 160×23，通道 4px、左右各缩进 8px；通道上暗下亮（凹槽）；
+     滑块 11×21，凸起斜面。 */
+  --slider-h: 23px;
+  --slider-track-h: 4px;
+  --slider-track: #c0c0c0;
+  --slider-fill: #c0c0c0;
+  --slider-track-radius: 0px;
+  /* 原生通道左右各缩进 8px；CSS 里改不了 track 的宽度（Chrome 忽略、Firefox 会
+     拆成 progress/track 两段），所以通道用满控件宽度，这条记在已知差距里。 */
+  --slider-track-edge-w: 0px;
+  --slider-track-shadow: inset 0 1px 0 #808080, inset 0 2px 0 #000000,
+    inset 0 -1px 0 #ffffff, inset 0 -2px 0 #dfdfdf;
+  --slider-thumb-w: 11px;
+  --slider-thumb-h: 21px;
+  --slider-thumb-radius: 0px;
+  --slider-thumb-bg: #c0c0c0;
+  --slider-thumb-border-w: 0px;
+  --slider-thumb-shadow: inset 1px 1px 0 #ffffff, inset 2px 2px 0 #dfdfdf,
+    inset -1px -1px 0 #000000, inset -2px -2px 0 #808080;
+  --slider-thumb-bg-hover: #c0c0c0;
+  --slider-thumb-bg-active: #c0c0c0;
+  --slider-thumb-bg-disabled: #c0c0c0;
+
+  /* 开关：这个年代没有开关，按同期 3D 控件语言做的解释：
+     凹槽 + 凸起滑块，只靠滑块位置表示状态。见 README「已知差距」。 */
+  --switch-w: 40px;
+  --switch-h: 18px;
+  --switch-knob: 12px;
+  --switch-knob-radius: 0px;
+  --switch-pad: 3px;
+  --switch-border-w: 0px;
+  --switch-radius: 0px;
+  --switch-bg: transparent;
+  --switch-bg-on: transparent;
+  --switch-border: transparent;
+  --switch-border-on: transparent;
+  --switch-track-shadow: inset 1px 1px 0 #808080, inset 2px 2px 0 #000000,
+    inset -1px -1px 0 #ffffff, inset -2px -2px 0 #dfdfdf;
+  --switch-knob-bg: #c0c0c0;
+  --switch-knob-on-bg: #c0c0c0;
+  --switch-knob-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #000000;
+  --switch-duration: 0ms;
+  --switch-ease: linear;
+}
