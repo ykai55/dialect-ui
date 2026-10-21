@@ -254,35 +254,54 @@
   stroke-dashoffset: 0;
 }
 
-.check:is(:hover, .s-hover) .check__input:not(:checked) + .check__box {
+/* 禁用态不响应指针：悬停 / 按下规则一律先排除它。原生各平台都不给禁用控件
+   悬停反馈，而这批选择器带的 :is()/:not() 让权重高过下面的禁用规则（选中态悬停
+   是 5 个类，禁用选中只有 4 个），不排除的话一悬停就画回选中态（Win11/macOS/GNOME
+   直接变强调色）。 */
+.check:not(.s-disabled, :has(.check__input:disabled)):is(:hover, .s-hover)
+  .check__input:not(:checked)
+  + .check__box {
   background: var(--check-bg-hover, var(--check-bg));
   border-color: var(--check-border-hover, var(--check-border));
 }
 
-.check:is(:active, .s-active) .check__input:not(:checked) + .check__box {
+.check:not(.s-disabled, :has(.check__input:disabled)):is(:active, .s-active)
+  .check__input:not(:checked)
+  + .check__box {
   background: var(--check-bg-active, var(--check-bg));
   border-color: var(--check-border-active, var(--check-border));
 }
 
-.check:is(:hover, .s-hover) .check__input:checked + .check__box {
+.check:not(.s-disabled, :has(.check__input:disabled)):is(:hover, .s-hover)
+  .check__input:checked
+  + .check__box {
   background: var(--check-bg-checked-hover, var(--check-bg-checked));
   border-color: var(--check-border-checked-hover, var(--check-border-checked));
 }
 
-.check:is(:active, .s-active) .check__input:checked + .check__box {
+.check:not(.s-disabled, :has(.check__input:disabled)):is(:active, .s-active)
+  .check__input:checked
+  + .check__box {
   background: var(--check-bg-active, var(--check-bg-checked));
   border-color: var(--check-border-active, var(--check-border-checked));
 }
 
-.check:is(:hover, .s-hover) .check__box .check__mark {
+.check:not(.s-disabled, :has(.check__input:disabled)):is(:hover, .s-hover)
+  .check__box
+  .check__mark {
   stroke: var(--check-mark-hover, var(--check-mark));
 }
 
-.check:is(:hover, .s-hover) .check__input:checked + .check__box .check__mark {
+.check:not(.s-disabled, :has(.check__input:disabled)):is(:hover, .s-hover)
+  .check__input:checked
+  + .check__box
+  .check__mark {
   stroke: var(--check-mark-checked-hover, var(--check-mark-hover, var(--check-mark)));
 }
 
-.check:is(:active, .s-active) .check__box .check__mark {
+.check:not(.s-disabled, :has(.check__input:disabled)):is(:active, .s-active)
+  .check__box
+  .check__mark {
   stroke: var(--check-mark-active, var(--check-mark));
 }
 

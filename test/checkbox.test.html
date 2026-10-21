@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>checkbox test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-win11.css" />
+    <link rel="stylesheet" href="../css/theme-win10.css" />
+    <link rel="stylesheet" href="../css/theme-winxp.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+    <link rel="stylesheet" href="../css/theme-macos15.css" />
+    <link rel="stylesheet" href="../css/theme-gnome.css" />
+  </head>
+  <body>
+    <div id="stage"></div>
+    <pre id="result">RUNNING</pre>
+
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+
+        var THEMES = ["win11", "win10", "winxp", "macos", "macos15", "gnome"];
+        var MODES = ["light", "dark"];
+        var stage = document.getElementById("stage");
+
+        function makeCheck(theme, mode, checked, cls, disabled) {
+          var wrap = document.createElement("div");
+          wrap.setAttribute("data-theme", theme);
+          wrap.setAttribute("data-mode", mode);
+
+          var label = document.createElement("label");
+          label.className = "check" + (cls ? " " + cls : "");
+
+          var input = document.createElement("input");
+          input.type = "checkbox";
+          input.className = "check__input";
+          input.checked = checked;
+          input.disabled = disabled !== false;
+
+          var box = document.createElement("span");
+          box.className = "check__box";
+
+          var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute("class", "check__mark");
+          svg.setAttribute("viewBox", "0 0 20 20");
+          var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", "M5.2 10.3 L8 14 L13.5 5.7");
+          svg.appendChild(path);
+          box.appendChild(svg);
+
+          label.appendChild(input);
+          label.appendChild(box);
+          wrap.appendChild(label);
+          stage.appendChild(wrap);
+
+          return { label: label, box: box, mark: svg };
+        }
+
+        function snapshot(el) {
+          var box = getComputedStyle(el.box);
+          var mark = getComputedStyle(el.mark);
+          return [
+            box.backgroundColor,
+            box.backgroundImage,
+            box.borderTopColor,
+            box.borderTopWidth,
+            box.boxShadow,
+            mark.stroke
+          ].join(" / ");
+        }
+
+        /* 禁用控件在各平台原生都没有悬停/按下反馈。悬停和按下用类名定格，
+           和真实 :hover / :active 走同一批选择器（README 的状态矩阵约定）。 */
+        THEMES.forEach(function (theme) {
+          MODES.forEach(function (mode) {
+            [true, false].forEach(function (checked) {
+              var state = checked ? "选中" : "未选中";
+              var base = makeCheck(theme, mode, checked, "s-disabled");
+              var hover = makeCheck(theme, mode, checked, "s-disabled s-hover");
+              var active = makeCheck(theme, mode, checked, "s-disabled s-active");
+              check(
+                theme + " " + mode + " 禁用" + state + "悬停不变",
+                function () { return snapshot(base) === snapshot(hover); }
+              );
+              check(
+                theme + " " + mode + " 禁用" + state + "按下不变",
+                function () { return snapshot(base) === snapshot(active); }
+              );
+            });
+          });
+        });
+
+        /* 守卫不能误伤正常态的悬停：Win10 / Win11 的悬停有可见变化。 */
+        check("Win10 未选中悬停仍变蓝边", function () {
+          var el = makeCheck("win10", "light", false, "s-hover", false);
+          return getComputedStyle(el.box).borderTopColor === "rgb(0, 120, 215)";
+        });
+        check("Win11 未选中悬停仍加深描边", function () {
+          var el = makeCheck("win11", "light", false, "s-hover", false);
+          return getComputedStyle(el.box).borderTopColor === "rgba(0, 0, 0, 0.72)";
+        });
+        check("GNOME 选中悬停仍是强调色", function () {
+          var el = makeCheck("gnome", "light", true, "s-hover", false);
+          return getComputedStyle(el.box).backgroundColor === "rgb(53, 132, 228)";
+        });
+
+        var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+        document.getElementById("result").textContent =
+          lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+        document.title = failed ? "FAIL" : "PASS";
+      })();
+    </script>
+  </body>
+</html>
