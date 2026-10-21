@@ -29,7 +29,7 @@ echo "1/3 渲染 AppKit 控件"
     swiftc -O -module-cache-path "$WORK/mc" appkit-render.swift -o "$WORK/render" 2>&1 |
     grep -v sandbox-exec || true
 )
-"$WORK/render" | sed 's/^/    /'
+"$WORK/render" --out "$(pwd)/reference/shots/macos/appkit" | sed 's/^/    /'
 
 echo "2/3 截 HTML 版本"
 for mode in light dark; do

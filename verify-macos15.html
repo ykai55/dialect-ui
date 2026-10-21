@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>macOS 15 verify · native vs CSS</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/theme-macos15.css" />
+    <style>
+      /* 底色必须和原生图逐像素一致：tools/compare-macos15.py 的 content_bbox
+         拿角像素当底色。原生矩阵的窗口底色是 legacy 渲染实测值
+         （浅色 #ECECEC、深色 #323232，见 reference/shots/macos15/appkit/metrics.txt）。 */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #ececec;
+      }
+      body.is-dark {
+        background: #323232;
+      }
+      #wrap {
+        background: inherit;
+        padding: 0;
+        gap: 0;
+        display: block;
+      }
+
+      /* 单元格尺寸和原生图一致：324×48 @1x（截图 2x 是 648×96）。
+         尺寸和位置按「可见包围盒」对齐——AppKit 的 bezel 常比控件 frame 小一圈
+         （按钮 frame 200×32 只画 188×21，输入框 frame 300×22 画 299×21.5，
+         开关 frame 42×25 画 38×22，下拉框 frame 180×25 画 175×21），所以这里
+         直接用可见尺寸 / 可见位置，纵向用 align-items:flex-start + margin-top
+         精确对到原生墨迹的顶边：
+           button    188×21   @(18,   12.5)
+           field     299×21.5 @(12.5, 13.5)
+           check / radio 盒子 14×14 @(14,17)，label 距盒子 7
+           switch    38×22    @(14,   12.5)
+           select    175×21   @(14,   12)
+           slider    216×22   @(14,   11.5)
+         这几毫米的偏移本身不是主题值，只是为了让对照图的墨迹范围能直接叠。 */
+      .cell {
+        width: 324px;
+        height: 48px;
+        display: flex;
+        align-items: flex-start;
+        padding-left: 0;
+        box-sizing: border-box;
+      }
+      .cell--vcenter {
+        align-items: center;
+      }
+      .cell .btn {
+        width: 188px;
+        margin-left: 18px;
+        margin-top: 12.5px;
+      }
+      .cell .field {
+        width: 299px;
+        margin-left: 12.5px;
+        margin-top: 13.5px;
+      }
+      .cell .check,
+      .cell .radio {
+        margin-left: 14px;
+        --choice-gap: 7px; /* 原生 label 起点和盒子间距 7px */
+      }
+      .cell .switch {
+        margin-left: 14px;
+        margin-top: 12.5px;
+      }
+      .cell .select {
+        width: 175px;
+        margin-left: 14px;
+        margin-top: 12px;
+      }
+      .cell .slider {
+        width: 216px;
+        margin-left: 14px;
+        margin-top: 11.5px;
+      }
+      /* 原生 NSSwitch 没有文字，比对时把这一侧的标签藏掉 */
+      .switch__label {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="panel"
+      id="wrap"
+      data-theme="macos15"
+      data-mode="light"
+    >
+      <div id="rows"></div>
+    </div>
+    <script>
+      var params = new URLSearchParams(location.search);
+      var mode = params.get("mode") === "dark" ? "dark" : "light";
+      var wrap = document.getElementById("wrap");
+      wrap.dataset.mode = mode;
+      if (mode === "dark") document.body.className = "is-dark";
+
+      function cell(html, extra) {
+        return '<div class="cell' + (extra ? " " + extra : "") + '">' + html + "</div>";
+      }
+      function field(value) {
+        return (
+          '<label class="field"><span class="field__wrap">' +
+          '<input class="field__input" type="text" ' +
+          (value ? 'value="' + value + '"' : 'placeholder="name@example.com"') +
+          " autocomplete=\"off\"></span></label>"
+        );
+      }
+      function check(state, disabled) {
+        return (
+          '<label class="check ' + (disabled ? "s-disabled" : "") + '">' +
+          '<input type="checkbox" class="check__input" ' +
+          (state ? "checked" : "") +
+          (disabled ? " disabled" : "") +
+          ">" +
+          '<span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>' +
+          '<span class="check__label">Label</span></label>'
+        );
+      }
+      function radio(state) {
+        return (
+          '<label class="radio">' +
+          '<input type="radio" class="radio__input" name="v1" ' +
+          (state ? "checked" : "") +
+          ">" +
+          '<span class="radio__dot"></span><span class="radio__label">Label</span></label>'
+        );
+      }
+      function select() {
+        return (
+          '<div class="select"><button type="button" class="select__button">' +
+          '<span class="select__value">Option A</span>' +
+          '<span class="select__chevron"><span class="select__chevron-up"></span>' +
+          '<span class="select__chevron-down"></span></span></button></div>'
+        );
+      }
+      /* 原生滑块：value=0.4 → thumb 左沿在可见区 79px 处（1x），
+         填充停在 thumb 左沿，所以 --slider-pct 用 79/216 ≈ 36.6%。 */
+      function slider() {
+        return (
+          '<input class="slider" type="range" min="0" max="100" value="40" ' +
+          'style="--slider-pct:36.6%" aria-label="slider">'
+        );
+      }
+      function toggle(state) {
+        return (
+          '<label class="switch">' +
+          '<input type="checkbox" class="switch__input" ' +
+          (state ? "checked" : "") +
+          ">" +
+          '<span class="switch__track"><span class="switch__knob"></span></span>' +
+          '<span class="switch__label">Label</span></label>'
+        );
+      }
+
+      // 顺序必须和 tools/compare-macos15.py 的 ROWS 逐项一致：
+      // 截图按行高累加切片，错一行后面全错位。
+      var rows = [
+        cell('<button class="btn">Save changes</button>'), //                     button
+        cell('<button class="btn btn--primary">Save changes</button>'), //       button-accent
+        cell('<button class="btn" disabled>Save changes</button>'), //           button-disabled
+        cell(field("")), //                                                       field-placeholder
+        cell(field("name@example.com")), //                                      field-value
+        cell(check(false, false), "cell--vcenter"), //                           check-off
+        cell(check(true, false), "cell--vcenter"), //                            check-on
+        cell(check(true, true), "cell--vcenter"), //                             check-disabled
+        cell(radio(false), "cell--vcenter"), //                                  radio-off
+        cell(radio(true), "cell--vcenter"), //                                   radio-on
+        cell(toggle(false)), //                                                  switch-off
+        cell(toggle(true)), //                                                   switch-on
+        cell(select()), //                                                       select
+        cell(slider()) //                                                        slider
+      ];
+      document.getElementById("rows").innerHTML = rows.join("");
+    </script>
+  </body>
+</html>
