@@ -255,3 +255,39 @@ sunken 边框和文字，没有画滚动条（滚动条不在这套矩阵的范�
 抓图和 8x 放大在 `reference/shots/windows/classic/raw/`（`radio-checked-pressed*.png`、
 `checkbox-checked-pressed*.png`）。核对矩阵里 `radio-checked-pressed` / `checkbox-checked-pressed`
 两行是把真控件的盒子 / 圆像素贴回原格子的结果（标签沿用原矩阵），这样对比页能逐像素看按下态。
+
+## 补充：开关没有原生图，按复选框外观映射
+
+XP classic 没有开关控件，原生矩阵里也没有 switch 项，所以没有开关的原生图可对。主题里的
+`.switch` 在 XP 下直接套复选框外观：13×13 凹陷盒 + 黑勾，几何和颜色全部复用 `--check-*`
+的实测值，`.switch` 的 API 不变。
+
+核对方法是把 `.switch` 和 `.check` 的同状态并排渲染、2x 截图逐像素比：off / on 两态完全一致，
+pressed / disabled 有 11 个像素差 1/255（mask 画勾和 SVG stroke 的抗锯齿舍入不同）。
+
+## 补充：焦点框（focus）
+
+矩阵里没有焦点态，焦点框是后来用真控件补抓的（`tools/winxp-focus-probe.cs`，session 2 + classic
+调色板 + 真 `BS_AUTOCHECKBOX` / `BS_AUTORADIOBUTTON` + `SetFocus` + PrintWindow）：
+
+- 焦点框只框**标签文字**，不包复选框盒子；勾选 / 未选中 / 单选都有。
+- 1px 黑白棋盘格：顶、底各一行，左、右各一列，黑白交替。
+- 实测：控件 180×16，Tahoma 8pt 文字 extent 25×13，焦点框 27×16，从文字起点开始。
+- classic 没有 focus-visible：焦点框由焦点决定，鼠标点一下和键盘 Tab 到都会出现。
+
+抓图和 8x 放大在 `reference/shots/windows/classic/raw-focus/`。**这些图里的文字和未选中态的盒子没有
+画出来**（PrintWindow 的已知伪影），所以只能拿它们核对焦点框的位置和图案，不能拿来核对文字和盒子。
+
+CSS 侧：`.check__label` / `.radio__label` / `.switch__label` 上画 `1px dotted`，offset 0（标签外 1px）；
+除焦点态 token 外另给了 `-mouse` 变体，覆盖 `:focus` 但不在 `:focus-visible` 里的鼠标点击。图案在
+2x 下是 2px 实 / 2px 空，和原生 1px 棋盘格放大后一致；框高 15px，原生 16px，差 1px 记在已知差距里。
+
+复跑：
+
+```bash
+ssh box-win 'powershell.exe -NoProfile -Command "New-Item -ItemType Directory -Force -Path C:\probe\xp-focus\out | Out-Null"'
+scp tools/winxp-focus-probe.cs tools/winxp-render.ps1 'box-win:C:/probe/xp-focus/'
+ssh box-win 'powershell.exe -NoProfile -Command "& C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /nologo /target:exe /out:C:\probe\xp-focus\winxp-focus-probe.exe /r:System.Drawing.dll C:\probe\xp-focus\winxp-focus-probe.cs"'
+ssh box-win 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\probe\xp-focus\winxp-render.ps1 -Exe C:\probe\xp-focus\winxp-focus-probe.exe -Arguments focus -ConsoleLog C:\probe\xp-focus\console.txt -Marker C:\probe\xp-focus\out\DONE.txt'
+scp -r 'box-win:C:/probe/xp-focus/out/*' reference/shots/windows/classic/raw-focus/
+```

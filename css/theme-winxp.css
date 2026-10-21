@@ -36,13 +36,16 @@
   --ui-duration: 0ms;
   --ui-ease: linear;
 
-  /* 焦点：1px 点线，画在控件内侧 */
+  /* 焦点：勾选 / 单选的焦点框只框标签文字、不框盒子（原生实测：1px 黑白棋盘格，
+     见 docs/winxp-native-notes.md）；classic 没有 focus-visible，鼠标点完也画。 */
   --focus-ring: 0 0 0 0 transparent;
   --focus-outline: 1px dotted #000000;
   --focus-outline-offset: -3px;
-  --choice-focus-outline: 1px dotted #000000;
-  --choice-focus-offset: 2px;
+  --choice-focus-outline: none;
   --choice-box-focus-outline: none;
+  --choice-label-focus-outline: 1px dotted #000000;
+  --choice-label-focus-offset: 0px;
+  --choice-label-focus-outline-mouse: 1px dotted #000000;
 
   /* 按钮：23px 高、方角、2px 凸起斜面；没有悬停，按下只把斜面反过来 */
   --btn-bg: #c0c0c0;
@@ -241,24 +244,40 @@
   --slider-thumb-bg-active: #c0c0c0;
   --slider-thumb-bg-disabled: #c0c0c0;
 
-  /* 开关：这个年代没有开关，按同期 3D 控件语言做的解释：
-     凹槽 + 凸起滑块，只靠滑块位置表示状态。见 README「已知差距」。 */
-  --switch-w: 40px;
-  --switch-h: 18px;
-  --switch-knob: 12px;
+  /* 开关：2000 / XP classic 没有开关控件。`.switch` 在 XP 主题下退化成复选框外观：
+     13×13 凹陷盒 + 黑勾，几何和颜色直接复用 --check-*，API（.switch 结构）不变。
+     勾用 --switch-mark（mask 图）画，路径和 .check__mark 的 SVG 相同；开关这一项
+     没有原生像素，依据仍是复选框的 GDI 实测。 */
+  --switch-w: var(--check-size);
+  --switch-h: var(--check-size);
+  --switch-knob: var(--check-size);
   --switch-knob-radius: 0px;
-  --switch-pad: 3px;
+  --switch-pad: 0px;
   --switch-border-w: 0px;
   --switch-radius: 0px;
-  --switch-bg: transparent;
-  --switch-bg-on: transparent;
+  --switch-bg: var(--check-bg);
+  --switch-bg-on: var(--check-bg-checked);
   --switch-border: transparent;
   --switch-border-on: transparent;
-  --switch-track-shadow: inset 1px 1px 0 #808080, inset 2px 2px 0 #000000,
-    inset -1px -1px 0 #ffffff, inset -2px -2px 0 #dfdfdf;
-  --switch-knob-bg: #c0c0c0;
-  --switch-knob-on-bg: #c0c0c0;
-  --switch-knob-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #000000;
+  --switch-track-shadow: var(--check-shadow);
+  --switch-knob-bg: transparent;
+  --switch-knob-on-bg: transparent;
+  --switch-knob-shadow: none;
   --switch-duration: 0ms;
   --switch-ease: linear;
+  --switch-bg-active: var(--check-bg-active);
+  --switch-bg-checked-active: var(--check-bg-active);
+  --switch-bg-disabled: var(--check-bg-disabled);
+  --switch-bg-checked-disabled: var(--check-bg-disabled);
+  --switch-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.2 10.3 L8 14 L13.5 5.7' fill='none' stroke='%23000000' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --switch-mark-color: var(--check-mark);
+  --switch-mark-color-disabled: var(--check-mark-disabled);
+  --switch-disabled-opacity: 1;
+  --switch-disabled-filter: none;
+  --switch-box-focus-outline: none;
+  --switch-row-focus-outline: none;
+  --switch-row-focus-offset: 0;
+  --switch-label-focus-outline: var(--choice-label-focus-outline);
+  --switch-label-focus-offset: var(--choice-label-focus-offset);
+  --switch-label-focus-outline-mouse: var(--choice-label-focus-outline-mouse);
 }

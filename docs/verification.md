@@ -296,10 +296,14 @@ unpackaged 资源解析）。死因和下一步：`docs/windows-winui3-notes.md`
 
 - 颜色、斜面结构、控件尺寸、禁用/按下状态：**系统本身**（GDI 离屏渲染 + 色板手动设定）。
 - 选中色 `#0A246A`：XP classic 方案的公开值，不是本机量出来的（本机是 Win10，没有 XP 的方案表）。
-- 焦点框的采集和 Win10 一样有 `DrawFocusRect` 的 XOR 问题，主题按 1px 深色点线画（**估计**）。
+- 焦点框：**系统本身**（真控件 + `SetFocus` + PrintWindow，见 `docs/winxp-native-notes.md`）。
+  原生只框标签文字、不框盒子，是 1px 黑白棋盘格；主题在 `.check__label` / `.radio__label` /
+  `.switch__label` 上画 `1px dotted`，标签外 1px；classic 没有 focus-visible，鼠标点完也画
+  （`:focus:not(:focus-visible)` 的 `-mouse` token）。抓图里的文字和未选中盒子没画出来，是
+  PrintWindow 的伪影，只有焦点框的几何和图案可信；框高 15px vs 原生 16px，差 1px。
 - 开关在这个年代不存在：`.switch` 在 XP 主题下套用复选框外观（13×13 凹陷盒 + 勾，复用
   `--check-*` 的实测值），API 不变；开关本身没有原生像素，只有复选框的 GDI 实测。
-  把 `.switch` 和 `.check` 同状态并排渲染、2x 截图逐像素比：off / on 完全一致，
+  把 `.switch` 和 `.check` 同状态并排渲染、2x 截图逐像素比：off / on / focus 完全一致，
   pressed / disabled 有 11 个像素差 1/255（mask 画勾和 SVG stroke 的抗锯齿舍入不同）。
 - 滑块刻度线、菜单阴影、滚动条、标题栏没有做。
 - 没有暗色、没有悬停态：这是时代本身的行为，不是没做。

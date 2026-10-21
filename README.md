@@ -171,6 +171,8 @@ macOS 有两套主题，区别在这里：
   下拉框 21px 高、17×17 箭头格嵌在边框里；
   滑块是 4px 凹槽（原生左右缩进 8px，CSS 用满控件宽度）+ 11×21 凸起滑块。菜单是灰底 + 2px 凸起边框，选中项深蓝底白字。
   采样和结构见 `docs/winxp-native-notes.md`。
+- **Windows XP 的焦点框只框标签文字**。原生真控件（`SetFocus` + PrintWindow）实测：1px 黑白棋盘格，
+  框在标签文字外 1px，不包 13×13 的盒子；classic 没有 focus-visible，鼠标点完也会出现。
 
 复选框的对勾用 SVG 画在 `viewBox` 里，任何尺寸都居中；描边粗细由 `--check-stroke` 控制。
 

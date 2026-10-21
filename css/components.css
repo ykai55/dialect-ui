@@ -327,18 +327,32 @@
   color: var(--ui-text-disabled);
 }
 
-.check:is(:focus-visible, .s-focus) .check__box,
-.radio:is(:focus-visible, .s-focus) .radio__dot {
+.check:is(:has(.check__input:focus-visible), .s-focus) .check__box,
+.radio:is(:has(.radio__input:focus-visible), .s-focus) .radio__dot {
   outline: var(--choice-box-focus-outline, var(--focus-outline));
   outline-offset: var(--focus-outline-offset);
   box-shadow: var(--focus-ring);
 }
 
 /* 有的平台（Win10）焦点框画在整行上，不是只框那个小方块 */
-.check:is(:focus-visible, .s-focus),
-.radio:is(:focus-visible, .s-focus) {
+.check:is(:has(.check__input:focus-visible), .s-focus),
+.radio:is(:has(.radio__input:focus-visible), .s-focus) {
   outline: var(--choice-focus-outline, none);
   outline-offset: var(--choice-focus-offset, var(--focus-outline-offset));
+}
+
+/* 经典外观的焦点框只框标签文字，不框整行（原生 DrawFocusRect 的范围） */
+.check:is(:has(.check__input:focus-visible), .s-focus) .check__label,
+.radio:is(:has(.radio__input:focus-visible), .s-focus) .radio__label {
+  outline: var(--choice-label-focus-outline, none);
+  outline-offset: var(--choice-label-focus-offset, 0);
+}
+
+/* 经典外观没有 focus-visible 的概念：鼠标点一下也画焦点框。默认不画 */
+.check:has(.check__input:focus:not(:focus-visible)) .check__label,
+.radio:has(.radio__input:focus:not(:focus-visible)) .radio__label {
+  outline: var(--choice-label-focus-outline-mouse, none);
+  outline-offset: var(--choice-label-focus-offset, 0);
 }
 
 /* ---------------- Radio ---------------- */
@@ -465,6 +479,17 @@
     background-color var(--switch-duration) var(--switch-ease);
 }
 
+/* 滑块里的可选标记层：默认不画。主题给 --switch-mark 一张 mask 图、再给勾选态的
+   颜色，就能把开关画成复选框；mask 的路径通常和 .check__mark 的 SVG 一致。 */
+.switch__knob::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask: var(--switch-mark, none) center / contain no-repeat;
+  mask: var(--switch-mark, none) center / contain no-repeat;
+}
+
 .switch__input:checked + .switch__track {
   background: var(--switch-bg-on);
   border-color: var(--switch-border-on);
@@ -480,15 +505,55 @@
   background: var(--switch-knob-on-bg);
 }
 
-.switch:is(:focus-visible, .s-focus) .switch__track {
-  outline: var(--focus-outline);
+.switch__input:checked + .switch__track .switch__knob::after {
+  background: var(--switch-mark-color, transparent);
+}
+
+/* 按下态：给「开关画成复选框」的平台用，默认不改变外观 */
+.switch:is(:active, .s-active) .switch__input:not(:checked) + .switch__track {
+  background: var(--switch-bg-active, var(--switch-bg));
+}
+
+.switch:is(:active, .s-active) .switch__input:checked + .switch__track {
+  background: var(--switch-bg-checked-active, var(--switch-bg-on));
+}
+
+.switch:is(:has(.switch__input:focus-visible), .s-focus) {
+  outline: var(--switch-row-focus-outline, none);
+  outline-offset: var(--switch-row-focus-offset, 0);
+}
+
+.switch:is(:has(.switch__input:focus-visible), .s-focus) .switch__track {
+  outline: var(--switch-box-focus-outline, var(--focus-outline));
   outline-offset: var(--switch-focus-outline-offset, var(--focus-outline-offset));
   box-shadow: var(--focus-ring);
 }
 
+.switch:is(:has(.switch__input:focus-visible), .s-focus) .switch__label {
+  outline: var(--switch-label-focus-outline, none);
+  outline-offset: var(--switch-label-focus-offset, 0);
+}
+
+.switch:has(.switch__input:focus:not(:focus-visible)) .switch__label {
+  outline: var(--switch-label-focus-outline-mouse, none);
+  outline-offset: var(--switch-label-focus-offset, 0);
+}
+
 .switch__input:disabled + .switch__track {
-  opacity: 0.5;
-  filter: grayscale(1);
+  opacity: var(--switch-disabled-opacity, 0.5);
+  filter: var(--switch-disabled-filter, grayscale(1));
+}
+
+.switch__input:not(:checked):disabled + .switch__track {
+  background: var(--switch-bg-disabled, var(--switch-bg));
+}
+
+.switch__input:checked:disabled + .switch__track {
+  background: var(--switch-bg-checked-disabled, var(--switch-bg-on));
+}
+
+.switch__input:checked:disabled + .switch__track .switch__knob::after {
+  background: var(--switch-mark-color-disabled, var(--switch-mark-color, transparent));
 }
 
 .switch:has(.switch__input:disabled) .switch__label,
