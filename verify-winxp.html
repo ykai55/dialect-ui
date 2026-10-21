@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Windows XP verify · native vs CSS</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/theme-winxp.css" />
+    <style>
+      /* 原生矩阵的底是 COLOR_3DFACE = #C0C0C0（见
+         reference/shots/windows/classic/ 里各图的角像素）。
+         这里固定 #C0C0C0，不用主题的 --ui-surface：对比图是按底色裁包围盒的，
+         底色必须和原生图逐像素一致，否则 content_bbox 会把整张图当成内容。
+         classic 没有暗色模式，所以只做单模式（light）。 */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #c0c0c0;
+      }
+      body {
+        min-height: 0;
+      }
+      #wrap {
+        background: #c0c0c0;
+        padding: 0;
+        gap: 0;
+        display: block;
+      }
+
+      /* 单元格尺寸对齐原生图：324×48 @1x（截图 2x 是 648×96）。
+         这轮原生矩阵把控件矩形一律贴 (x=12, y=12)，所以这里也贴顶
+         （padding-top:12），控件顶边和原生逐像素对齐；纵向居中会让 23px
+         的控件落在 y=12.5，凭空多出 0.5px 差。
+         例外是勾选 / 单选：原生矩阵自己把 13px 的盒子在 48 格里居中（墨迹 y=17），
+         滑块也居中更好（滑块 23px 高居中后通道正好落在原生 y=22..25），
+         这两类用下面的 --choice / --slider 类覆盖回居中。 */
+      .cell {
+        width: 324px;
+        height: 48px;
+        display: flex;
+        align-items: flex-start;
+        padding-left: 12px;
+        padding-top: 12px;
+        box-sizing: border-box;
+      }
+      .cell--choice,
+      .cell--slider {
+        align-items: center;
+        padding-top: 0;
+      }
+
+      /* 行高必须和 tools/compare-winxp.py 的 ROW_HEIGHTS 同步：
+         截图是 2x，脚本按 行高×2 累加切片，错一格后面全错位。
+         textarea 原生格是 324×104（96dpi 图），控件 200×80 贴顶 y=12，
+         居中正好也是 12，所以这里只要把行高显式写成 104。 */
+      .cell--textarea {
+        height: 104px;
+      }
+
+      /* 菜单原生格是 324×112，弹出层 200×76 贴顶 y=12（不是居中：112-76 的一半是 18）。
+         矩阵里菜单是 200×76 / 4 项 ×18px，这里按实测宽度显式给 200。
+         .menu 默认是 fixed + 最小宽度 100%，内联摆放时全部覆盖掉，免得撑满整格。 */
+      .cell--menu {
+        height: 112px;
+      }
+      .menu--inline {
+        position: static;
+        inset: auto;
+        width: 200px;
+        min-width: 200px;
+        max-height: none;
+        overflow: visible;
+      }
+
+      /* 宽度按原生矩阵：button=200 field=200 textarea=200 combo=200 slider=160 */
+      .cell .btn {
+        width: 200px;
+      }
+      .cell .field {
+        width: 200px;
+      }
+      .cell .select {
+        width: 200px;
+      }
+      .cell .slider {
+        width: 160px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel" id="wrap" data-theme="winxp" data-mode="light">
+      <div id="rows"></div>
+    </div>
+    <script>
+      function cell(html, extraClass) {
+        return '<div class="cell' + (extraClass ? " " + extraClass : "") + '">' + html + "</div>";
+      }
+
+      // ---------------- 片段 ----------------
+      // 文字取原生 renderer 里画的那几串（正式矩阵实测）：
+      // button="Button" field="Hello" textarea="Line one\nLine two" combo="Item 2"
+      // checkbox/radio="Label" menu="New/Open.../Save/Exit"。
+      // 正式矩阵的 textarea 是两行、贴顶排（探针那套是单行居中，以正式图为准）。
+
+      function button(stateClass, primary, disabled) {
+        var cls = "btn" + (primary ? " btn--primary" : "") + (stateClass ? " " + stateClass : "");
+        return cell(
+          '<button type="button" class="' + cls + '"' +
+            (disabled ? " disabled" : "") + ">Button</button>"
+        );
+      }
+
+      function field(stateClass, disabled) {
+        return cell(
+          '<label class="field' + (stateClass ? " " + stateClass : "") + '">' +
+            '<span class="field__wrap">' +
+              '<input class="field__input" type="text" value="Hello" autocomplete="off"' +
+                (disabled ? " disabled" : "") + ">" +
+            "</span>" +
+          "</label>"
+        );
+      }
+
+      function textarea(stateClass, disabled) {
+        return cell(
+          '<label class="field' + (stateClass ? " " + stateClass : "") + '">' +
+            '<span class="field__wrap">' +
+              '<textarea class="field__input field__input--multiline" rows="2" spellcheck="false"' +
+                (disabled ? " disabled" : "") + ">Line one\nLine two</textarea>" +
+            "</span>" +
+          "</label>",
+          "cell--textarea"
+        );
+      }
+
+      function combobox(stateClass, disabled) {
+        return cell(
+          '<div class="select">' +
+            '<button type="button" class="select__button' +
+              (stateClass ? " " + stateClass : "") + '"' +
+              (disabled ? " disabled" : "") + ">" +
+              '<span class="select__value">Item 2</span>' +
+              '<span class="select__chevron">' +
+                '<span class="select__chevron-up"></span>' +
+                '<span class="select__chevron-down"></span>' +
+              "</span>" +
+            "</button>" +
+          "</div>"
+        );
+      }
+
+      // 原生滑块（正式矩阵 = 真 msctls_trackbar32，160×23，TBM_SETPOS=4/10）：
+      // 通道 144 宽（左右各缩进 8px），thumb 11×21，左沿在控件内 61px 处
+      // （绝对 x=73，y=14..34）。Chrome range 的 thumb 行程是 (160-11)=149px，
+      // 61/149≈40.9% → value=41。
+      function slider(stateClass, disabled) {
+        return cell(
+          '<input class="slider' + (stateClass ? " " + stateClass : "") + '"' +
+            ' type="range" min="0" max="100" value="41" style="--slider-pct:40.9%"' +
+            ' aria-label="slider"' + (disabled ? " disabled" : "") + ">",
+          "cell--slider"
+        );
+      }
+
+      // 菜单弹出层（正式矩阵实测：200×76、4 项、项高 18、悬停项整行 #0A246A + 白字）。
+      // 内联摆放，不用 popover；悬停态用 .is-active 定格在第二项 "Open..."。
+      function menu(hoverSecond) {
+        var items = ["New", "Open...", "Save", "Exit"];
+        var html = '<ul class="menu menu--inline">';
+        for (var i = 0; i < items.length; i++) {
+          html += '<li class="menu__item' +
+            (hoverSecond && i === 1 ? " is-active" : "") + '">' + items[i] + "</li>";
+        }
+        html += "</ul>";
+        return cell(html, "cell--menu");
+      }
+
+      function check(stateClass, checked, disabled) {
+        return cell(
+          '<label class="check' + (stateClass ? " " + stateClass : "") + '">' +
+            '<input type="checkbox" class="check__input"' +
+              (checked ? " checked" : "") + (disabled ? " disabled" : "") + ">" +
+            '<span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>' +
+            '<span class="check__label">Label</span>' +
+          "</label>",
+          "cell--choice"
+        );
+      }
+
+      var radioSeq = 0;
+      function radio(stateClass, checked, disabled) {
+        radioSeq += 1;
+        return cell(
+          '<label class="radio' + (stateClass ? " " + stateClass : "") + '">' +
+            '<input type="radio" class="radio__input" name="verify-radio-' + radioSeq + '"' +
+              (checked ? " checked" : "") + (disabled ? " disabled" : "") + ">" +
+            '<span class="radio__dot"></span>' +
+            '<span class="radio__label">Label</span>' +
+          "</label>",
+          "cell--choice"
+        );
+      }
+
+      // ---------------- 行清单 ----------------
+      // 顺序必须和 tools/compare-winxp.py 的 ROWS 逐项一致：
+      // 截图是按行高累加切片的，错一行后面全错位。
+      // classic 没有悬停态，所以没有 hot 行；按下用 .s-active、默认按钮用
+      // .btn--primary、禁用用 disabled 属性 + .s-disabled。
+      // 原生矩阵里 checkbox-disabled / radio-disabled 都是「已选中 + 禁用」
+      // （勾 / 点变 #808080），所以这两行按 checked+disabled 摆。
+      var rows = [
+        // button
+        button("", false, false), //            button-normal
+        button("s-active", false, false), //   button-pressed（按下只把斜面反过来）
+        button("s-disabled", false, true), //  button-disabled
+        button("", true, false), //            button-default（PBS_DEFAULTED → .btn--primary）
+
+        // field
+        field("", false), //                   field-normal
+        field("s-disabled", true), //          field-disabled
+
+        // textarea（行高 104）
+        textarea("", false), //                textarea-normal
+
+        // checkbox
+        check("", false, false), //            checkbox-unchecked
+        check("", true, false), //             checkbox-checked
+        check("s-active", true, false), //    checkbox-checked-pressed
+        check("s-disabled", true, true), //    checkbox-disabled
+
+        // radio
+        radio("", false, false), //            radio-unchecked
+        radio("", true, false), //             radio-checked
+        radio("s-active", true, false), //    radio-checked-pressed
+        radio("s-disabled", true, true), //    radio-disabled
+
+        // combobox
+        combobox("", false), //                combobox-normal
+        combobox("s-disabled", true), //       combobox-disabled
+
+        // slider
+        slider("", false), //                   slider-normal
+
+        // menu（行高 112；原生 200×76 弹出层，项高 18）
+        menu(false), //                         menu-popup
+        menu(true) //                           menu-popup-hover
+      ];
+
+      document.getElementById("rows").innerHTML = rows.join("");
+    </script>
+  </body>
+</html>
