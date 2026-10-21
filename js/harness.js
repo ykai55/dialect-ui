@@ -3,6 +3,7 @@
 
   var THEMES = [
     { id: "win11", name: "Windows 11", sub: "Fluent / WinUI 3 · 4px 圆角 · 底部内描边" },
+    { id: "win10", name: "Windows 10", sub: "Aero / Win32 · 方角 · 1px 全描边" },
     { id: "macos", name: "macOS", sub: "Tahoe (26) · 胶囊按钮 · 外发光焦点" },
     { id: "gnome", name: "GNOME", sub: "Adwaita / GTK4 · 9px 圆角 · 内侧焦点环" }
   ];
@@ -194,5 +195,5 @@
   });
 
   document.getElementById("harness-hint").textContent =
-    (only && only !== "all" ? only : "三个平台") + " · " + mode;
+    (only && only !== "all" ? only : "四个平台") + " · " + mode;
 })();

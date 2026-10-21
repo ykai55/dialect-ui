@@ -51,6 +51,7 @@
 
 .btn:is(:active, .s-active) {
   background: var(--btn-bg-active);
+  border-color: var(--btn-border-active, var(--btn-border));
   color: var(--btn-fg-active, var(--btn-fg));
 }
 
@@ -64,9 +65,9 @@
 }
 
 .btn:is(:disabled, .s-disabled) {
-  background: var(--disabled-bg);
-  border-color: var(--disabled-border);
-  color: var(--disabled-fg);
+  background: var(--btn-bg-disabled, var(--disabled-bg));
+  border-color: var(--btn-border-disabled, var(--disabled-border));
+  color: var(--btn-fg-disabled, var(--disabled-fg));
   box-shadow: none;
 }
 
@@ -85,6 +86,7 @@
 
 .btn--primary:is(:active, .s-active) {
   background: var(--primary-bg-active);
+  border-color: var(--primary-border-active, var(--primary-border));
   color: var(--primary-fg);
 }
 
@@ -167,9 +169,9 @@
 }
 
 .field__input:disabled {
-  background: var(--disabled-bg);
-  border-color: var(--disabled-border);
-  color: var(--disabled-fg);
+  background: var(--field-bg-disabled, var(--disabled-bg));
+  border-color: var(--field-border-disabled, var(--disabled-border));
+  color: var(--field-fg-disabled, var(--disabled-fg));
   box-shadow: none;
 }
 
@@ -184,7 +186,7 @@
 .switch {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--choice-gap, 8px);
   font-size: var(--ui-font-size);
   color: var(--ui-text);
   cursor: default;
@@ -249,14 +251,42 @@
   stroke-dashoffset: 0;
 }
 
-.check:is(:hover, .s-hover) .check__box {
+.check:is(:hover, .s-hover) .check__input:not(:checked) + .check__box {
+  background: var(--check-bg-hover, var(--check-bg));
   border-color: var(--check-border-hover, var(--check-border));
+}
+
+.check:is(:active, .s-active) .check__input:not(:checked) + .check__box {
+  background: var(--check-bg-active, var(--check-bg));
+  border-color: var(--check-border-active, var(--check-border));
+}
+
+.check:is(:hover, .s-hover) .check__input:checked + .check__box {
+  background: var(--check-bg-checked-hover, var(--check-bg-checked));
+  border-color: var(--check-border-checked-hover, var(--check-border-checked));
+}
+
+.check:is(:active, .s-active) .check__input:checked + .check__box {
+  background: var(--check-bg-active, var(--check-bg-checked));
+  border-color: var(--check-border-active, var(--check-border-checked));
+}
+
+.check:is(:hover, .s-hover) .check__box .check__mark {
+  stroke: var(--check-mark-hover, var(--check-mark));
+}
+
+.check:is(:hover, .s-hover) .check__input:checked + .check__box .check__mark {
+  stroke: var(--check-mark-checked-hover, var(--check-mark-hover, var(--check-mark)));
+}
+
+.check:is(:active, .s-active) .check__box .check__mark {
+  stroke: var(--check-mark-active, var(--check-mark));
 }
 
 .check__input:disabled + .check__box,
 .check.s-disabled .check__box {
-  background: var(--disabled-bg);
-  border-color: var(--disabled-border);
+  background: var(--check-bg-disabled, var(--disabled-bg));
+  border-color: var(--check-border-disabled, var(--disabled-border));
 }
 
 .check__input:disabled:checked + .check__box,
@@ -277,9 +307,16 @@
 
 .check:is(:focus-visible, .s-focus) .check__box,
 .radio:is(:focus-visible, .s-focus) .radio__dot {
-  outline: var(--focus-outline);
+  outline: var(--choice-box-focus-outline, var(--focus-outline));
   outline-offset: var(--focus-outline-offset);
   box-shadow: var(--focus-ring);
+}
+
+/* 有的平台（Win10）焦点框画在整行上，不是只框那个小方块 */
+.check:is(:focus-visible, .s-focus),
+.radio:is(:focus-visible, .s-focus) {
+  outline: var(--choice-focus-outline, none);
+  outline-offset: var(--choice-focus-offset, var(--focus-outline-offset));
 }
 
 /* ---------------- Radio ---------------- */
@@ -327,13 +364,26 @@
   border-color: var(--radio-border-hover, var(--radio-border));
 }
 
+.radio:is(:hover, .s-hover) .radio__dot::after {
+  background: var(--radio-dot-hover, var(--radio-dot-color));
+}
+
+.radio:is(:active, .s-active) .radio__dot {
+  background: var(--radio-bg-active, var(--radio-bg));
+  border-color: var(--radio-border-active, var(--radio-border));
+}
+
+.radio:is(:active, .s-active) .radio__dot::after {
+  background: var(--radio-dot-active, var(--radio-dot-color));
+}
+
 .radio__input:disabled + .radio__dot {
-  background: var(--disabled-bg);
-  border-color: var(--disabled-border);
+  background: var(--radio-bg-disabled, var(--disabled-bg));
+  border-color: var(--radio-border-disabled, var(--disabled-border));
 }
 
 .radio__input:disabled + .radio__dot::after {
-  background: var(--ui-text-disabled);
+  background: var(--radio-dot-disabled, var(--ui-text-disabled));
 }
 
 .radio:has(.radio__input:disabled) .radio__label,
@@ -425,8 +475,17 @@
   height: auto;
   min-height: var(--textarea-min-h);
   padding: var(--textarea-py) var(--field-px);
-  line-height: 1.45;
-  resize: vertical;
+  line-height: var(--textarea-line-height, 1.45);
+  resize: var(--textarea-resize, vertical);
+  border-color: var(--textarea-border, var(--field-border));
+}
+
+.field:is(:focus-within, .s-focus) .field__input--multiline {
+  border-color: var(--textarea-focus-border, var(--field-focus-border));
+}
+
+.field__input--multiline:disabled {
+  border-color: var(--textarea-disabled-border, var(--disabled-border));
 }
 
 /* ---------------- 下拉框 ---------------- */
@@ -445,7 +504,7 @@
   width: 100%;
   height: var(--select-h);
   min-width: 140px;
-  padding: 0 var(--select-px);
+  padding: 0 var(--select-pr, var(--select-px)) 0 var(--select-px);
   border: var(--select-border-w) solid var(--select-border);
   border-radius: var(--select-radius);
   background: var(--select-bg);
@@ -455,6 +514,19 @@
   line-height: 1;
   cursor: default;
   user-select: none;
+  transition:
+    background-color var(--ui-duration) var(--ui-ease),
+    border-color var(--ui-duration) var(--ui-ease);
+}
+
+.select__button:is(:hover, .s-hover) {
+  background: var(--select-bg-hover, var(--select-bg));
+  border-color: var(--select-border-hover, var(--select-border));
+}
+
+.select__button:is(:active, .s-active) {
+  background: var(--select-bg-active, var(--select-bg));
+  border-color: var(--select-border-active, var(--select-border));
 }
 
 .select__button:is(:focus-visible, .s-focus) {
@@ -463,21 +535,39 @@
   box-shadow: var(--focus-ring);
 }
 
+.select__button:is(:disabled, .s-disabled) {
+  background: var(--select-bg-disabled, var(--disabled-bg));
+  border-color: var(--select-border-disabled, var(--disabled-border));
+  color: var(--select-fg-disabled, var(--disabled-fg));
+}
+
+.select__button:is(:disabled, .s-disabled) .select__chevron {
+  color: var(--select-chevron-disabled, var(--select-chevron));
+}
+
+/* 箭头格：Windows 的 ComboBox 右边是一个独立的箭头按钮（17px + 1px 分隔线），
+   其它平台不给 --select-arrow-w，就是普通的小箭头。 */
 .select__chevron {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 2px;
+  width: var(--select-arrow-w, auto);
+  min-width: var(--select-arrow-w, 0px);
+  height: 100%;
+  padding-left: var(--select-arrow-pad, 0px);
+  border-left: var(--select-arrow-sep-w, 0px) solid var(--select-arrow-sep, transparent);
   color: var(--select-chevron);
 }
 
 .select__chevron-up,
 .select__chevron-down {
   display: block;
-  width: 6px;
-  height: 6px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
+  width: var(--select-chevron-size, 6px);
+  height: var(--select-chevron-size, 6px);
+  border-right: var(--select-chevron-w, 1.5px) solid currentColor;
+  border-bottom: var(--select-chevron-w, 1.5px) solid currentColor;
 }
 
 .select__chevron-up {
@@ -503,44 +593,72 @@
 
 .slider::-webkit-slider-runnable-track {
   height: var(--slider-track-h);
-  border-radius: 999px;
+  border-radius: var(--slider-track-radius, 999px);
   background: linear-gradient(
     to right,
     var(--slider-fill) 0 var(--slider-pct, 40%),
     var(--slider-track) var(--slider-pct, 40%) 100%
   );
+  box-shadow: inset 0 0 0 var(--slider-track-edge-w, 0px) var(--slider-track-edge, transparent);
 }
 
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: var(--slider-thumb);
-  height: var(--slider-thumb);
-  margin-top: calc((var(--slider-track-h) - var(--slider-thumb)) / 2);
+  width: var(--slider-thumb-w, var(--slider-thumb));
+  height: var(--slider-thumb-h, var(--slider-thumb));
+  margin-top: calc(
+    (var(--slider-track-h) - var(--slider-thumb-h, var(--slider-thumb))) / 2
+  );
   border: var(--slider-thumb-border-w, 0px) solid var(--slider-thumb-border, transparent);
-  border-radius: 50%;
+  border-radius: var(--slider-thumb-radius, 50%);
   background: var(--slider-thumb-bg);
   box-shadow: var(--slider-thumb-shadow);
+}
+
+.slider:is(:hover, .s-hover)::-webkit-slider-thumb {
+  background: var(--slider-thumb-bg-hover, var(--slider-thumb-bg));
+}
+
+.slider:is(:active, .s-active)::-webkit-slider-thumb {
+  background: var(--slider-thumb-bg-active, var(--slider-thumb-bg));
+}
+
+.slider:disabled::-webkit-slider-thumb {
+  background: var(--slider-thumb-bg-disabled, var(--slider-thumb-bg));
 }
 
 .slider::-moz-range-track {
   height: var(--slider-track-h);
-  border-radius: 999px;
+  border-radius: var(--slider-track-radius, 999px);
   background: var(--slider-track);
+  box-shadow: inset 0 0 0 var(--slider-track-edge-w, 0px) var(--slider-track-edge, transparent);
 }
 
 .slider::-moz-range-progress {
   height: var(--slider-track-h);
-  border-radius: 999px;
+  border-radius: var(--slider-track-radius, 999px);
   background: var(--slider-fill);
 }
 
 .slider::-moz-range-thumb {
-  width: var(--slider-thumb);
-  height: var(--slider-thumb);
+  width: var(--slider-thumb-w, var(--slider-thumb));
+  height: var(--slider-thumb-h, var(--slider-thumb));
   border: var(--slider-thumb-border-w, 0px) solid var(--slider-thumb-border, transparent);
-  border-radius: 50%;
+  border-radius: var(--slider-thumb-radius, 50%);
   background: var(--slider-thumb-bg);
   box-shadow: var(--slider-thumb-shadow);
+}
+
+.slider:is(:hover, .s-hover)::-moz-range-thumb {
+  background: var(--slider-thumb-bg-hover, var(--slider-thumb-bg));
+}
+
+.slider:is(:active, .s-active)::-moz-range-thumb {
+  background: var(--slider-thumb-bg-active, var(--slider-thumb-bg));
+}
+
+.slider:disabled::-moz-range-thumb {
+  background: var(--slider-thumb-bg-disabled, var(--slider-thumb-bg));
 }
 
 .slider-row {
@@ -585,7 +703,8 @@
   align-items: center;
   box-sizing: border-box;
   height: var(--menu-item-h);
-  padding: 0 var(--menu-item-pad-x) 0 calc(var(--menu-item-pad-x) + 12px);
+  padding: 0 var(--menu-item-pad-x) 0
+    calc(var(--menu-item-pad-x) + var(--menu-item-marker-space, 12px));
   border-radius: var(--menu-item-radius);
   color: inherit;
   white-space: nowrap;

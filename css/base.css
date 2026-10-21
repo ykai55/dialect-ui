@@ -195,9 +195,9 @@ body.mode-dark .bar__repo {
 }
 
 body.is-compare .stage {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   justify-content: stretch;
-  max-width: 1560px;
+  max-width: 1920px;
   margin: 0 auto;
 }
 
@@ -328,10 +328,10 @@ body.mode-dark .board__cap b {
 .harness {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: start;
   padding: 20px;
-  max-width: 1680px;
+  max-width: 2240px;
   margin: 0 auto;
 }
 

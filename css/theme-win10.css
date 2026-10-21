@@ -1,0 +1,315 @@
+/* ============================================================
+   theme-win10.css — Windows 10 / Aero（Win32 经典控件）
+
+   依据：2026-10-20 在 box-win（Windows 10 Enterprise 22H2 / build 19045，
+   96 dpi、Aero.msstyles、主题字体 Microsoft YaHei UI 9pt）上，用 uxtheme 的
+   DrawThemeBackground 逐 part/state 离屏渲染出来的原生状态矩阵。逐值对照在
+   reference/shots/windows/win10-uxtheme/matrix/metrics-{light,dark}.txt，
+   方法与已知差距在 docs/verification.md。
+
+   两件事先说清楚：
+   1. 这是 Win32 经典控件（aero.msstyles），不是 Win11 的 WinUI 3（Fluent 2）。
+      两套控件体系不能互相搬值，Win11 主题仍是 theme-win11.css。
+   2. 开关在 Win32/uxtheme 里没有对应部件，这里的开关取 Windows 10 UWP 的
+      ToggleSwitch（Win10 桌面上真实存在的开关形态），来源见
+      docs/win10-switch-evidence.md，属「跨控件体系借用」，已标注。
+   ============================================================ */
+
+[data-theme="win10"] {
+  /* 桌面底色 = COLOR_BTNFACE；文字 = COLOR_WINDOWTEXT */
+  --ui-surface: #f0f0f0;
+  --ui-text: #000000;
+  --ui-text-2: #6d6d6d; /* COLOR_GRAYTEXT */
+  --ui-text-disabled: #6d6d6d;
+
+  --ui-font: "Segoe UI", "Microsoft YaHei UI", "Selawik", system-ui,
+    -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --ui-font-size: 12px; /* 9pt @96dpi */
+  --ui-control-h: 23px;
+
+  /* COLOR_HIGHLIGHT / COLOR_HOTLIGHT / 按下态深一档 */
+  --ui-accent: #0078d7;
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #0066cc;
+  --ui-accent-active: #005499;
+
+  /* 经典 Win32 控件没有过渡动画（实测原生只有即时切换） */
+  --ui-duration: 0ms;
+  --ui-ease: linear;
+
+  /* 焦点：1px 点线、内缩 2px。真实 Win10 的点线是深色；矩阵里那张被
+     DrawFocusRect 的 XOR 语义画成了近白点线，判断为采集伪影，见文档。 */
+  --focus-ring: 0 0 0 0 transparent;
+  --focus-outline: 1px dotted #000000;
+  --focus-outline-offset: -3px;
+  /* 原生勾选框 / 单选框的焦点框住整行，不是只框方块 */
+  --choice-focus-outline: 1px dotted #000000;
+  --choice-focus-offset: 2px;
+  --choice-box-focus-outline: none;
+
+  /* 按钮：填充 #E1E1E1、1px #ADADAD、方角；悬停浅蓝、按下蓝底 */
+  --btn-bg: #e1e1e1;
+  --btn-bg-hover: #e5f1fb;
+  --btn-bg-active: #cce4f7;
+  --btn-fg: #000000;
+  --btn-border: #adadad;
+  --btn-border-hover: #0078d7;
+  --btn-border-active: #005499;
+  --btn-border-w: 1px;
+  --btn-radius: 0px;
+  --btn-h: 23px;
+  --btn-px: 10px;
+  --btn-font-size: 12px;
+  --btn-font-weight: 400;
+  --btn-shadow: none;
+  --btn-bottom-stroke: transparent;
+  --btn-bg-disabled: #cccccc;
+  --btn-border-disabled: #bfbfbf;
+  --btn-fg-disabled: #838383;
+
+  /* 主按钮 = Win32 的「默认按钮」：灰底 + 2px 蓝边（1px 边框 + 1px 内阴影） */
+  --primary-bg: #e1e1e1;
+  --primary-bg-hover: #e5f1fb;
+  --primary-bg-active: #cce4f7;
+  --primary-fg: #000000;
+  --primary-border: #0078d7;
+  --primary-border-active: #005499;
+  --primary-shadow: inset 0 0 0 1px #0078d7;
+  --primary-bottom-stroke: transparent;
+
+  /* 输入框：白底 + 1px #ABADB3；聚焦只挪插入符，外观不变（实测如此） */
+  --field-bg: #ffffff;
+  --field-border: #abadb3;
+  --field-border-w: 1px;
+  --field-radius: 0px;
+  --field-h: 23px;
+  --field-px: 4px;
+  --field-font-size: 12px;
+  --field-shadow: none;
+  --field-placeholder: #6d6d6d;
+  --field-focus-border: #abadb3;
+  --field-focus-shadow: none;
+  --field-focus-outline: none;
+  --field-underline-w: 0px;
+  --field-underline-color: transparent;
+  --field-label-size: 12px;
+  --field-bg-disabled: #f0f0f0;
+  --field-border-disabled: #abadb3;
+  --field-fg-disabled: #6d6d6d;
+
+  /* 多行输入：原生用 EP_EDITBORDER_NOSCROLL，边框比单行深 */
+  --textarea-border: #7a7a7a;
+  --textarea-focus-border: #0078d7;
+  --textarea-disabled-border: #cccccc;
+  --textarea-min-h: 80px;
+  --textarea-py: 3px;
+  --textarea-line-height: 1.25; /* 原生单行 15px */
+  --textarea-resize: none; /* 原生 Win32 编辑框没有右下缩放手柄 */
+
+  /* 复选框：13×13 白底、1px #333、深色勾；悬停描边变蓝、勾也变蓝 */
+  --choice-gap: 5px;
+  --check-size: 13px;
+  --check-radius: 0px;
+  --check-bg: #ffffff;
+  --check-border: #333333;
+  --check-border-w: 1px;
+  --check-shadow: none;
+  --check-bg-checked: #ffffff;
+  --check-border-checked: #333333;
+  --check-mark: #333333;
+  --check-stroke: 2.6; /* viewBox 20 单位映射到 13px，勾线约 1.7px */
+  --check-duration: 0ms;
+  --check-bg-hover: #ffffff;
+  --check-border-hover: #0078d7;
+  --check-mark-hover: #0078d7;
+  --check-bg-checked-hover: #ffffff;
+  --check-border-checked-hover: #0078d7;
+  --check-mark-checked-hover: #0078d7;
+  --check-bg-active: #cce4f7;
+  --check-border-active: #005499;
+  --check-mark-active: #005499;
+  --check-bg-disabled: #e2e2e2;
+  --check-border-disabled: #cccccc;
+  --check-mark-disabled: #9b9b9b;
+
+  /* 单选框：13×13 圆环、1px #333、实心点 5px */
+  --radio-size: 13px;
+  --radio-bg: #ffffff;
+  --radio-border: #333333;
+  --radio-border-w: 1px;
+  --radio-bg-checked: #ffffff;
+  --radio-border-checked: #333333;
+  --radio-dot: 7px;
+  --radio-dot-color: #333333;
+  --radio-border-hover: #0078d7;
+  --radio-dot-hover: #0078d7;
+  --radio-border-active: #005499;
+  --radio-dot-active: #005499;
+  --radio-bg-disabled: #e2e2e2;
+  --radio-border-disabled: #cccccc;
+  --radio-dot-disabled: #9b9b9b;
+
+  /* 开关：Win32/uxtheme 无此部件，取 Win10 UWP ToggleSwitch 的深色实测值
+     （44×20 含 2px 描边、滑块 10×10、行程 24px），见 docs/win10-switch-evidence.md。
+     浅色态没有实测，边框 / 滑块按同一套中性值推（估计）。 */
+  --switch-w: 44px;
+  --switch-h: 20px;
+  --switch-knob: 10px;
+  --switch-pad: 3px; /* 外框内缩 5px 减去 2px 描边 */
+  --switch-border-w: 2px;
+  --switch-bg: transparent;
+  --switch-border: #767676; /* 估计 */
+  --switch-bg-on: #0078d7;
+  --switch-border-on: #0078d7;
+  --switch-knob-bg: #767676; /* 估计 */
+  --switch-knob-on-bg: #ffffff;
+  --switch-knob-shadow: none;
+  --switch-duration: 150ms; /* 估计：UWP 开关是滑过去的 */
+  --switch-ease: cubic-bezier(0, 0, 0, 1);
+
+  /* 下拉框（收起态）：灰底 + 17px 箭头格 + 1px 分隔线 */
+  --select-h: 23px;
+  --select-radius: 0px;
+  --select-bg: #e1e1e1;
+  --select-border: #adadad;
+  --select-border-w: 1px;
+  --select-px: 4px;
+  --select-pr: 0px;
+  --select-chevron: #000000;
+  --select-chevron-size: 4px;
+  --select-chevron-w: 1px;
+  --select-arrow-w: 17px;
+  --select-arrow-sep-w: 1px;
+  --select-arrow-sep: #adadad;
+  --select-arrow-pad: 0px;
+  --select-bg-hover: #e5f1fb;
+  --select-border-hover: #0078d7;
+  --select-bg-active: #cce4f7;
+  --select-border-active: #005499;
+  --select-bg-disabled: #cccccc;
+  --select-border-disabled: #bfbfbf;
+  --select-chevron-disabled: #8b8b8b;
+  --select-fg-disabled: #6d6d6d;
+
+  /* 下拉菜单（展开层）：白底 1px #7A7A7A、方角、项高 16、整行蓝高亮 */
+  --menu-min-w: 140px;
+  --menu-bg: #ffffff;
+  --menu-fg: #000000;
+  --menu-border: #7a7a7a;
+  --menu-border-w: 1px;
+  --menu-radius: 0px;
+  --menu-shadow: 0 2px 6px rgba(0, 0, 0, 0.18); /* 估计：原生阴影由 DWM 画 */
+  --menu-pad: 0px;
+  --menu-item-h: 16px;
+  --menu-item-radius: 0px;
+  --menu-item-pad-x: 4px;
+  --menu-item-marker-space: 0px;
+  --menu-item-hover-bg: #0078d7;
+  --menu-item-hover-fg: #ffffff;
+  --menu-item-selected-bg: #0078d7;
+  --menu-item-selected-fg: #ffffff;
+  --menu-item-marker: transparent;
+  --menu-item-font-size: 12px;
+  --menu-offset: 0px;
+
+  /* 滑块：轨道 4px（#E7EAEA + 1px #D6D6D6 边）、滑块 11×19 竖条。
+     经典 Win32 trackbar 没有强调色填充，填充段与轨道同色。 */
+  --slider-h: 19px;
+  --slider-track-h: 4px;
+  --slider-track: #e7eaea;
+  --slider-fill: #e7eaea;
+  --slider-track-radius: 0px;
+  --slider-track-edge-w: 1px;
+  --slider-track-edge: #d6d6d6;
+  --slider-thumb-w: 11px;
+  --slider-thumb-h: 19px;
+  --slider-thumb-radius: 3px;
+  --slider-thumb-bg: #0078d7;
+  --slider-thumb-border-w: 0px;
+  --slider-thumb-shadow: none;
+  --slider-thumb-bg-hover: #171717;
+  --slider-thumb-bg-active: #cccccc;
+  --slider-thumb-bg-disabled: #cccccc;
+}
+
+/* ============================================================
+   暗色：Win10 的 Win32 暗色只覆盖一部分控件（实测：按钮、输入框、
+   多行输入、下拉框有暗色变体；勾选框、单选框、滑块没有，仍是浅色）。
+   下面凡是标「估计」的，都是原生没有暗色资源、按同一套暗色中性值推的。
+   ============================================================ */
+
+[data-theme="win10"][data-mode="dark"] {
+  --ui-surface: #202020; /* 估计：Win10 暗色窗口底 */
+  --ui-text: #ffffff;
+  --ui-text-2: #9b9b9b;
+  --ui-text-disabled: #838383;
+
+  --focus-outline: 1px dotted #f2f4f3; /* 估计：暗色底上反色点线 */
+  --choice-focus-outline: 1px dotted #f2f4f3;
+
+  /* 按钮：实测 #333 / #454545 / #666666，1px #9B9B9B */
+  --btn-bg: #333333;
+  --btn-bg-hover: #454545;
+  --btn-bg-active: #666666;
+  --btn-fg: #ffffff;
+  --btn-border: #9b9b9b;
+  --btn-border-hover: #9b9b9b;
+  --btn-border-active: #9b9b9b;
+  --btn-bg-disabled: #333333;
+  --btn-border-disabled: #404040;
+  --btn-fg-disabled: #838383;
+
+  /* 默认按钮：暗色矩阵里和普通按钮画法一样（#333 底 + #9B9B9B 边，没有蓝圈），照抄 */
+  --primary-bg: #333333;
+  --primary-bg-hover: #454545;
+  --primary-bg-active: #666666;
+  --primary-fg: #ffffff;
+  --primary-border: #9b9b9b;
+  --primary-border-active: #9b9b9b;
+  --primary-shadow: none;
+
+  /* 输入框：实测 #383838 底、#9B9B9B 边、聚焦边 #FFFFFF */
+  --field-bg: #383838;
+  --field-border: #9b9b9b;
+  --field-focus-border: #ffffff;
+  --field-placeholder: #9b9b9b;
+  --field-bg-disabled: #383838;
+  --field-border-disabled: #404040;
+  --field-fg-disabled: #9b9b9b;
+
+  --textarea-border: #9b9b9b;
+  --textarea-focus-border: #ffffff;
+  --textarea-disabled-border: #404040;
+
+  /* 勾选 / 单选：原生没有暗色资源，暗色矩阵里就是浅色那套（白底、#333 边、深色勾），
+     所以这里不覆盖，落回浅色令牌；标签文字跟随 --ui-text 变白，真实 Win10 暗色应用就是这个组合。 */
+
+  /* 下拉框：实测 #333 底、#9B9B9B 边、悬停 #454545、按下 #666666 */
+  --select-bg: #333333;
+  --select-border: #9b9b9b;
+  --select-chevron: #ffffff;
+  --select-arrow-sep: #9b9b9b;
+  --select-bg-hover: #454545;
+  --select-border-hover: #9b9b9b;
+  --select-bg-active: #666666;
+  --select-border-active: #9b9b9b;
+  --select-bg-disabled: #333333;
+  --select-border-disabled: #404040;
+  --select-chevron-disabled: #9b9b9b;
+  --select-fg-disabled: #9b9b9b;
+
+  /* 下拉菜单：无原生暗色参考，按中性值推（估计） */
+  --menu-bg: #2d2d2d;
+  --menu-fg: #ffffff;
+  --menu-border: #9b9b9b;
+  --menu-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+
+  /* 滑块：暗色下原生没有变暗（实测仍是 #E7EAEA 轨道），照抄 */
+  --slider-thumb-bg-hover: #171717;
+  --slider-thumb-bg-active: #cccccc;
+  --slider-thumb-bg-disabled: #cccccc;
+
+  /* 开关：深色实测，轨道关态描边和滑块都是 #CCCCCC */
+  --switch-border: #cccccc;
+  --switch-knob-bg: #cccccc;
+}

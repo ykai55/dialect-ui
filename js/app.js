@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var THEMES = ["win11", "macos", "gnome"];
+  var THEMES = ["win11", "win10", "macos", "gnome"];
   var params = new URLSearchParams(window.location.search);
   var boards = Array.prototype.slice.call(document.querySelectorAll(".board"));
   var template = document.getElementById("specimen");
@@ -117,7 +117,13 @@
   }
 
   function labelOf(id) {
-    return id === "win11" ? "Windows" : id === "macos" ? "macOS" : "Linux";
+    return id === "win11"
+      ? "Windows 11"
+      : id === "win10"
+        ? "Windows 10"
+        : id === "macos"
+          ? "macOS"
+          : "Linux";
   }
 
   /* ---------- 5. 交互 ---------- */

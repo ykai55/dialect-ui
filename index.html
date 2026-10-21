@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/tokens.css" />
     <link rel="stylesheet" href="css/components.css" />
     <link rel="stylesheet" href="css/theme-win11.css" />
+    <link rel="stylesheet" href="css/theme-win10.css" />
     <link rel="stylesheet" href="css/theme-macos.css" />
     <link rel="stylesheet" href="css/theme-gnome.css" />
   </head>
@@ -17,6 +18,7 @@
 
       <div class="bar__group" role="group" aria-label="平台主题">
         <button class="seg" type="button" data-pick-theme="win11">Windows 11</button>
+        <button class="seg" type="button" data-pick-theme="win10">Windows 10</button>
         <button class="seg" type="button" data-pick-theme="macos">macOS</button>
         <button class="seg" type="button" data-pick-theme="gnome">GNOME</button>
       </div>
@@ -28,7 +30,7 @@
 
       <label class="bar__toggle">
         <input type="checkbox" id="compare" />
-        三平台并排
+        四平台并排
       </label>
 
       <div class="bar__spacer"></div>
@@ -41,6 +43,14 @@
         <div class="board__cap">
           <b>Windows 11</b> Fluent / WinUI 3
           <code>data-theme="win11"</code>
+        </div>
+        <div class="board__body" data-slot></div>
+      </section>
+
+      <section class="board" data-board="win10">
+        <div class="board__cap">
+          <b>Windows 10</b> Aero / Win32
+          <code>data-theme="win10"</code>
         </div>
         <div class="board__body" data-slot></div>
       </section>
