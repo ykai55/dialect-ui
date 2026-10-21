@@ -8,3 +8,7 @@
 
 # 由 tools/index-refs.sh 从 reference/shots 生成
 /reference/manifest.js
+
+# Python 缓存（tools/*.py 运行时产生）
+__pycache__/
+*.pyc
