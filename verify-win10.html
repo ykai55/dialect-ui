@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Win10 verify · native vs CSS</title>
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/theme-win10.css" />
+    <style>
+      /* 原生截图底是 COLOR_WINDOW：#FFFFFF（见
+         reference/shots/windows/win10-uxtheme/matrix/metrics-{light,dark}.txt）。
+         这里固定白底，不用主题的 --ui-surface，不然明暗两套会和原生图对不上。
+         深色原生图也是白底——Win10 的 ForceDark 只暗化了一部分 Win32 控件。 */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+      }
+      body {
+        min-height: 0;
+      }
+      #wrap {
+        background: #ffffff;
+        padding: 0;
+        gap: 0;
+        display: block;
+      }
+
+      /* 单元格尺寸对齐原生图：324×48 @1x（截图 2x 是 648×96）。
+         原生控件一律从 x=12 起画，所以左侧留 12px；纵向用居中，
+         和 verify.html 的写法保持一致。 */
+      .cell {
+        width: 324px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        padding-left: 12px;
+        box-sizing: border-box;
+      }
+      /* textarea 原生格是 324×120，控件贴顶 12px，不是垂直居中 */
+      .cell--textarea {
+        height: 120px;
+        align-items: flex-start;
+        padding-top: 12px;
+      }
+
+      /* 宽度按原生 matrix 的 metrics：
+         button=200 field=200 textarea=200 combo=200 slider=160 */
+      .cell .btn {
+        width: 200px;
+      }
+      .cell .field {
+        width: 200px;
+      }
+      .cell .select {
+        width: 200px;
+      }
+      .cell .slider {
+        width: 160px;
+      }
+
+      /* 深色矩阵里勾选框 / 单选框的标签是采集器画的黑色文字（原生这几个控件没有暗色资源，
+         真实应用里标签跟随应用前景色，矩阵里不是），对比页按矩阵来，否则白底上看不见。 */
+      [data-mode="dark"] .check__label,
+      [data-mode="dark"] .radio__label {
+        color: #000000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel" id="wrap" data-theme="win10" data-mode="light">
+      <div id="rows"></div>
+    </div>
+    <script>
+      var params = new URLSearchParams(location.search);
+      var mode = params.get("mode") === "dark" ? "dark" : "light";
+      document.getElementById("wrap").dataset.mode = mode;
+
+      function cell(html, extraClass) {
+        return '<div class="cell' + (extraClass ? " " + extraClass : "") + '">' + html + "</div>";
+      }
+
+      // ---------------- 片段 ----------------
+      // 原生 renderer 里的文字：button="Button" field="Hello"
+      // textarea="Line one\r\nLine two" combo="Item 2" checkbox/radio="Label"
+
+      function button(stateClass, primary, disabled) {
+        var cls = "btn" + (primary ? " btn--primary" : "") + (stateClass ? " " + stateClass : "");
+        return cell(
+          '<button type="button" class="' + cls + '"' +
+            (disabled ? " disabled" : "") + ">Button</button>"
+        );
+      }
+
+      function field(stateClass, disabled) {
+        return cell(
+          '<label class="field' + (stateClass ? " " + stateClass : "") + '">' +
+            '<span class="field__wrap">' +
+              '<input class="field__input" type="text" value="Hello" autocomplete="off"' +
+                (disabled ? " disabled" : "") + ">" +
+            "</span>" +
+          "</label>"
+        );
+      }
+
+      function textarea(stateClass, disabled) {
+        return cell(
+          '<label class="field' + (stateClass ? " " + stateClass : "") + '">' +
+            '<span class="field__wrap">' +
+              '<textarea class="field__input field__input--multiline" rows="2" spellcheck="false"' +
+                (disabled ? " disabled" : "") + ">Line one\nLine two</textarea>" +
+            "</span>" +
+          "</label>",
+          "cell--textarea"
+        );
+      }
+
+      function combobox(stateClass, disabled) {
+        return cell(
+          '<div class="select">' +
+            '<button type="button" class="select__button' +
+              (stateClass ? " " + stateClass : "") + '"' +
+              (disabled ? " disabled" : "") + ">" +
+              '<span class="select__value">Item 2</span>' +
+              '<span class="select__chevron">' +
+                '<span class="select__chevron-up"></span>' +
+                '<span class="select__chevron-down"></span>' +
+              "</span>" +
+            "</button>" +
+          "</div>"
+        );
+      }
+
+      // 原生滑块：160 宽的轨道，滑块中心在 160 里的 71.5px 处（thub 11×19，tx=ox+66）。
+      // 用 value=44 让 CSS 的 ::-webkit-slider-thumb 也落在这个位置。
+      function slider(stateClass, disabled) {
+        return cell(
+          '<input class="slider' + (stateClass ? " " + stateClass : "") + '"' +
+            ' type="range" min="0" max="100" value="44" style="--slider-pct:44%"' +
+            ' aria-label="slider"' + (disabled ? " disabled" : "") + ">"
+        );
+      }
+
+      function check(stateClass, checked, disabled) {
+        return cell(
+          '<label class="check' + (stateClass ? " " + stateClass : "") + '">' +
+            '<input type="checkbox" class="check__input"' +
+              (checked ? " checked" : "") + (disabled ? " disabled" : "") + ">" +
+            '<span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>' +
+            '<span class="check__label">Label</span>' +
+          "</label>"
+        );
+      }
+
+      var radioSeq = 0;
+      function radio(stateClass, checked, disabled) {
+        radioSeq += 1;
+        return cell(
+          '<label class="radio' + (stateClass ? " " + stateClass : "") + '">' +
+            '<input type="radio" class="radio__input" name="verify-radio-' + radioSeq + '"' +
+              (checked ? " checked" : "") + (disabled ? " disabled" : "") + ">" +
+            '<span class="radio__dot"></span>' +
+            '<span class="radio__label">Label</span>' +
+          "</label>"
+        );
+      }
+
+      // ---------------- 行清单 ----------------
+      // 顺序必须和 tools/compare-win10.py 的 ROWS 逐项一致：
+      // 截图是按行高累加切片的，错一行后面全错位。
+      // 状态定格类名：.s-hover / .s-active / .s-focus / .s-disabled；
+      // 主按钮 .btn--primary 对应原生的 PBS_DEFAULTED。
+      var rows = [
+        // button
+        button("", false, false), //          button-normal
+        button("s-hover", false, false), //   button-hot
+        button("s-active", false, false), //  button-pressed
+        button("s-focus", false, false), //   button-focus
+        button("s-disabled", false, true), // button-disabled
+        button("", true, false), //           button-defaulted（PBS_DEFAULTED → .btn--primary）
+
+        // field
+        field("", false), //           field-normal
+        field("s-focus", false), //    field-focus
+        field("s-disabled", true), //  field-disabled
+
+        // textarea（行高 120）
+        textarea("", false), //          textarea-normal
+        textarea("s-focus", false), //   textarea-focus
+        textarea("s-disabled", true), // textarea-disabled
+
+        // combobox
+        combobox("", false), //            combobox-normal
+        combobox("s-hover", false), //     combobox-hot
+        combobox("s-active", false), //    combobox-pressed
+        combobox("s-focus", false), //     combobox-focus
+        combobox("s-disabled", true), //   combobox-disabled
+
+        // slider
+        slider("", false), //            slider-normal
+        slider("s-hover", false), //     slider-hot
+        slider("s-active", false), //    slider-pressed
+        slider("s-focus", false), //     slider-focus
+        slider("s-disabled", true), //   slider-disabled
+
+        // checkbox
+        check("", false, false), //            checkbox-unchecked-normal
+        check("s-hover", false, false), //     checkbox-unchecked-hot
+        check("s-active", false, false), //    checkbox-unchecked-pressed
+        check("s-focus", false, false), //     checkbox-unchecked-focus
+        check("s-disabled", false, true), //   checkbox-unchecked-disabled
+        check("", true, false), //             checkbox-checked-normal
+        check("s-hover", true, false), //      checkbox-checked-hot
+        check("s-active", true, false), //     checkbox-checked-pressed
+        check("s-focus", true, false), //      checkbox-checked-focus
+        check("s-disabled", true, true), //    checkbox-checked-disabled
+
+        // radio
+        radio("", false, false), //            radio-unchecked-normal
+        radio("s-hover", false, false), //     radio-unchecked-hot
+        radio("s-active", false, false), //    radio-unchecked-pressed
+        radio("s-focus", false, false), //     radio-unchecked-focus
+        radio("s-disabled", false, true), //   radio-unchecked-disabled
+        radio("", true, false), //             radio-checked-normal
+        radio("s-hover", true, false), //      radio-checked-hot
+        radio("s-active", true, false), //     radio-checked-pressed
+        radio("s-focus", true, false), //      radio-checked-focus
+        radio("s-disabled", true, true) //     radio-checked-disabled
+      ];
+
+      document.getElementById("rows").innerHTML = rows.join("");
+    </script>
+  </body>
+</html>
