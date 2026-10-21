@@ -128,9 +128,11 @@
   --check-bg-active: #cce4f7;
   --check-border-active: #005499;
   --check-mark-active: #005499;
-  --check-bg-disabled: #e2e2e2;
+  /* 禁用：实测白底 + #CCCCCC 边，勾约 #B7B7B7。早前把勾的抗锯齿边 (#E2E2E2/#D4D4D4)
+     当成了底色，禁用框就成了一整块灰，看着比普通框大一圈。 */
+  --check-bg-disabled: #ffffff;
   --check-border-disabled: #cccccc;
-  --check-mark-disabled: #9b9b9b;
+  --check-mark-disabled: #b7b7b7;
 
   /* 单选框：13×13 圆环、1px #333、实心点 5px */
   --radio-size: 13px;
@@ -145,9 +147,10 @@
   --radio-dot-hover: #0078d7;
   --radio-border-active: #005499;
   --radio-dot-active: #005499;
-  --radio-bg-disabled: #e2e2e2;
-  --radio-border-disabled: #cccccc;
-  --radio-dot-disabled: #9b9b9b;
+  --radio-bg-disabled: #ffffff; /* 实测禁用圆内是白底 */
+  /* 实测：禁用单选的环是近黑 #0A090A（比常态 #333 还深），点变 #CCCCCC。照抄。 */
+  --radio-border-disabled: #0a090a;
+  --radio-dot-disabled: #cccccc;
 
   /* 开关：Win32/uxtheme 无此部件，取 Win10 UWP ToggleSwitch 的深色实测值
      （44×20 含 2px 描边、滑块 10×10、行程 24px），见 docs/win10-switch-evidence.md。
@@ -281,8 +284,12 @@
   --textarea-focus-border: #ffffff;
   --textarea-disabled-border: #404040;
 
-  /* 勾选 / 单选：原生没有暗色资源，暗色矩阵里就是浅色那套（白底、#333 边、深色勾），
-     所以这里不覆盖，落回浅色令牌；标签文字跟随 --ui-text 变白，真实 Win10 暗色应用就是这个组合。 */
+  /* 勾选 / 单选：原生没有暗色资源，暗色矩阵里就是浅色那套（白底、#333 边、深色勾）。
+     但 #333 描边画在深色面上会融进背景：常态框看着只有 11px，禁用框的 #CCC 边却还有轮廓，
+     视觉上就成了「禁用大一圈」。这里只把暗色常态描边提亮到 #9B9B9B（估计值，非实测），
+     让常态 / 选中 / 禁用读出来的框一样大；标签文字跟随 --ui-text 变白。 */
+  --check-border: #9b9b9b;
+  --check-border-checked: #9b9b9b;
 
   /* 下拉框：实测 #333 底、#9B9B9B 边、悬停 #454545、按下 #666666 */
   --select-bg: #333333;
