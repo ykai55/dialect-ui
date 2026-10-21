@@ -395,8 +395,9 @@ AppKit 的 bezel 比控件 frame 小一圈：按钮 frame 200×32 只画 188×21
 
 - **绘制惯例差**：AppKit 的 bezel 比 frame 小一圈，对照页按可见尺寸对齐，CSS 不需要复刻 frame 内缩。
 - **字体档**：AppKit 文字平滑和 Chrome 不同，check / radio 的 ink bbox 宽差 1–3px；这部分不进几何档。
-- **形状差**：双 chevron 的角度（原生约 54°、CSS 折线只能 45°）有差别；两段间距用新加的
-  `--select-chevron-gap` 调成 1px（组件默认 2px），比原来贴近很多，角度差仍在。
+- **chevron 画法**：边框折线画不出圆头，而原生是圆头折线。`components.css` 现在支持用一张
+  `--select-chevron-mask` 画整组双箭头（Windows / GNOME / XP 仍走边框折线，默认路径不变），
+  两套 macOS 主题都切到了 mask；尺寸和两段间距按 metrics 拟合，折角角度还有 1–2° 误差。
 - **估计项**：hover / pressed / focus、菜单展开层、多行输入、动效时长拿不到原生图，按同类控件和
   系统惯例推，主题里逐条标了「估计」。
 

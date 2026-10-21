@@ -594,8 +594,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* 两段 chevron 的间距：有的平台双箭头几乎贴在一起，有的分得更开 */
-  gap: var(--select-chevron-gap, 2px);
+  gap: 2px;
   width: var(--select-arrow-w, auto);
   min-width: var(--select-arrow-w, 0px);
   height: calc(100% - 2 * var(--select-arrow-inset, 0px));
@@ -611,18 +610,24 @@
 .select__chevron-down {
   display: block;
   width: var(--select-chevron-size, 6px);
-  height: var(--select-chevron-size, 6px);
+  height: var(--select-chevron-h, var(--select-chevron-size, 6px));
   border-right: var(--select-chevron-w, 1.5px) solid currentColor;
   border-bottom: var(--select-chevron-w, 1.5px) solid currentColor;
+  /* 圆头折线箭头：主题给一张指向上方的 mask 图时，边框让位给 mask + 背景色，
+     两段用同一个 mask 靠 transform 翻转。默认 none，行为不变。 */
+  background: var(--select-chevron-mask-fill, transparent);
+  -webkit-mask: var(--select-chevron-mask, none) center / contain no-repeat;
+  mask: var(--select-chevron-mask, none) center / contain no-repeat;
 }
 
 .select__chevron-up {
   display: var(--select-chevron-up, none);
-  transform: rotate(-135deg);
+  transform: var(--select-chevron-up-transform, rotate(-135deg));
 }
 
 .select__chevron-down {
-  transform: rotate(45deg);
+  display: var(--select-chevron-down, block);
+  transform: var(--select-chevron-down-transform, rotate(45deg));
 }
 
 /* ---------------- 滑块 ---------------- */

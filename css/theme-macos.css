@@ -116,7 +116,15 @@
   --select-border-w: 0px;
   --select-px: 10px;
   --select-chevron: #212121;
-  --select-chevron-up: block;
+  /* 双 chevron 用一张 mask 画成圆头折线（原生是 SF Symbols，圆头圆角）。
+     mask 里上下两段各 4.5、间距 1.5；box 就是原生 ink 的 7.5×10.5。 */
+  --select-chevron-up: none;
+  --select-chevron-size: 7.5px;
+  --select-chevron-h: 10.5px;
+  --select-chevron-w: 0px;
+  --select-chevron-down-transform: none;
+  --select-chevron-mask-fill: currentColor;
+  --select-chevron-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2015%2021'%3E%3Cpath%20d='M1.5%207.5L7.5%201.5L13.5%207.5M1.5%2013.5L7.5%2019.5L13.5%2013.5'%20fill='none'%20stroke='white'%20stroke-width='3'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
 
   --slider-track-h: 6px;
   --slider-track: #d0d0d0;

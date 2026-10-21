@@ -185,11 +185,15 @@
   --select-px: 10px; /* 实测：文字左边缘距 bezel 左边缘约 10 */
   --select-fg: #000000; /* 实测 */
   --select-chevron: #323232; /* 实测 */
-  --select-chevron-up: block; /* 实测：旧版是上下双 chevron */
-  --select-chevron-size: 4.5px; /* 实测：单段 ink 约 6.5×4.5；CSS 是 45° 折线，只能近似 */
-  --select-chevron-gap: 0px; /* 近似：gap 0 时两段墨迹间距约 3px（原生约 2px）、总高都是 11px；
-                                折线几何下 gap 不能为负，这 1px 调不掉 */
-  --select-chevron-w: 1.5px; /* 近似：metrics 记的笔画约 1px；4.5px 折线下 1px 太细，取 1.5 */
+  /* 双 chevron 用一张 mask 画成圆头折线（原生是 SF Symbols，圆头圆角）。
+     mask 里上下两段各 4.5、间距 2；box 就是原生 ink 的 7×11。 */
+  --select-chevron-up: none;
+  --select-chevron-size: 7px;
+  --select-chevron-h: 11px;
+  --select-chevron-w: 0px;
+  --select-chevron-down-transform: none;
+  --select-chevron-mask-fill: currentColor;
+  --select-chevron-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2014%2022'%3E%3Cpath%20d='M1.5%207.5L7%201.5L12.5%207.5M1.5%2014.5L7%2020.5L12.5%2014.5'%20fill='none'%20stroke='white'%20stroke-width='3'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E");
   --select-shadow: inset 0 -0.5px 0 rgba(0, 0, 0, 0.14),
     0 0.5px 1px rgba(0, 0, 0, 0.16); /* 实测：底边比侧面深 + 落影 */
 
