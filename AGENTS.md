@@ -1,6 +1,6 @@
 # platform-ui
 
-用 HTML + CSS 实现 Windows、macOS、GNOME 三套原生观感的 UI 组件库。
+用 HTML + CSS 实现 Windows、macOS、GNOME 各代原生观感的 UI 组件库。
 
 ## 原则
 
@@ -15,11 +15,13 @@ GNOME 像 GNOME。出现「把三个平台对齐成一套」的改动，就是�
 
 **依据分等级，并且写下来。** 优先级：系统本身（AppKit 离屏渲染、录屏抽帧）> 官方文档截图 >
 上游源码（libadwaita 的 SCSS、Fluent 的 token）> 观感估计。低等级的依据要在注释或文档里标出来，
-不能当成实测。
+不能当成实测。旧版本系统的外观可以借新系统的兼容外观路径渲染（见 `docs/macos15-native-notes.md`），
+这仍算「系统本身」，但要写清是兼容路径而不是真机版本。
 
 ## 范围
 
-- 三个平台：Windows 11（Fluent / WinUI 3）、macOS（Tahoe / 26）、GNOME（Adwaita / GTK4）。
+- 平台与代际：Windows 11（Fluent / WinUI 3）、Windows 10（Aero）、Windows XP（经典外观）、
+  macOS 26（Tahoe）、macOS 11–15（26 之前）、GNOME（Adwaita / GTK4）。一代一个主题，不合并。
 - 八种控件：按钮、输入框、多行输入、下拉框（含展开层）、滑块、复选框、单选框、开关。
 - 状态：默认、悬停、按下、焦点、禁用；明暗两套。
 - 手段：CSS 自定义属性做设计令牌，主题文件只赋值，组件不判断平台。
@@ -27,6 +29,7 @@ GNOME 像 GNOME。出现「把三个平台对齐成一套」的改动，就是�
 ## 参考图
 
 - 图放本地 `reference/shots/<平台>/`，**不入库**：它们是第三方版权素材，仓库是公开的。
+  自己用系统渲染出来的对照图放 `<平台>/appkit/` 这类子目录，下载来的素材放 `official/`。
 - 命名 `{平台}-{控件}-{状态}-{明暗}.png`；官方素材加来源前缀（`hig-` / `ms-` / `gnome-`）。
 - 每张图在 `reference/MANIFEST.md` 记四件事：来源页、直链、像素尺寸、能看什么。别人靠这份清单自己下。
 - 只收能支撑判断的：控件够大、看得出圆角描边和状态。营销图、图标、缩略图不收。
