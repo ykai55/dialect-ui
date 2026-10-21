@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var THEMES = ["win11", "win10", "winxp", "macos", "gnome"];
+  var THEMES = ["win11", "win10", "winxp", "macos", "macos15", "gnome"];
   var params = new URLSearchParams(window.location.search);
   var boards = Array.prototype.slice.call(document.querySelectorAll(".board"));
   var template = document.getElementById("specimen");
@@ -63,7 +63,6 @@
   var theme = THEMES.indexOf(params.get("theme")) > -1
     ? params.get("theme")
     : detected || "macos";
-
   var mode = params.get("mode") === "dark"
     ? "dark"
     : params.get("mode") === "light"
@@ -73,6 +72,24 @@
         : "light";
 
   var compare = params.get("compare") === "1" || params.get("compare") === "true";
+
+  /* macOS 26 之前 / 之后是两套外观。UA 里的 "Mac OS X 10_15_7" 被冻结了，认不出大版本；
+     Chromium 系可以从 UA 高熵值拿到真实版本（如 "15.6.0" / "26.6.0"），拿不到就保持现状。 */
+  var pickedTheme = false;
+
+  function detectMacosGeneration() {
+    if (pickedTheme || params.get("theme") || detected !== "macos") return;
+    var uad = navigator.userAgentData;
+    if (!uad || !uad.getHighEntropyValues) return;
+    uad.getHighEntropyValues(["platformVersion"]).then(function (v) {
+      if (pickedTheme) return; // 回调是异步的，期间用户可能已经手动选过
+      var major = parseInt(String(v.platformVersion || "").split(".")[0], 10);
+      if (isNaN(major) || major < 11 || major >= 26) return;
+      detected = "macos15";
+      theme = "macos15";
+      render();
+    }).catch(function () {});
+  }
 
   /* ---------- 4. 渲染 ---------- */
 
@@ -124,14 +141,17 @@
         : id === "winxp"
           ? "Windows XP"
           : id === "macos"
-            ? "macOS"
-            : "Linux";
+            ? "macOS 26"
+            : id === "macos15"
+              ? "macOS 15"
+              : "Linux";
   }
 
   /* ---------- 5. 交互 ---------- */
 
   document.querySelectorAll("[data-pick-theme]").forEach(function (btn) {
     btn.addEventListener("click", function () {
+      pickedTheme = true;
       theme = btn.dataset.pickTheme;
       if (compare) compare = false;
       render();
@@ -153,4 +173,5 @@
   });
 
   render();
+  detectMacosGeneration();
 })();

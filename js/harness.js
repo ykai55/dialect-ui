@@ -5,7 +5,8 @@
     { id: "win11", name: "Windows 11", sub: "Fluent / WinUI 3 · 4px 圆角 · 底部内描边" },
     { id: "win10", name: "Windows 10", sub: "Aero / Win32 · 方角 · 1px 全描边" },
     { id: "winxp", name: "Windows XP", sub: "经典外观 · 2px 四色斜面 · 无悬停" },
-    { id: "macos", name: "macOS", sub: "Tahoe (26) · 胶囊按钮 · 外发光焦点" },
+    { id: "macos", name: "macOS 26", sub: "Tahoe · 胶囊按钮 · 外发光焦点" },
+    { id: "macos15", name: "macOS 15", sub: "Sequoia 及更早 · 白底描边按钮" },
     { id: "gnome", name: "GNOME", sub: "Adwaita / GTK4 · 9px 圆角 · 内侧焦点环" }
   ];
 

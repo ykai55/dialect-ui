@@ -575,7 +575,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 2px;
+  /* 两段 chevron 的间距：有的平台双箭头几乎贴在一起，有的分得更开 */
+  gap: var(--select-chevron-gap, 2px);
   width: var(--select-arrow-w, auto);
   min-width: var(--select-arrow-w, 0px);
   height: calc(100% - 2 * var(--select-arrow-inset, 0px));

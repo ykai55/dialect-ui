@@ -9,8 +9,14 @@ import pathlib
 
 root = pathlib.Path("reference/shots")
 data = {}
-for plat in ("win11", "macos", "gnome"):
-    folder = root / plat
+# macOS 15 的第三方参考图收在 official/ 子目录，appkit/ 里是本机渲染的原生图，不进这个画廊
+FOLDERS = {
+    "win11": root / "win11",
+    "macos": root / "macos",
+    "macos15": root / "macos15" / "official",
+    "gnome": root / "gnome",
+}
+for plat, folder in FOLDERS.items():
     files = []
     if folder.is_dir():
         files = sorted(

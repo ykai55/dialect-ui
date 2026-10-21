@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/theme-win10.css" />
     <link rel="stylesheet" href="css/theme-winxp.css" />
     <link rel="stylesheet" href="css/theme-macos.css" />
+    <link rel="stylesheet" href="css/theme-macos15.css" />
     <link rel="stylesheet" href="css/theme-gnome.css" />
   </head>
   <body>
@@ -21,7 +22,8 @@
         <button class="seg" type="button" data-pick-theme="win11">Windows 11</button>
         <button class="seg" type="button" data-pick-theme="win10">Windows 10</button>
         <button class="seg" type="button" data-pick-theme="winxp">Windows XP</button>
-        <button class="seg" type="button" data-pick-theme="macos">macOS</button>
+        <button class="seg" type="button" data-pick-theme="macos">macOS 26</button>
+        <button class="seg" type="button" data-pick-theme="macos15">macOS 15</button>
         <button class="seg" type="button" data-pick-theme="gnome">GNOME</button>
       </div>
 
@@ -69,6 +71,14 @@
         <div class="board__cap">
           <b>macOS</b> Tahoe (26) 起
           <code>data-theme="macos"</code>
+        </div>
+        <div class="board__body" data-slot></div>
+      </section>
+
+      <section class="board" data-board="macos15">
+        <div class="board__cap">
+          <b>macOS</b> 15 Sequoia 及更早（26 之前）
+          <code>data-theme="macos15"</code>
         </div>
         <div class="board__body" data-slot></div>
       </section>

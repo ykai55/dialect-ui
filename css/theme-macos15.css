@@ -1,0 +1,329 @@
+/* ============================================================
+   theme-macos15.css — macOS 11 Big Sur – 15 Sequoia 的旧版外观
+
+   macOS 11–15 这一代的外观基本冻结（Big Sur 重新设计之后没再改控件），
+   macOS 26 Tahoe 才换成新外观（灰胶囊按钮、玻璃材质）。theme-macos.css 是 26 的，
+   这套是 26 之前的，两套不合并。
+
+   依据等级（详见 docs/macos15-native-notes.md）：
+   - 实测：本机 macOS 26.6.1 上把 tools/appkit-render.swift 编出来的二进制
+     用 `vtool -set-build-version macos 15.0` 改掉 LC_BUILD_VERSION 的 sdk 字段，
+     AppKit 就会走系统内置的旧版外观路径，渲染产物在
+     reference/shots/macos15/appkit/。颜色是 PNG 内嵌 Generic RGB profile
+     转成 sRGB 之后采的（不转的话蓝色会偏，见 notes）。
+   - **compat 路径 caveat**：这不是真 15.x 系统，是 26.6.1 的 AppKit 走旧版外观。
+     旧版外观路径本身在 11/14/15 三档 sdk 下渲染结果一致（滑块 knob 阴影差 1px），
+     但字体栅格化、部分材质仍然走的是 26 的 AppKit。
+   - 估计：离屏渲染拿不到 hover / pressed / focus / 菜单展开层 / 多行输入，
+     这些值按同类控件和系统惯例推，注释里标「估计」。
+   - 不来自 theme-macos.css，也不来自 Windows / GNOME 主题：跨平台跨版本搬数值
+     是仓库禁止的，这里的每个数都能追到上面那份 legacy 渲染。
+
+   控件外观要点（都有实测像素）：
+   - 普通按钮：白底 + 0.5px 灰描边 + 1px 落影，可见高 22px。注意 AppKit 的
+     NSButton regular rounded bezel 在 200pt 宽的 frame 里只画 188pt 宽的 bezel
+     （左右各内缩 6pt），frame 高度 32pt 但可见只有 22pt；CSS 这边可见尺寸就是
+     盒子的尺寸，对比时按可见尺寸对齐。
+   - 主按钮：蓝色纵向渐变 #287CFF → #0065FF，白字，无描边。
+   - 输入框：白底、0.5px 描边、圆角 5，可见高 22（frame 左右各内缩 2pt）。
+   - 复选框 / 单选框：14×14，未选中白底灰描边（深色是灰底 + 深描边），
+     选中是蓝色渐变底 + 白勾 / 白点。
+   - 开关：38×22 胶囊，knob 20×20，关态灰轨，开态蓝渐变轨。
+   - 下拉框：白底（深色是灰底）、0.5px 描边、圆角 5、右侧双 chevron。
+   - 滑块：4px 轨道、20px 白色圆 knob、左侧蓝色填充。
+   ============================================================ */
+
+[data-theme="macos15"] {
+  --ui-surface: #ececec; /* 实测：legacy NSColor.windowBackgroundColor（浅色） */
+  --ui-text: #000000; /* 实测：标签 / 按钮文字最暗像素 #030303，取黑 */
+  --ui-text-2: rgba(0, 0, 0, 0.55); /* 估计：没有渲染到次要文字 */
+  --ui-text-disabled: #9a9a9a; /* 实测：禁用复选框标签 #949494–#A3A3A3，取按钮禁用字的同值 */
+
+  --ui-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
+    Arial, sans-serif;
+  --ui-font-size: 13px; /* 实测：控件里 NSFont.systemFont(ofSize: 13) */
+  --ui-control-h: 22px; /* 实测：按钮 / 输入框可见高 */
+
+  --ui-accent: #0a82ff; /* 实测：滑块蓝填充 */
+  --ui-accent-text: #ffffff;
+  --ui-accent-hover: #2e8dff; /* 估计：没有渲染到悬停 */
+  --ui-accent-active: #0068d9; /* 估计：没有渲染到按下 */
+
+  --ui-duration: 120ms; /* 估计：旧版外观的过渡时长，没有录屏依据 */
+  --ui-ease: ease-out; /* 估计 */
+
+  /* 焦点是 3px 蓝色外发光（旧版外观的 focus ring 画在控件外面）。
+     估计：离屏渲染没有第一响应者，拿不到焦点态 */
+  --focus-ring: 0 0 0 3px rgba(10, 130, 255, 0.35);
+  --focus-outline: none;
+  --focus-outline-offset: 0px;
+
+  /* ---------- 普通按钮 ----------
+     实测（light）：可见 188×22（frame 200×32 里左右各内缩 6、上下各内缩 5），
+     填充 #FFFFFF，顶部描边 #D9D9D9 / 左右 #D2D2D2 / 底部 #BFBFBF（都是 0.5px），
+     下方 1.5px 的落影（#D8D8D8 → #E9E9E9），字色 #000，13pt regular。
+     可见宽度比 frame 窄 12pt 是 NSButton rounded bezel 的绘制惯例，CSS 不会有
+     这个内缩，对比页按可见宽度 188 对齐。 */
+  --btn-bg: #ffffff; /* 实测 */
+  --btn-bg-hover: #ffffff; /* 估计：旧版普通按钮悬停不变色 */
+  --btn-bg-active: #e8e8e8; /* 估计：按下时略暗 */
+  --btn-fg: #000000; /* 实测 */
+  --btn-fg-active: #000000; /* 估计 */
+  --btn-border: #c6c6c6; /* 实测：0.5px，上浅下深取中间值 */
+  --btn-border-hover: #c6c6c6; /* 估计 */
+  --btn-border-w: 0.5px; /* 实测：2x PNG 里 1 个设备像素 */
+  --btn-radius: 6px; /* 实测：按边缘剖面拟合，6px 最接近 */
+  --btn-h: 21px; /* 实测：可见 bezel 21 高（12.5–33.5，含 0.5px 描边）；frame 高 32 不算 */
+  --btn-px: 13px; /* 估计：文字居中时量不到内边距 */
+  --btn-font-size: 13px; /* 实测 */
+  --btn-font-weight: 400; /* 实测：NSFont.systemFont regular */
+  --btn-shadow: inset 0 -0.5px 0 rgba(0, 0, 0, 0.14),
+    0 0.5px 1px rgba(0, 0, 0, 0.16); /* 实测：底边比侧面深 + 下方 1.5px 淡落影 */
+
+  /* ---------- 主按钮 ----------
+     实测（light）：纵向渐变，顶部 #287CFF、中间 #116FFF、底部 #0065FF，
+     白字，无描边；可见尺寸和普通按钮一致，阴影也一致。 */
+  --primary-bg: linear-gradient(to bottom, #287cff, #0065ff); /* 实测 */
+  --primary-bg-hover: linear-gradient(to bottom, #2e8dff, #0069ff); /* 估计 */
+  --primary-bg-active: linear-gradient(to bottom, #1c6fe8, #0059e0); /* 估计 */
+  --primary-fg: #ffffff; /* 实测 */
+  --primary-border: transparent;
+  --primary-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.18); /* 实测有落影，颜色是估计 */
+
+  --disabled-bg: #f5f5f5; /* 实测：禁用按钮填充 */
+  --disabled-fg: #9a9a9a; /* 实测：禁用按钮文字 */
+  --disabled-border: #e2e2e2; /* 实测：禁用按钮顶部描边 */
+  --btn-bg-disabled: #f5f5f5; /* 实测 */
+  --btn-fg-disabled: #9a9a9a; /* 实测 */
+  --btn-border-disabled: #e2e2e2; /* 实测 */
+  --btn-shadow-disabled: 0 0.5px 1px rgba(0, 0, 0, 0.08); /* 实测有很淡的落影 */
+
+  /* ---------- 输入框 ----------
+     实测（light）：可见 299×21.5（frame 300×22 左右各内缩约 0.5–1.5），
+     白底，顶部 / 左右描边 #CECECE（0.5px），底边更暗 #979797→#BFBFBF，
+     没有外阴影，圆角约 6（剖面拟合），占位符 #CBCBCB。 */
+  --field-bg: #ffffff; /* 实测 */
+  --field-border: #c6c6c6; /* 实测：0.5px */
+  --field-border-w: 0.5px; /* 实测 */
+  --field-radius: 6px; /* 实测：按边缘剖面拟合，6px 最接近 */
+  --field-h: 21.5px; /* 实测：可见 bezel 21.5（frame 22） */
+  --field-px: 6px; /* 估计：占位符起点量不到内边距 */
+  --field-font-size: 13px; /* 实测 */
+  --field-shadow: inset 0 -0.5px 0 rgba(0, 0, 0, 0.2); /* 实测：底边比其它三边暗（#979797/#BFBFBF） */
+  --field-placeholder: #cbcbcb; /* 实测 */
+  --field-focus-border: #0a82ff; /* 估计：没有渲染到聚焦 */
+  --field-focus-shadow: 0 0 0 3px rgba(10, 130, 255, 0.35); /* 估计 */
+  --field-underline-w: 0px;
+  --field-label-size: 11px; /* 估计 */
+
+  /* ---------- 复选框 ----------
+     实测（light）：盒子 14×14（控件 frame 18 高，盒子上方还有 2pt 余量），
+     未选中：白底 + 0.5px #C4C4C4 描边，圆角约 3.5；
+     选中：蓝色纵向渐变 #2891FF → #017BFF + 白色勾；
+     禁用（已选中）：#F1F1F1 底 + #B9B9B9 勾。 */
+  --check-size: 14px; /* 实测 */
+  --check-radius: 3.5px; /* 实测：14px 盒子上按边缘剖面拟合 */
+  --check-bg: #ffffff; /* 实测 */
+  --check-shadow: none; /* 实测：盒子只有描边，没有外阴影 */
+  --check-border: #c4c4c4; /* 实测：0.5px */
+  --check-border-hover: #c4c4c4; /* 估计：旧版外观悬停不变色 */
+  --check-border-w: 0.5px; /* 实测 */
+  --check-bg-checked: linear-gradient(to bottom, #2891ff, #017bff); /* 实测 */
+  --check-border-checked: transparent; /* 实测：选中后描边被填充盖住 */
+  --check-bg-disabled: #f1f1f1; /* 实测 */
+  --check-mark: #ffffff; /* 实测 */
+  --check-mark-disabled: #b9b9b9; /* 实测 */
+  --check-stroke: 3.5; /* 实测勾的笔画约 2.5px（viewBox 20 里的 3.5），3 太细 */
+
+  /* ---------- 单选框 ----------
+     实测（light）：14×14 圆，未选中白底 + 0.5px #C4C4C4 描边；
+     选中是蓝色渐变圆 + 白色圆点（直径约 5.5–6）。 */
+  --radio-size: 14px; /* 实测 */
+  --radio-bg: #ffffff; /* 实测 */
+  --radio-border: #c4c4c4; /* 实测 */
+  --radio-border-hover: #c4c4c4; /* 估计 */
+  --radio-border-w: 0.5px; /* 实测 */
+  --radio-bg-checked: linear-gradient(to bottom, #2891ff, #017bff); /* 实测 */
+  --radio-border-checked: transparent; /* 实测 */
+  --radio-dot: 5.5px; /* 实测：白色圆点 5–5.5 */
+  --radio-dot-color: #ffffff; /* 实测 */
+
+  /* ---------- 开关 ----------
+     实测（light）：可见轨道 38×22 胶囊（frame 42×25，四周各内缩 2/1.5），
+     knob 20×20 圆形（距轨道边 1px），关态轨道 #D8D8D8、开态蓝色渐变
+     #0B7CF8 → #218DFF；knob 白色带 1.5px 落影。 */
+  --switch-w: 38px; /* 实测 */
+  --switch-h: 22px; /* 实测 */
+  --switch-knob: 20px; /* 实测 */
+  --switch-knob-w: 20px; /* 实测：旧版 knob 是圆的，不是胶囊 */
+  --switch-pad: 1px; /* 实测 */
+  --switch-border-w: 0px; /* 实测：轨道没有描边 */
+  --switch-bg: #d8d8d8; /* 实测 */
+  --switch-border: transparent;
+  --switch-track-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.08); /* 实测：轨道边缘略深 */
+  --switch-bg-on: linear-gradient(to bottom, #0b7cf8, #218dff); /* 实测 */
+  --switch-border-on: transparent;
+  --switch-knob-bg: #ffffff; /* 实测（浅色） */
+  --switch-knob-on-bg: #ffffff; /* 实测（浅色） */
+  --switch-knob-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.28),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05); /* 实测有落影，数值是估计 */
+  --switch-duration: 180ms; /* 估计：没有录屏 */
+  --switch-ease: cubic-bezier(0.25, 0.1, 0.25, 1); /* 估计 */
+
+  /* ---------- 下拉框（收起态）----------
+     实测（light）：可见 175×22（frame 180×25，左右各内缩 2/3、上下各 1.5），
+     白底 + 0.5px 描边（上 #D9D9D9 / 下 #BFBFBF）+ 1.5px 落影，圆角约 6，
+     文字 #000，右侧双 chevron（up+down）#323232。
+     caveat：下拉框是唯一放进真实 NSWindow contentView 才画得对的控件
+     （离屏会画出蓝色强调箭头格 = key/活跃窗口样式）；这个进程不是前台应用，窗口是
+     非活跃状态，chevron 的灰色可能比活跃窗口浅一点。 */
+  --select-h: 21px; /* 实测：可见 bezel 21（frame 25） */
+  --select-radius: 6px; /* 实测：和按钮同一套圆角（同一批 bezel 绘制） */
+  --select-bg: #ffffff; /* 实测 */
+  --select-border: #c6c6c6; /* 实测：0.5px */
+  --select-border-w: 0.5px; /* 实测 */
+  --select-px: 10px; /* 实测：文字左边缘距 bezel 左边缘约 10 */
+  --select-fg: #000000; /* 实测 */
+  --select-chevron: #323232; /* 实测 */
+  --select-chevron-up: block; /* 实测：旧版是上下双 chevron */
+  --select-chevron-size: 4.5px; /* 实测：单段 ink 约 6.5×4.5；CSS 是 45° 折线，只能近似 */
+  --select-chevron-gap: 0px; /* 近似：gap 0 时两段墨迹间距约 3px（原生约 2px）、总高都是 11px；
+                                折线几何下 gap 不能为负，这 1px 调不掉 */
+  --select-chevron-w: 1.5px; /* 近似：metrics 记的笔画约 1px；4.5px 折线下 1px 太细，取 1.5 */
+  --select-shadow: inset 0 -0.5px 0 rgba(0, 0, 0, 0.14),
+    0 0.5px 1px rgba(0, 0, 0, 0.16); /* 实测：底边比侧面深 + 落影 */
+
+  /* ---------- 滑块 ----------
+     实测（light）：轨道 4px、#E2E2E2；左侧填充 #0A82FF；knob 20×20 白色圆
+     + 1.5px 落影。可见内容宽 216（frame 220 左右各内缩 2）。 */
+  --slider-h: 22px; /* 实测 */
+  --slider-track-h: 4px; /* 实测 */
+  --slider-track: #e2e2e2; /* 实测 */
+  --slider-fill: #0a82ff; /* 实测 */
+  --slider-thumb: 20px; /* 实测 */
+  --slider-thumb-bg: #ffffff; /* 实测 */
+  --slider-thumb-border-w: 0px; /* 实测：白圆没有描边 */
+  --slider-thumb-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.3),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06); /* 实测有落影，数值是估计 */
+
+  /* ---------- 下拉菜单（展开层）----------
+     估计：离屏渲染拿不到展开的菜单。按同期菜单惯例：圆角 6、0.5px 边框、
+     大落影、项高 22、悬停/选中整行强调蓝 + 白字（旧版 macOS 菜单选中色
+     就是强调色，不是 Tahoe 的玻璃高亮）。 */
+  --menu-bg: rgba(255, 255, 255, 0.98); /* 估计（真实是半透明材质，不做） */
+  --menu-fg: #000000; /* 估计 */
+  --menu-border: rgba(0, 0, 0, 0.1); /* 估计 */
+  --menu-border-w: 0.5px; /* 估计 */
+  --menu-radius: 6px; /* 估计 */
+  --menu-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(0, 0, 0, 0.08); /* 估计 */
+  --menu-pad: 4px; /* 估计 */
+  --menu-item-h: 22px; /* 估计 */
+  --menu-item-radius: 5px; /* 估计 */
+  --menu-item-pad-x: 10px; /* 估计 */
+  --menu-item-hover-bg: #0a82ff; /* 估计：旧版菜单高亮用强调色 */
+  --menu-item-hover-fg: #ffffff; /* 估计 */
+  --menu-item-selected-bg: #0a82ff; /* 估计 */
+  --menu-item-selected-fg: #ffffff; /* 估计 */
+  --menu-item-font-size: 13px; /* 估计 */
+
+  /* ---------- 多行输入 ----------
+     估计：离屏只渲染了单行输入框。多行输入沿用同一套底色 / 描边，圆角 5。 */
+  --textarea-py: 4px; /* 估计 */
+  --textarea-border: #c6c6c6; /* 估计 */
+  --textarea-focus-border: #0a82ff; /* 估计 */
+}
+
+[data-theme="macos15"][data-mode="dark"] {
+  --ui-surface: #323232; /* 实测：legacy NSColor.windowBackgroundColor（深色） */
+  --ui-text: #ffffff; /* 实测：标签 / 按钮文字最亮像素 #FBFBFB，取白 */
+  --ui-text-2: rgba(255, 255, 255, 0.55); /* 估计 */
+  --ui-text-disabled: #959595; /* 实测：禁用复选框的标签 */
+
+  --ui-accent: #166ae6; /* 实测：滑块蓝填充（深色） */
+  --ui-accent-hover: #2f7cf0; /* 估计 */
+  --ui-accent-active: #1259c8; /* 估计 */
+
+  --focus-ring: 0 0 0 3px rgba(10, 132, 255, 0.45); /* 估计 */
+
+  /* 深色普通按钮：填充 #6F6F6F（≈ 32% 白叠在窗口灰上），顶部有一道更亮的
+     高光 #909090，左右 / 底部是更暗的描边 #2C2C2C，#FCFCFC 字。 */
+  --btn-bg: #6f6f6f; /* 实测 */
+  --btn-bg-hover: #6f6f6f; /* 估计 */
+  --btn-bg-active: #636363; /* 估计 */
+  --btn-fg: #ffffff; /* 实测 */
+  --btn-fg-active: #ffffff; /* 估计 */
+  --btn-border: #2c2c2c; /* 实测：0.5px，两侧 / 底部 */
+  --btn-border-hover: #2c2c2c; /* 估计 */
+  --btn-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.45),
+    0 0.5px 1px rgba(0, 0, 0, 0.4); /* 实测：顶部高光 + 底边暗 + 落影 */
+
+  /* 深色主按钮：渐变 #1768E4 → #145CCC，白字 */
+  --primary-bg: linear-gradient(to bottom, #1768e4, #145ccc); /* 实测 */
+  --primary-bg-hover: linear-gradient(to bottom, #2f7cf0, #1a63cf); /* 估计 */
+  --primary-bg-active: linear-gradient(to bottom, #1259c8, #0f4fb8); /* 估计 */
+  --primary-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.45); /* 估计 */
+
+  --disabled-bg: #525252; /* 实测 */
+  --disabled-fg: #a6a6a6; /* 实测 */
+  --disabled-border: #646464; /* 实测：禁用按钮顶部高光 */
+  --btn-bg-disabled: #525252; /* 实测 */
+  --btn-fg-disabled: #a6a6a6; /* 实测 */
+  --btn-border-disabled: #646464; /* 实测 */
+  --btn-shadow-disabled: 0 0.5px 1px rgba(0, 0, 0, 0.25); /* 估计 */
+
+  --field-bg: #4d4d4d; /* 实测 */
+  --field-border: #646464; /* 实测：顶部高光 / 左右 */
+  --field-shadow: inset 0 -0.5px 0 rgba(255, 255, 255, 0.35); /* 实测：深色输入框底边是亮边 #9A9A9A */
+  --field-placeholder: #a3a3a3; /* 实测 */
+  --field-focus-border: #166ae6; /* 估计 */
+  --field-focus-shadow: 0 0 0 3px rgba(10, 132, 255, 0.45); /* 估计 */
+
+  /* 深色未选中复选框：灰底（≈ 25% 白叠在窗口灰上）+ 深描边，
+     填充有很弱的上下渐变 #595959 → #777777。 */
+  --check-bg: linear-gradient(to bottom, #595959, #777777); /* 实测 */
+  --check-border: #2c2c2c; /* 实测 */
+  --check-border-hover: #2c2c2c; /* 估计 */
+  --check-bg-checked: linear-gradient(to bottom, #1768e5, #165ecd); /* 实测 */
+  --check-border-checked: transparent; /* 实测 */
+  --check-bg-disabled: #4e4e4e; /* 实测 */
+  --check-mark: #dce7fa; /* 实测：白勾带一点蓝（叠加在蓝底上） */
+  --check-mark-disabled: #808080; /* 实测 */
+
+  --radio-bg: linear-gradient(to bottom, #595959, #777777); /* 实测 */
+  --radio-border: #2c2c2c; /* 实测 */
+  --radio-border-hover: #2c2c2c; /* 估计 */
+  --radio-bg-checked: linear-gradient(to bottom, #1768e5, #165ecd); /* 实测 */
+  --radio-border-checked: transparent; /* 实测 */
+  --radio-dot-color: #dce7fa; /* 实测 */
+
+  --switch-bg: #4d4d4d; /* 实测 */
+  --switch-track-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.14); /* 实测：轨道有浅色收边 */
+  --switch-bg-on: linear-gradient(to bottom, #1560d2, #1669e3); /* 实测 */
+  --switch-knob-bg: #d3d3d3; /* 实测 */
+  --switch-knob-on-bg: #d3d3d3; /* 实测 */
+
+  --select-bg: #6f6f6f; /* 实测 */
+  --select-border: #2c2c2c; /* 实测：两侧 / 底部，顶部是高光 */
+  --select-fg: #fcfcfc; /* 实测 */
+  --select-chevron: #ececec; /* 实测 */
+  --select-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.45),
+    0 0.5px 1px rgba(0, 0, 0, 0.4); /* 实测：顶部高光 + 底边暗 + 落影 */
+
+  --slider-track: #4d4d4d; /* 实测 */
+  --slider-fill: #166ae6; /* 实测 */
+  --slider-thumb-bg: #ffffff; /* 实测 */
+
+  --menu-bg: #2c2c2c; /* 估计 */
+  --menu-fg: #f2f2f2; /* 估计 */
+  --menu-border: rgba(255, 255, 255, 0.12); /* 估计 */
+  --menu-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 0 0.5px rgba(0, 0, 0, 0.4); /* 估计 */
+  --menu-item-hover-bg: #166ae6; /* 估计 */
+  --menu-item-selected-bg: #166ae6; /* 估计 */
+
+  --textarea-border: #646464; /* 估计 */
+  --textarea-focus-border: #166ae6; /* 估计 */
+}

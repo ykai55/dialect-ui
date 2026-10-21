@@ -29,17 +29,17 @@ shot() {
 
 if [ "$WHAT" = "all" ] || [ "$WHAT" = "play" ]; then
   echo "playground"
-  for theme in win11 win10 winxp macos gnome; do
+  for theme in win11 win10 winxp macos macos15 gnome; do
     for mode in light dark; do
       shot "index.html?theme=${theme}&mode=${mode}" "play-${theme}-${mode}.png" 860 1080
     done
   done
-  shot "index.html?theme=macos&mode=light&compare=1" "play-compare-light.png" 2560 860
+  shot "index.html?theme=macos&mode=light&compare=1" "play-compare-light.png" 3060 860
 fi
 
 if [ "$WHAT" = "all" ] || [ "$WHAT" = "harness" ]; then
   echo "harness"
-  for theme in win11 win10 winxp macos gnome; do
+  for theme in win11 win10 winxp macos macos15 gnome; do
     for mode in light dark; do
       shot "harness.html?theme=${theme}&mode=${mode}" "matrix-${theme}-${mode}.png" 620 1060
     done
