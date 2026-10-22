@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>tabs test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-win10.css" />
+    <link rel="stylesheet" href="../css/theme-win11.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+  </head>
+  <body>
+    <div id="wrap" data-theme="win10" data-mode="light">
+      <div id="tabs" class="tabs" data-tabs>
+        <div class="tabs__list" role="tablist" aria-label="Sections">
+          <button type="button" class="tabs__tab" role="tab" aria-selected="true" data-value="general">General</button>
+          <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-value="advanced" disabled>Advanced</button>
+          <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-value="about">About</button>
+          <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-value="updates">Updates</button>
+        </div>
+        <div class="tabs__panel"><p>General panel</p></div>
+        <div class="tabs__panel" hidden><p>Advanced panel</p></div>
+        <div class="tabs__panel" hidden><p>About panel</p></div>
+        <div class="tabs__panel" hidden><p>Updates panel</p></div>
+      </div>
+    </div>
+
+
+    <div id="wrap-win11" data-theme="win11" data-mode="light">
+      <div id="tabs-win11" class="tabs" data-tabs>
+        <div class="tabs__list" role="tablist" aria-label="Win11 sections">
+          <button type="button" class="tabs__tab" role="tab" aria-selected="true" data-value="one">One</button>
+          <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-value="two">Two</button>
+          <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-value="three">Three</button>
+        </div>
+        <div class="tabs__panel"><p>One</p></div>
+        <div class="tabs__panel" hidden><p>Two</p></div>
+        <div class="tabs__panel" hidden><p>Three</p></div>
+      </div>
+    </div>
+
+    <div id="wrap-macos" data-theme="macos" data-mode="light">
+      <div id="tabs-macos" class="tabs" data-tabs>
+        <div class="tabs__list" role="tablist" aria-label="macOS sections">
+          <button type="button" class="tabs__tab" role="tab" aria-selected="true" data-value="one">One</button>
+          <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-value="two">Two</button>
+          <button type="button" class="tabs__tab" role="tab" aria-selected="false" data-value="three">Three</button>
+        </div>
+        <div class="tabs__panel"><p>One</p></div>
+        <div class="tabs__panel" hidden><p>Two</p></div>
+        <div class="tabs__panel" hidden><p>Three</p></div>
+      </div>
+    </div>
+
+    <pre id="result">RUNNING</pre>
+
+    <script src="../js/tabs.js"></script>
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+        function key(el, k) {
+          el.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
+        }
+
+        var tabsRoot = document.getElementById("tabs");
+        var win11Root = document.getElementById("tabs-win11");
+        var win11Tabs = Array.prototype.slice.call(win11Root.querySelectorAll(".tabs__tab"));
+        var macosRoot = document.getElementById("tabs-macos");
+        var macosTabs = Array.prototype.slice.call(macosRoot.querySelectorAll(".tabs__tab"));
+        function selectedOf(list) {
+          return list.filter(function (t) { return t.getAttribute("aria-selected") === "true"; })[0];
+        }
+        var list = tabsRoot.querySelector(".tabs__list");
+        var tabs = Array.prototype.slice.call(tabsRoot.querySelectorAll(".tabs__tab"));
+        var panels = Array.prototype.slice.call(tabsRoot.querySelectorAll(".tabs__panel"));
+        var changes = [];
+        tabsRoot.addEventListener("tabs:change", function (e) { changes.push(e.detail.value); });
+
+        function selectedValue() {
+          var t = tabs.filter(function (x) { return x.getAttribute("aria-selected") === "true"; })[0];
+          return t ? t.getAttribute("data-value") : null;
+        }
+        function selectedPanel() {
+          var t = tabs.filter(function (x) { return x.getAttribute("aria-selected") === "true"; })[0];
+          return t ? document.getElementById(t.getAttribute("aria-controls")) : null;
+        }
+
+        (async function () {
+          try {
+            check("tablist 和 tab / tabpanel 角色就位", function () {
+              return list.getAttribute("role") === "tablist" &&
+                tabs.every(function (t) { return t.getAttribute("role") === "tab"; }) &&
+                panels.every(function (p) { return p.getAttribute("role") === "tabpanel"; });
+            });
+            check("没写 id 也能按顺序配上 aria-controls", function () {
+              return tabs.every(function (t, i) {
+                return t.getAttribute("aria-controls") === panels[i].id;
+              }) && panels[0].getAttribute("aria-labelledby") === tabs[0].id;
+            });
+            check("初始选中 General，只有它的面板可见", function () {
+              return selectedValue() === "general" &&
+                !panels[0].hidden && panels[1].hidden && panels[2].hidden && panels[3].hidden;
+            });
+            check("roving tabindex 落在选中标签", function () {
+              return tabs[0].tabIndex === 0 && tabs[1].tabIndex === -1 && tabs[2].tabIndex === -1;
+            });
+
+            /* 点禁用标签 */
+            tabs[1].click();
+            check("点禁用标签不切换", function () { return selectedValue() === "general"; });
+
+            /* 点可用标签 */
+            tabs[2].click();
+            check("点标签切换选中", function () { return selectedValue() === "about"; });
+            check("切换后显示对应面板", function () {
+              return !panels[2].hidden && panels[0].hidden;
+            });
+            check("切换发 tabs:change", function () {
+              return changes.length === 1 && changes[0] === "about";
+            });
+            check("焦点跟到点中的标签", function () { return document.activeElement === tabs[2]; });
+
+            tabs[2].click();
+            check("重复点击同一标签不重复发事件", function () { return changes.length === 1; });
+
+            /* 方向键 */
+            key(tabs[2], "ArrowRight");
+            check("右方向键切到下一个并跳过禁用标签", function () {
+              return selectedValue() === "updates";
+            });
+            check("右方向键焦点跟随", function () { return document.activeElement === tabs[3]; });
+
+            key(tabs[3], "ArrowRight");
+            check("右方向键循环回第一个", function () { return selectedValue() === "general"; });
+
+            key(tabs[0], "ArrowLeft");
+            check("左方向键循环到最后一个", function () { return selectedValue() === "updates"; });
+
+            key(tabs[3], "ArrowLeft");
+            check("左方向键跳过禁用标签", function () { return selectedValue() === "about"; });
+
+            key(tabs[2], "Home");
+            check("Home 到第一个", function () { return selectedValue() === "general"; });
+            key(tabs[0], "End");
+            check("End 到最后一个", function () { return selectedValue() === "updates"; });
+
+            /* 空格 / 回车 */
+            tabs[0].focus();
+            key(tabs[0], " ");
+            check("空格选中当前标签", function () { return selectedValue() === "general"; });
+            tabs[2].focus();
+            key(tabs[2], "Enter");
+            check("回车选中当前标签", function () { return selectedValue() === "about"; });
+
+            /* Win11：方向键只移焦点，空格/回车才选中 */
+            win11Tabs[0].focus();
+            key(win11Tabs[0], "ArrowRight");
+            check("Win11 右方向键只移焦点、不改选中", function () {
+              return document.activeElement === win11Tabs[1] &&
+                selectedOf(win11Tabs) === win11Tabs[0];
+            });
+            key(win11Tabs[1], " ");
+            check("Win11 空格确认后选中", function () {
+              return selectedOf(win11Tabs) === win11Tabs[1];
+            });
+
+            /* macOS：方向键完全不动 */
+            var macBefore = selectedOf(macosTabs);
+            macosTabs[0].focus();
+            key(macosTabs[0], "ArrowRight");
+            check("macOS 方向键不移动焦点也不切页", function () {
+              return document.activeElement === macosTabs[0] && selectedOf(macosTabs) === macBefore;
+            });
+            key(macosTabs[0], "Entry");
+            check("macOS 鼠标点选仍然可用", function () {
+              macosTabs[2].click();
+              return selectedOf(macosTabs) === macosTabs[2];
+            });
+
+            /* 面板与标签的 aria 关联 */
+            check("可见面板和选中标签一一对应", function () {
+              return selectedPanel() === panels[2] && panels.filter(function (p) { return !p.hidden; }).length === 1;
+            });
+          } catch (e) {
+            lines.push("FAIL 测试中断 — " + e.message);
+          }
+
+          var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+          document.getElementById("result").textContent =
+            lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+          document.title = failed ? "FAIL" : "PASS";
+        })();
+      })();
+    </script>
+  </body>
+</html>
