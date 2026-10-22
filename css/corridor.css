@@ -808,32 +808,32 @@ body.corridor {
 
 .room[data-era="winxp"] {
   --era-accent: #3a93ff;
-  --era-cursor: url("../assets/cursors/winxp/arrow.png") 7 2, default;
+  --era-cursor: url("../assets/cursors/winxp/arrow.png") 2 2, default;
   --era-text-cursor: url("../assets/cursors/winxp/text.png") 16 16, text;
 }
 .room[data-era="win10"] {
   --era-accent: #0078d7;
-  --era-cursor: url("../assets/cursors/win11/arrow.png") 8 5, default;
+  --era-cursor: url("../assets/cursors/win11/arrow.png") 1 2, default;
   --era-text-cursor: url("../assets/cursors/win11/text.png") 16 16, text;
 }
 .room[data-era="win11"] {
   --era-accent: #60cdff;
-  --era-cursor: url("../assets/cursors/win11/arrow.png") 8 5, default;
+  --era-cursor: url("../assets/cursors/win11/arrow.png") 1 2, default;
   --era-text-cursor: url("../assets/cursors/win11/text.png") 16 16, text;
 }
 .room[data-era="macos15"] {
   --era-accent: #8b7bff;
-  --era-cursor: url("../assets/cursors/macos/arrow.png") 8 3, default;
+  --era-cursor: url("../assets/cursors/macos/arrow.png") 2 3, default;
   --era-text-cursor: url("../assets/cursors/macos/text.png") 16 16, text;
 }
 .room[data-era="macos"] {
   --era-accent: #ff7ab6;
-  --era-cursor: url("../assets/cursors/macos/arrow.png") 8 3, default;
+  --era-cursor: url("../assets/cursors/macos/arrow.png") 2 3, default;
   --era-text-cursor: url("../assets/cursors/macos/text.png") 16 16, text;
 }
 .room[data-era="gnome"] {
   --era-accent: #3584e4;
-  --era-cursor: url("../assets/cursors/gnome/arrow.png") 8 2, default;
+  --era-cursor: url("../assets/cursors/gnome/arrow.png") 2 2, default;
   --era-text-cursor: url("../assets/cursors/gnome/text.png") 16 16, text;
 }
 

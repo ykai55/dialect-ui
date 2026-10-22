@@ -5,14 +5,16 @@
 
 | 目录 | 用于 | 箭头 / 文本 | 来源 | 许可 |
 | --- | --- | --- | --- | --- |
-| `win11/` | Windows 10 / 11 | 白色箭头、黑色 I-beam | [s1rd0/Win11-Cursor](https://github.com/s1rd0/Win11-Cursor)（README 注明光标设计来自 jepriCreations） | MIT |
+| `win11/` | Windows 10 / 11 | 白色箭头（按官方轮廓重画）、黑色 I-beam | 箭头参考 [Windows 11 `aero_arrow.cur`](https://github.com/bartekl1/windows-ui-assets/tree/master/Cursors/Windows%2011)（只作轮廓参考，不直接分发）；I-beam 来自 [s1rd0/Win11-Cursor](https://github.com/s1rd0/Win11-Cursor) | I-beam：MIT |
 | `winxp/` | Windows XP | 经典白色箭头、黑色 I-beam | [na0miluv/modernXP-cursor-theme](https://github.com/na0miluv/modernXP-cursor-theme) | GPL-3.0 |
 | `macos/` | macOS 15 / 26 | 黑色箭头（白描边）、黑色 I-beam | [ful1e5/apple_cursor](https://github.com/ful1e5/apple_cursor) | GPL-3.0 |
 | `gnome/` | GNOME 48 | 黑色箭头（白描边）、黑色 I-beam | [GNOME gnome-shell](https://gitlab.gnome.org/GNOME/gnome-shell) `data/cursor-theme/icons/Adwaita/cursors_scalable/` | GPL-2.0-or-later |
 
 ## 转换方式
 
-- `win11/`：直接从上游的 `arrow.cur` / `ibeam.cur` 取 32×32 帧，保留透明通道，四周补透明边。
+- `win11/`：概念光标包里的 `arrow.cur` 是三角形，和系统箭头不一致，弃用；箭头按 Windows 11 官方
+  `aero_arrow.cur` 的轮廓重画成 SVG（`sources/win-arrow.svg`），再栅格化。I-beam 仍取上游
+  `ibeam.cur` 的 32×32 帧。
 - `winxp/`、`macos/`：用 ImageMagick 把上游 SVG 栅格化到 64px，再缩放/居中到 32×32。
   XP 的文本光标带 Inkscape 渐变和滤镜，直接栅格化会丢透明度；这里取 I-beam 的主路径重画成
   黑填充白描边，再透明栅格化后缩放。
@@ -25,10 +27,10 @@
 
 | 资源 | 热点（32×32 像素） |
 | --- | --- |
-| Windows 箭头 | 8, 5 |
-| Windows XP 箭头 | 7, 2 |
-| macOS 箭头 | 8, 3 |
-| GNOME 箭头 | 8, 2 |
+| Windows 箭头 | 1, 2 |
+| Windows XP 箭头 | 2, 2 |
+| macOS 箭头 | 2, 3 |
+| GNOME 箭头 | 2, 2 |
 | 文本光标（四套） | 16, 16 |
 
 ## 许可

@@ -335,4 +335,9 @@
 
   applyMode(mode);
   startRoom();
+
+  // 演示页按原生窗口处理：浏览器默认右键菜单不弹，右键交给组件
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
 })();
