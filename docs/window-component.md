@@ -1,6 +1,6 @@
 # 窗口组件（Window）
 
-`css/window.css` + `js/window.js`。窗口骨架和右键行为都在组件里，宿主只提供内容。
+`packages/core/css/window.css` + `packages/core/src/behavior/window.js`。窗口骨架和右键行为都在组件里，宿主只提供内容。
 
 ## 结构
 
@@ -30,7 +30,7 @@
 `data-window` 自动初始化，也可以 `Dialect.createWindow(el, options)`。
 
 - **右键**：窗口内一律不弹浏览器菜单；右键落在 `input` / `textarea` 上时懒创建一个文本菜单
-  （Cut / Copy / Paste / Delete / Select All），复用 `js/text-menu.js`；右键落在别处只拦截浏览器菜单。
+  （Cut / Copy / Paste / Delete / Select All），复用 `packages/core/src/behavior/text-menu.js`；右键落在别处只拦截浏览器菜单。
 - **禁用控件**：窗口用捕获阶段监听，禁用按钮上的右键也走同一条路径，不会漏出浏览器菜单。
 - **窗口按钮**：悬停有底色，按下有 pressed 态。Windows 10 关闭键悬停 `#E81123`、按下 `#F1707A`；
   Windows 11 悬停 `#C42B1C`、按下 `#B22F22`；XP 按下斜面翻向（内阴影）；GNOME 按下底色加深；

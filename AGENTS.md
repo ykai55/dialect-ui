@@ -37,14 +37,22 @@ GNOME 像 GNOME。出现「把三个平台对齐成一套」的改动，就是�
 
 ## 目录约定
 
-- `css/theme-*.css` 只允许声明自定义属性，不许写选择器逻辑。
-- `css/components.css` 不许出现平台名，只读令牌。
+- `packages/core/css/themes/*.css` 只允许声明自定义属性，不许写选择器逻辑。
+- `packages/core/css/components.css` 不许出现平台名，只读令牌。
+- `packages/core/src/behavior/*.js` 是行为层的唯一实现，ESM + `createXxx` / `destroy`，
+  模块加载阶段不访问 `document` / `window`。
+- `packages/react`、`packages/vue` 是薄适配层：只渲染和静态站一样的 DOM 契约、挂载/销毁 core
+  控制器、把回调映射成框架 props/emits；不许自己实现键盘、定位、焦点、开关状态。
+- 框架组件不渲染 `data-menu` / `data-select` 这类自动初始化标记（会与显式 `createXxx` 双绑）。
+- 根 `css/`、`js/` 只剩站点自己的壳（`base.css`、`corridor.css`、`corridor.js`、`harness.js`），
+  组件相关的东西不进这里。
 - `docs/verification.md` 写对齐方法与实测值。
 - `shots/` 是生成物，随时可以删掉重跑 `tools/shoot.sh`。
-- `test/*.test.html` 是交互测试，跑 `tools/test.sh`。新增有行为的组件时一起补。
+- `test/*.test.html` 是站点交互测试，跑 `tools/test.sh`。新增有行为的组件时一起补。
+- 框架包验收页放 `packages/<fw>/test/fixture/`，跑 `tools/test-fixture.sh <fw>`；
+  三个包一起跑 `npm test`。构建用 `npm run build`。
 
 ## 不属于这里的东西
 
 - 桌面壳（Electron / Tauri）的接入代码，等组件层稳定后再另起目录。
-- 键盘行为、右键菜单、无障碍适配还没有系统做，只有下拉框这一处有基本的键盘支持。
 - 玻璃材质、半透明模糊这类需要合成层的材质效果，不做。

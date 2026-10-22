@@ -1,0 +1,49 @@
+{
+  "name": "@dialect-ui/react",
+  "version": "0.1.0",
+  "description": "Dialect 组件的 React 适配层：渲染同一套 DOM 契约，行为交给 @dialect-ui/core。",
+  "license": "MIT",
+  "homepage": "https://ykai55.github.io/dialect-ui/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ykai55/dialect-ui.git",
+    "directory": "packages/react"
+  },
+  "keywords": [
+    "dialect",
+    "ui",
+    "components",
+    "react",
+    "windows",
+    "macos",
+    "gnome"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "bash ../../tools/test-fixture.sh react"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "dependencies": {
+    "@dialect-ui/core": "^0.1.0"
+  }
+}

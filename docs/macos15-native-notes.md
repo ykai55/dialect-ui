@@ -2,7 +2,7 @@
 
 这套图是给 `data-theme="macos15"` 用的原生像素参考，覆盖 macOS 11 Big Sur – 15 Sequoia
 这一代外观（这套外观在 11–15 之间基本冻结）。macOS 26 Tahoe 换成了新外观（灰胶囊按钮、
-54×24 开关），两代不合并：`css/theme-macos.css` 是 26 的，`css/theme-macos15.css` 是这代的。
+54×24 开关），两代不合并：`packages/core/css/themes/macos.css` 是 26 的，`packages/core/css/themes/macos15.css` 是这代的。
 
 **像素来源是「系统本身」这一级，但走的是兼容外观路径**：本机是 macOS 26.6.1 + Xcode 27.1
 （只有 macOS 26/27 SDK），没有 15.x 系统。AppKit 挑外观看的是二进制 `LC_BUILD_VERSION`
@@ -213,7 +213,7 @@ knob 20×20 白色圆 + 约 1.5px 落影；可见宽 216（frame 220 左右各�
 3. 在 `verify/verify-macos15.html` 的 `rows` 里按同样顺序加一行，宽度/位置按可见尺寸对齐；
 4. 在 `tools/compare-macos15.py` 的 `ROWS`（以及需要的话 `SAMPLE_POINTS`）里同步加；
 5. 跑 `bash tools/verify-macos15.sh`，看 `shots/verify/macos15/{row}-{mode}.png`；
-6. 差在哪就改 `css/theme-macos15.css` 的令牌，值有变化回头更新上面那张表。
+6. 差在哪就改 `packages/core/css/themes/macos15.css` 的令牌，值有变化回头更新上面那张表。
 
 ## 清理和确定性
 

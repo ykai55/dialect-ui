@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>@dialect-ui/vue fixture</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <pre id="result">RUNNING</pre>
+
+    <script type="module" src="./main.ts"></script>
+    <script>
+      // 兜底：模块加载失败或断言中断时，tools/test-fixture.sh 也必须看到 FAIL，
+      // 不能把一直停在 RUNNING 的页面当成通过。
+      setTimeout(function () {
+        var el = document.getElementById("result");
+        if (el && el.textContent.trim() === "RUNNING") {
+          el.textContent = "FAIL 验收脚本没有跑完（模块加载失败或断言中断）";
+        }
+      }, 4500);
+    </script>
+  </body>
+</html>

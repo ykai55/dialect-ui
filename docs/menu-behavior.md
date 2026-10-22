@@ -391,7 +391,7 @@ Tahoe 的菜单比上一代更圆、四周留白更多：外圆角约 12，项�
 
 - 弹层用 `popover="manual"`，不是默认的 auto。auto 的 light dismiss 在「菜单开着时点触发器」这条
   路径上会先把菜单关掉，再把同一次 click 交给触发器，结果又打开一遍，看起来像关不掉。改成 manual
-  后，点外面由 `js/menu.js` 的 document `pointerdown` 处理，关闭时机和焦点归属都能自己定。
+  后，点外面由 `packages/core/src/behavior/menu.js` 的 document `pointerdown` 处理，关闭时机和焦点归属都能自己定。
 - 点外面那一下没有吞掉。原生 Windows 菜单会把关闭菜单的这次点击吃掉，不做任何事；我们让点击照常
   落到下面的元素上。要吞就得在 `pointerdown` 里 `preventDefault`，容易误伤正常交互，先不做。
 - Tab 关闭菜单、焦点继续往后走，跟 Windows / macOS 的估计一致；GNOME 的「Tab 在菜单内循环」没做。

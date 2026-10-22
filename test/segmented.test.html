@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <title>segmented test</title>
-    <link rel="stylesheet" href="../css/tokens.css" />
-    <link rel="stylesheet" href="../css/components.css" />
-    <link rel="stylesheet" href="../css/theme-macos.css" />
+    <link rel="stylesheet" href="../packages/core/css/tokens.css" />
+    <link rel="stylesheet" href="../packages/core/css/components.css" />
+    <link rel="stylesheet" href="../packages/core/css/themes/macos.css" />
   </head>
   <body>
     <div id="wrap" data-theme="macos" data-mode="light">
@@ -19,8 +19,12 @@
 
     <pre id="result">RUNNING</pre>
 
-    <script src="../js/segmented.js"></script>
-    <script>
+    <script type="module">
+      import { initAll } from "../packages/core/src/index.js";
+      initAll();
+    </script>
+
+    <script type="module">
       (function () {
         var lines = [];
         function check(name, fn) {

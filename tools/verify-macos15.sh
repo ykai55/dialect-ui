@@ -58,7 +58,7 @@ PYTHON="$PYTHON" WORK="$WORK/native" bash tools/render-macos-legacy.sh | sed 's/
 
 echo "2/3 截 CSS 版本（${PAGE_W}×${PAGE_H} @2x）"
 # 每次清空 Chrome profile：http.server 不支持条件请求，复用 profile 时 Chrome 可能
-# 直接拿上一次缓存的 css/theme-macos15.css，改完 CSS 再跑会看到旧样式。
+# 直接拿上一次缓存的 packages/core/css/themes/macos15.css，改完 CSS 再跑会看到旧样式。
 for mode in light dark; do
   rm -rf "$PROFILE"
   mkdir -p "$PROFILE"

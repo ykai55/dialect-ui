@@ -1,7 +1,7 @@
 # 分段控件：六平台依据与实现取舍
 
-分段控件是一排互斥的按钮，一次选中一个。外观在 `css/components.css` 的「分段控件」一节，
-每个平台的数值在 `css/theme-*.css` 的 `--seg-*` 令牌里，行为在 `js/segmented.js`。
+分段控件是一排互斥的按钮，一次选中一个。外观在 `packages/core/css/components.css` 的「分段控件」一节，
+每个平台的数值在 `packages/core/css/themes/*.css` 的 `--seg-*` 令牌里，行为在 `packages/core/src/behavior/segmented.js`。
 
 依据等级沿用仓库约定：系统本身 > 官方文档 > 上游源码 > 观感估计。
 
@@ -120,7 +120,7 @@ GNOME 48 起有 `AdwToggleGroup`（libadwaita 1.7）。47 只有 `.linked` 的�
 | GNOME | 每个段都是 Tab 站，逐段走；没有方向键处理 | 上游源码 |
 
 也就是说 mac 和 GNOME 的原生键盘模型都不是「方向键切换」。这一版为了可用性和 web 惯例统一成了
-radiogroup，属于 web affordance，后面要按平台分叉时在 `js/segmented.js` 里按主题加开关。
+radiogroup，属于 web affordance，后面要按平台分叉时在 `packages/core/src/behavior/segmented.js` 里按主题加开关。
 
 ## 验证链路
 

@@ -12,3 +12,12 @@
 # Python 缓存（tools/*.py 运行时产生）
 __pycache__/
 *.pyc
+
+# npm workspaces：依赖和框架包的构建产物都不入库
+/node_modules/
+/packages/*/node_modules/
+/packages/*/dist/
+/packages/*/test/fixture/dist/
+
+# 锁文件不入库：本机走内部 npm 源，resolved URL 带内网地址，公开仓库不发布
+/package-lock.json

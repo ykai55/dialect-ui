@@ -1,0 +1,46 @@
+{
+  "name": "@dialect-ui/core",
+  "version": "0.1.0",
+  "description": "Dialect 的设计令牌、平台主题和框架无关行为层。",
+  "license": "MIT",
+  "homepage": "https://ykai55.github.io/dialect-ui/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ykai55/dialect-ui.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "dialect",
+    "ui",
+    "components",
+    "design-tokens",
+    "windows",
+    "macos",
+    "gnome",
+    "css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "files": [
+    "src",
+    "css",
+    "fonts"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./css/*": "./css/*",
+    "./fonts/*": "./fonts/*",
+    "./package.json": "./package.json"
+  }
+}

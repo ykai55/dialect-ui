@@ -1,7 +1,7 @@
 # 进度条与提示气泡：六平台依据与实现取舍
 
-外观在 `css/components.css` 的「进度条」「提示气泡」两节，数值在 `css/theme-*.css` 的
-`--progress-*` / `--tooltip-*` 令牌里，提示气泡的行为在 `js/tooltip.js`。
+外观在 `packages/core/css/components.css` 的「进度条」「提示气泡」两节，数值在 `packages/core/css/themes/*.css` 的
+`--progress-*` / `--tooltip-*` 令牌里，提示气泡的行为在 `packages/core/src/behavior/tooltip.js`。
 
 依据等级沿用仓库约定：系统本身 > 官方文档 > 上游源码 > 观感估计。这一轮的来源：
 

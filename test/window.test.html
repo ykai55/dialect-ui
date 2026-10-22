@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <title>Window 组件测试</title>
-    <link rel="stylesheet" href="../css/tokens.css" />
-    <link rel="stylesheet" href="../css/components.css" />
-    <link rel="stylesheet" href="../css/window.css" />
-    <link rel="stylesheet" href="../css/theme-win10.css" />
+    <link rel="stylesheet" href="../packages/core/css/tokens.css" />
+    <link rel="stylesheet" href="../packages/core/css/components.css" />
+    <link rel="stylesheet" href="../packages/core/css/window.css" />
+    <link rel="stylesheet" href="../packages/core/css/themes/win10.css" />
   </head>
   <body data-theme="win10" data-mode="light">
     <div class="window" data-window id="win">
@@ -36,10 +36,12 @@
     <button type="button" class="btn" id="outside">outside</button>
     <pre id="result">RUNNING</pre>
 
-    <script src="../js/menu.js"></script>
-    <script src="../js/text-menu.js"></script>
-    <script src="../js/window.js"></script>
-    <script>
+    <script type="module">
+      import { initAll } from "../packages/core/src/index.js";
+      initAll();
+    </script>
+
+    <script type="module">
       (async function () {
         var lines = [];
         function check(name, ok) {

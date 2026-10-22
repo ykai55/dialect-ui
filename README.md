@@ -8,7 +8,8 @@ Windows 10（Aero）、Windows XP（classic）、macOS 26（Tahoe）、macOS 11�
 八种控件：按钮、输入框、多行输入、下拉框（含展开层）、滑块、复选框、单选框、开关。状态有默认、
 悬停、按下、焦点、禁用，明暗两套。Windows XP 没有暗色。另有六个扩展组件：独立菜单与右键菜单（见下文「菜单」）、窗口（见下文「窗口」）、分段控件、标签页、进度条和提示气泡。
 
-纯静态，无构建步骤，无框架依赖。
+站点本身纯静态，无构建步骤，无框架依赖。框架包（`@dialect-ui/react`、`@dialect-ui/vue`）在
+`packages/` 下用 npm workspaces 管理，见[框架包](#框架包)。
 
 在线示例：<https://ykai55.github.io/dialect-ui/>
 
@@ -25,15 +26,19 @@ python3 -m http.server 4173 --bind 127.0.0.1
 ## 主题切换
 
 ```html
-<link rel="stylesheet" href="css/tokens.css" />
-<link rel="stylesheet" href="css/components.css" />
-<link rel="stylesheet" href="css/window.css" />
-<link rel="stylesheet" href="css/theme-macos.css" />
+<link rel="stylesheet" href="packages/core/css/tokens.css" />
+<link rel="stylesheet" href="packages/core/css/components.css" />
+<link rel="stylesheet" href="packages/core/css/window.css" />
+<link rel="stylesheet" href="packages/core/css/themes/macos.css" />
 
 <div class="panel" data-theme="macos" data-mode="dark">
   <button class="btn">Save changes</button>
 </div>
 ```
+
+用 npm 包时同样的 CSS 走子路径导出：`@dialect-ui/core/css/tokens.css`、
+`@dialect-ui/core/css/components.css`、`@dialect-ui/core/css/window.css`、
+`@dialect-ui/core/css/themes/macos.css`。
 
 主题挂在容器的 `data-theme` / `data-mode` 上，组件 CSS 不判断平台。新增平台只加一个主题变量文件；
 多套主题可以在同一页面共存。
@@ -47,6 +52,62 @@ document.documentElement.dataset.mode = "dark";   // light | dark
 
 macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26 之前 `macos15`，26 及以后
 `macos`。Safari、Firefox 拿不到版本号，保持当前选择。
+
+## 框架包
+
+同一套 CSS 和行为层现在拆成三个 npm 包（npm workspaces）：
+
+| 包 | 内容 |
+| --- | --- |
+| `@dialect-ui/core` | 设计令牌、六个平台主题、组件 CSS、无框架行为层（`initAll` / `createXxx`） |
+| `@dialect-ui/react` | React 适配层，peer `react >= 18` |
+| `@dialect-ui/vue` | Vue 3 适配层，peer `vue ^3.4` |
+
+安装（公共 npm，MIT）：
+
+```bash
+npm install @dialect-ui/core @dialect-ui/react   # React
+npm install @dialect-ui/core @dialect-ui/vue     # Vue 3
+```
+
+适配层只渲染和静态站一模一样的 DOM 契约，行为（打开、定位、键盘、焦点）全部交给 core 的控制器，
+不存在第二套实现。当前纵切覆盖 Theme / Button / TextField / Select，其余组件按同一模子铺开。
+
+```bash
+npm install
+npm run build        # 构建两个框架包
+npm test             # 站点行为测试 + 框架包浏览器验收
+```
+
+```tsx
+import "@dialect-ui/core/css/tokens.css";
+import "@dialect-ui/core/css/components.css";
+import "@dialect-ui/core/css/themes/win11.css";
+import { Theme, Button, TextField, Select } from "@dialect-ui/react";
+
+<Theme theme="win11" mode="dark">
+  <Button variant="primary">Save changes</Button>
+  <TextField label="Email address" placeholder="name@example.com" />
+  <Select options={options} defaultValue="a" onValueChange={console.log} />
+</Theme>
+```
+
+Vue 3 用 `v-model` 直接绑值：
+
+```ts
+import { Theme, Button, TextField, Select } from "@dialect-ui/vue";
+```
+
+```html
+<Theme theme="win11" mode="dark">
+  <Button variant="primary">Save changes</Button>
+  <TextField v-model="email" label="Email address" />
+  <Select v-model="choice" :options="options" />
+</Theme>
+```
+
+包结构、状态归属约定、构建/测试方式和后续迁移步骤写在
+[docs/framework-packages.md](docs/framework-packages.md)。
 
 ## 页面与工具
 
@@ -74,7 +135,9 @@ bash tools/verify-win10.sh    # Windows 10：同上
 bash tools/verify-winxp.sh    # Windows XP：同上
 bash tools/frames.sh          # 动效逐帧定格
 bash tools/record-native.sh   # 录制原生控件动画（需要屏幕录制权限）
-bash tools/test.sh            # 交互测试
+bash tools/test.sh            # 站点行为测试
+npm run build                 # 构建 @dialect-ui/react / @dialect-ui/vue
+bash tools/test-frameworks.sh # 框架包浏览器验收
 ```
 
 产物在 `shots/`，2x。verify 脚本要带 Pillow 的 Python（`PYTHON=/path/to/python3`）。对齐页的行序和
@@ -137,7 +200,7 @@ macOS 两代差得多，所以是两个主题文件：26 按钮是灰胶囊、�
 ## 菜单
 
 菜单是行为层组件，不算八种控件里的一个。`.menu` 的外观令牌六个主题都有，独立菜单、右键菜单和
-下拉框展开层共用 `js/menu.js` 的行为。
+下拉框展开层共用 `packages/core/src/behavior/menu.js` 的行为。
 
 ```html
 <div data-menu>
@@ -152,7 +215,8 @@ macOS 两代差得多，所以是两个主题文件：26 按钮是灰胶囊、�
 ```
 
 右键区域放在同一个 `[data-menu]` 容器里，加 `data-menu-context`；也可以直接用脚本
-`Dialect.createMenu(menuEl, options)` 控制打开位置和选中回调，参数写在 `js/menu.js` 开头。
+`createMenu(menuEl, options)`（从 `@dialect-ui/core` 导入，或静态站里用 `initAll()` 自动初始化）
+控制打开位置和选中回调，参数写在 `packages/core/src/behavior/menu.js` 开头。
 
 键盘模型按原生菜单的通用做法：上下键在可导航项之间循环，Home / End 到首尾，Enter 或空格激活，
 Esc 关闭并把焦点还给打开它的元素，Tab 关闭后焦点继续往后走，输入字母按前缀跳转（600ms 内的输入
@@ -167,7 +231,7 @@ Win10 / WinXP / macOS 的「方向键不循环」只是估计，没有为估计�
 
 独立菜单不接管浏览器默认右键菜单；窗口组件会在窗口内统一接管，见下文「窗口」。
 
-输入框和多行输入接了自己的右键菜单：[js/text-menu.js](js/text-menu.js) 复用 `.menu` 外观，右键时按
+输入框和多行输入接了自己的右键菜单：[packages/core/src/behavior/text-menu.js](packages/core/src/behavior/text-menu.js) 复用 `.menu` 外观，右键时按
 选区状态决定哪些项可用。Cut / Copy / Paste / Delete / Select All 五项，没选中时前三项变灰，只读字段
 只留 Copy 和 Select All，禁用字段不弹。Paste 要读剪贴板，浏览器没授权时这一项也是灰的，不是菜单坏了。
 
@@ -327,12 +391,21 @@ Win10 是 uxtheme 实测色但尺寸是估计，XP 的分块宽和高度是估�
 
 1. 给标签页补「整块控件」的 verify 行类型，让 macOS / Win10 的标签页也能进原生对照链。
 2. Windows 11 要上真机跑 uxtheme 管线，或把 WinUI 3 离屏渲染跑通。GNOME 目前靠官方截图和上游 SCSS。
-3. 最后拆包：主题按需引入，组件按需引，给桌面壳留一层封装。
+3. 拆包已开工：`@dialect-ui/core` 收编了 CSS、字体和行为层，React / Vue 的 Theme / Button /
+   TextField / Select 纵切落地；剩余组件按 [docs/framework-packages.md](docs/framework-packages.md)
+   的模子铺开。桌面壳接入留到组件层稳定之后。
 
 ## 工程约定
 
 主题文件只声明自定义属性；组件 CSS 不出现平台名，只读令牌。各平台各做各的，不合并，也不跨平台搬
 数值。
 
-参考图放本地 `reference/shots/<平台>/`，不入库，来源记在 `reference/MANIFEST.md`。更细的约定见
-`AGENTS.md`。
+代码分三层：`packages/core` 是 CSS + 无框架行为层的唯一实现；`packages/react`、`packages/vue` 是
+只渲染 DOM 契约、挂载 core 控制器的薄适配层；根目录的 `css/`、`js/` 只剩站点自己的壳（走廊、
+harness）。参考图放本地 `reference/shots/<平台>/`，不入库，来源记在 `reference/MANIFEST.md`。
+更细的约定见 `AGENTS.md`。
+
+## 许可
+
+MIT，见 [LICENSE](LICENSE)。仓库和三个框架包（`@dialect-ui/core`、`@dialect-ui/react`、
+`@dialect-ui/vue`）都按这个许可证发布。

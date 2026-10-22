@@ -1,0 +1,26 @@
+{
+  "name": "dialect-ui",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dialect：用 HTML + CSS 复刻 Windows、macOS、GNOME 原生观感的组件库。仓库根同时是静态示例站和 npm workspaces 根。",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @dialect-ui/react && npm run build -w @dialect-ui/vue",
+    "test": "bash tools/test.sh && bash tools/test-frameworks.sh",
+    "test:site": "bash tools/test.sh",
+    "test:frameworks": "bash tools/test-frameworks.sh",
+    "serve": "python3 -m http.server 4173 --bind 127.0.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vue": "^3.5.44"
+  },
+  "license": "MIT"
+}

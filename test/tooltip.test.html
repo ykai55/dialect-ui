@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <title>tooltip test</title>
-    <link rel="stylesheet" href="../css/tokens.css" />
-    <link rel="stylesheet" href="../css/components.css" />
-    <link rel="stylesheet" href="../css/theme-win11.css" />
-    <link rel="stylesheet" href="../css/theme-macos.css" />
+    <link rel="stylesheet" href="../packages/core/css/tokens.css" />
+    <link rel="stylesheet" href="../packages/core/css/components.css" />
+    <link rel="stylesheet" href="../packages/core/css/themes/win11.css" />
+    <link rel="stylesheet" href="../packages/core/css/themes/macos.css" />
   </head>
   <body>
     <div id="wrap" data-theme="win11" data-mode="light" style="padding:120px 40px">
@@ -26,8 +26,12 @@
 
     <pre id="result">RUNNING</pre>
 
-    <script src="../js/tooltip.js"></script>
-    <script>
+    <script type="module">
+      import { initAll } from "../packages/core/src/index.js";
+      initAll();
+    </script>
+
+    <script type="module">
       (function () {
         var lines = [];
         function check(name, fn) {

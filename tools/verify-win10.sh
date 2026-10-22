@@ -82,7 +82,7 @@ fi
 
 # ---------- 截图 ----------
 # 每次清空 Chrome profile：python3 -m http.server 不支持条件请求，
-# 复用 profile 时 Chrome 可能直接拿上一次缓存的 css/components.css，
+# 复用 profile 时 Chrome 可能直接拿上一次缓存的 packages/core/css/components.css，
 # 改完 CSS 再跑就会看到旧样式（这个坑在滑块 thumb 上踩到过一次）。
 rm -rf "$PROFILE"
 mkdir -p "$PROFILE"

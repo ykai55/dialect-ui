@@ -1,7 +1,7 @@
 # 标签页：六平台依据与实现取舍
 
-横向、不可关闭的标签页。外观在 `css/components.css` 的「标签页」一节，每个平台的数值在
-`css/theme-*.css` 的 `--tabs-*` 令牌里，行为在 `js/tabs.js`。
+横向、不可关闭的标签页。外观在 `packages/core/css/components.css` 的「标签页」一节，每个平台的数值在
+`packages/core/css/themes/*.css` 的 `--tabs-*` 令牌里，行为在 `packages/core/src/behavior/tabs.js`。
 
 依据等级沿用仓库约定：系统本身 > 官方文档 > 上游源码 > 观感估计。这一轮的像素来源：
 
@@ -129,7 +129,7 @@ inline 形态，所以只保留 34 的标签高。`GtkNotebook` 的 4px 下划�
 
 ## 键盘
 
-`js/tabs.js` 按主题令牌 `--tabs-arrow-mode` 分三档：
+`packages/core/src/behavior/tabs.js` 按主题令牌 `--tabs-arrow-mode` 分三档：
 
 | 主题 | 模式 | 行为 |
 | --- | --- | --- |

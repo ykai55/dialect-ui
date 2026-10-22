@@ -149,7 +149,7 @@ python3 tools/anim-strip.py /tmp/native-rec check-light
 | 复选框 / 单选框 | 16×16，未选 `#D0D0D0`，选中 `#095DF8`，禁用选中 `#85A9ED` | 未选 `#333234`，选中 `#1064FE`，禁用选中 `#193D81` |
 | 开关 | 54×24，滑块是 **32×20 的胶囊**（不是圆），关 `#D0D0D0`，开 `#095DF8`，滑块白 | 关 `#333234`，开 `#1064FE`，滑块关态 `#E1E0E1`、开态 `#DBE8FF` |
 
-这些值都写进了 `css/theme-macos.css`，注释里标了来源。
+这些值都写进了 `packages/core/css/themes/macos.css`，注释里标了来源。
 
 ## 这套方法的边界
 
@@ -168,14 +168,14 @@ python3 tools/anim-strip.py /tmp/native-rec check-light
 1. 在 `tools/appkit-render.swift` 的 `specs` 里加一行；
 2. 跑 `tools/verify-macos.sh`；
 3. 在 `verify/verify.html` 的 `rows` 里加同样的一行（顺序必须一致）；
-4. 看 `shots/verify/macos/{控件}-{mode}.png`，差在哪就改 `css/theme-macos.css` 里的令牌；
+4. 看 `shots/verify/macos/{控件}-{mode}.png`，差在哪就改 `packages/core/css/themes/macos.css` 里的令牌；
 5. 值有变化的话，回头更新上面那张表。
 
 ## Windows 10：拿系统自己当像素参考
 
 Win10 这套主题不是估的。2026-10-20 在 `ssh box-win`（Windows 10 Enterprise 22H2 / build 19045，
 Aero.msstyles，主题字体 Microsoft YaHei UI 9pt，会话实际 96 dpi）上用 uxtheme 的
-`DrawThemeBackground` 把每个控件、每个状态离屏渲染成 PNG，`css/theme-win10.css` 的数值逐一取自
+`DrawThemeBackground` 把每个控件、每个状态离屏渲染成 PNG，`packages/core/css/themes/win10.css` 的数值逐一取自
 这批图。**注意：那台机器不是 Windows 11**，所以这套值只对 Win10 有效，不能搬进 `theme-win11.css`。
 
 ### 一条命令

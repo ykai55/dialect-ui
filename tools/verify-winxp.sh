@@ -94,8 +94,8 @@ fi
 
 # ---------- 截图 ----------
 # 每次清空 Chrome profile：python3 -m http.server 不支持条件请求，
-# 复用 profile 时 Chrome 可能直接拿上一次缓存的 css/components.css 或
-# css/theme-winxp.css，改完 CSS 再跑就会看到旧样式。
+# 复用 profile 时 Chrome 可能直接拿上一次缓存的 packages/core/css/components.css 或
+# packages/core/css/themes/winxp.css，改完 CSS 再跑就会看到旧样式。
 rm -rf "$PROFILE"
 mkdir -p "$PROFILE"
 echo "2/3 截 CSS 版本（${PAGE_W}×${PAGE_H} @2x，单模式 light）"
