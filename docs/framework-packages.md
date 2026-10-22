@@ -346,6 +346,13 @@ ContextMenu 的右键打开；Window 的窗口按钮派发 action、右键拦截
   （`publishConfig.access` 已写入，不用再带 `--access public`）。
 - 前提：执行发布的账号在公网 npm 上拥有 `@dialect-ui` 这个 scope（用户名或组织）。没有的话要么在
   npmjs.com 建同名组织，要么改成不带 scope 的包名。
+- 首次发布时 npm 会先返回 `202 Accepted` 并提示「being processed」，几分钟后版本才可读；
+  这期间 `npm view` / registry packument 可能 404，重复 publish 会报
+  `409 Cannot publish over previously staged version`（npm 已知问题，见 npm/cli#9889）。
+  遇到时等几分钟或直接 bump 一个新版本，不要反复重发同一版本。
+- `0.1.2` 已发布为 `latest`（2026-10）。npm 上还留有首轮发布产生的 `0.1.0` 和占位版本
+  `0.0.0-stage`；bypass-2FA 的 granular token 不允许 unpublish（npm 已限制），要清理只能用网页端
+  登录后删版本。
 
 ## 测试
 
