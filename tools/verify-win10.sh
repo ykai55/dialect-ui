@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 一条命令跑完 Win10 的「原生 vs 复刻」核对：
 #   1. 确认本地静态服务（默认 http://127.0.0.1:4173），没起就自己在别的端口起一个
-#   2. 用无头 Chrome 2x 截 verify-win10.html 的 light / dark 两张
+#   2. 用无头 Chrome 2x 截 verify/verify-win10.html 的 light / dark 两张
 #   3. 调 tools/compare-win10.py，一个控件一张对照图，输出 shots/verify/win10/
 #
 # 原生图不用现渲染：已经在 reference/shots/windows/win10-uxtheme/matrix/ 里了
@@ -51,7 +51,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-if curl -sf -o /dev/null "$BASE/verify-win10.html"; then
+if curl -sf -o /dev/null "$BASE/verify/verify-win10.html"; then
   echo "1/3 用已有静态服务 ${BASE}"
 else
   for port in 4174 4175 4176 4177 4178 4179 4180; do
@@ -62,12 +62,12 @@ else
     SERVER_PID=$!
     BASE="http://127.0.0.1:$port"
     for _ in $(seq 1 50); do
-      if curl -sf -o /dev/null "$BASE/verify-win10.html"; then
+      if curl -sf -o /dev/null "$BASE/verify/verify-win10.html"; then
         break
       fi
       sleep 0.1
     done
-    if curl -sf -o /dev/null "$BASE/verify-win10.html"; then
+    if curl -sf -o /dev/null "$BASE/verify/verify-win10.html"; then
       echo "1/3 自己起了静态服务 ${BASE}（pid ${SERVER_PID}，结束会关掉）"
       break
     fi
@@ -95,7 +95,7 @@ for mode in light dark; do
     --user-data-dir="$PROFILE" \
     --virtual-time-budget=1500 \
     --screenshot="$WORK/css-$mode.png" \
-    "$BASE/verify-win10.html?mode=$mode&v=$(date +%s)" >/dev/null 2>&1
+    "$BASE/verify/verify-win10.html?mode=$mode&v=$(date +%s)" >/dev/null 2>&1
   echo "    $WORK/css-$mode.png"
 done
 

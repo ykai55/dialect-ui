@@ -2,7 +2,7 @@
 """把 macOS 11–15 legacy AppKit 原生控件和 CSS 复刻（data-theme="macos15"）逐个拼对照图。
 
 用法：python3 tools/compare-macos15.py <WORK>
-  <WORK>/css-{light,dark}.png                          verify-macos15.html 的 2x 截图
+  <WORK>/css-{light,dark}.png                          verify/verify-macos15.html 的 2x 截图
   reference/shots/macos15/appkit/native-{mode}-{row}.png  原生渲染（2x）
   shots/verify/macos15/{row}-{mode}.png               输出：上原生、下 CSS
   shots/verify/macos15/report.txt                     逐行 ink bbox 差 + 颜色对照
@@ -12,10 +12,10 @@
    都会偏（CSS 是 sRGB）。转换用的 profile 是 AppKit 自己写进去的那个。
 2. 除了拼图，还打印逐行 ink bbox 差和颜色对照，写进 report.txt。
 3. 行数和 26 那套一样是 14 行，但控件尺寸按 legacy 的可见尺寸对（见
-   verify-macos15.html 里的注释）。
+   verify/verify-macos15.html 里的注释）。
 
 【同步约定，改之前先读】
-  ROWS 的顺序必须和 verify-macos15.html 的 rows 数组逐项一致；
+  ROWS 的顺序必须和 verify/verify-macos15.html 的 rows 数组逐项一致；
   每行 48px（截图为 2x，切片按 96px 累加），两边一起改、只往后加。
 """
 import io
@@ -149,7 +149,7 @@ def main():
     w = report.append
     w("macOS 11–15 legacy 原生 vs CSS（data-theme=macos15）")
     w("原生图：reference/shots/macos15/appkit/（sdk 15.0 compat 路径，见 docs/macos15-native-notes.md）")
-    w("CSS 图：verify-macos15.html?mode={light,dark}（324×48 格，2x）")
+    w("CSS 图：verify/verify-macos15.html?mode={light,dark}（324×48 格，2x）")
     w("bbox 单位：CSS px（1x）；Δ = CSS − 原生。颜色已统一到 sRGB。")
     w("")
 
@@ -161,7 +161,7 @@ def main():
         expect_h = len(ROWS) * CELL_H
         if css_strip.height != expect_h:
             sys.exit(
-                "%s 高 %dpx，按 ROWS 应该是 %dpx（行数 / 行高和 verify-macos15.html 不同步）"
+                "%s 高 %dpx，按 ROWS 应该是 %dpx（行数 / 行高和 verify/verify-macos15.html 不同步）"
                 % (strip_path, css_strip.height, expect_h)
             )
         w("## %s" % mode)

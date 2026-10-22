@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>参考图 vs 复刻 · Dialect</title>
-    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="../css/base.css" />
     <style>
       .cmp-page {
         max-width: 1400px;
@@ -104,7 +104,7 @@
     <header class="bar">
       <div class="bar__brand">参考图 vs 复刻 <span>左：系统原生截图 · 右：HTML + CSS 复刻</span></div>
       <div class="bar__spacer"></div>
-      <a class="bar__hint" href="index.html">交互版 →</a>
+      <a class="bar__hint" href="../index.html">交互版 →</a>
       <a class="bar__hint" href="harness.html">状态矩阵 →</a>
     </header>
 
@@ -117,14 +117,14 @@
       <div id="sections"></div>
     </main>
 
-    <script src="reference/manifest.js"></script>
+    <script src="../reference/manifest.js"></script>
     <script>
       (function () {
         var PLATS = [
-          { id: "win11", name: "Windows 11", sub: "Fluent / WinUI 3", shot: "shots/play-win11-light.png" },
-          { id: "macos", name: "macOS 26", sub: "Tahoe", shot: "shots/play-macos-light.png" },
-          { id: "macos15", name: "macOS 15", sub: "Sequoia 及更早（26 之前）", shot: "shots/play-macos15-light.png" },
-          { id: "gnome", name: "GNOME", sub: "Adwaita / GTK4", shot: "shots/play-gnome-light.png" }
+          { id: "win11", name: "Windows 11", sub: "Fluent / WinUI 3", shot: "../shots/play-win11-light.png" },
+          { id: "macos", name: "macOS 26", sub: "Tahoe", shot: "../shots/play-macos-light.png" },
+          { id: "macos15", name: "macOS 15", sub: "Sequoia 及更早（26 之前）", shot: "../shots/play-macos15-light.png" },
+          { id: "gnome", name: "GNOME", sub: "Adwaita / GTK4", shot: "../shots/play-gnome-light.png" }
         ];
         var data = window.REFERENCE || {};
         var root = document.getElementById("sections");
@@ -151,7 +151,7 @@
             refs.forEach(function (src) {
               var fig = document.createElement("figure");
               fig.innerHTML =
-                '<img loading="lazy" src="' + src + '" alt="">' +
+                '<img loading="lazy" src="../' + src + '" alt="">' +
                 "<figcaption>" + src.split("/").pop() + "</figcaption>";
               refsBox.appendChild(fig);
             });

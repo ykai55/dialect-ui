@@ -21,5 +21,5 @@ mkdir -p "$OUT"
   --user-data-dir="$PROFILE" \
   --virtual-time-budget=3000 \
   --screenshot="$OUT/${TARGET}-${THEME}-${MODE}.png" \
-  "$BASE/frames.html?target=${TARGET}&theme=${THEME}&mode=${MODE}&n=${N}&v=$(date +%s)" >/dev/null 2>&1
+  "$BASE/demo/frames.html?target=${TARGET}&theme=${THEME}&mode=${MODE}&n=${N}&v=$(date +%s)" >/dev/null 2>&1
 echo "$OUT/${TARGET}-${THEME}-${MODE}.png"

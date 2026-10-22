@@ -327,7 +327,7 @@ body.mode-dark .board__cap b {
   align-items: flex-start;
 }
 
-/* ---------------- 状态矩阵（harness.html） ---------------- */
+/* ---------------- 状态矩阵（demo/harness.html） ---------------- */
 
 .harness {
   display: grid;

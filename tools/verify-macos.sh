@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 一条命令跑完 macOS 的「原生 vs 复刻」核对：
 #   1. 编译 tools/appkit-render.swift，把真实 AppKit 控件渲染成 PNG
-#   2. 用无头 Chrome 截 verify.html 的同一组控件
+#   2. 用无头 Chrome 截 verify/verify.html 的同一组控件
 #   3. 拼成 shots/verify-macos-{light,dark}.png
 #
 # 前置：本地静态服务已经在跑（python3 -m http.server 4173），见 README。
@@ -40,7 +40,7 @@ for mode in light dark; do
     --user-data-dir="$PROFILE" \
     --virtual-time-budget=1500 \
     --screenshot="$WORK/css-$mode.png" \
-    "$BASE/verify.html?mode=$mode&v=$(date +%s)" >/dev/null 2>&1
+    "$BASE/verify/verify.html?mode=$mode&v=$(date +%s)" >/dev/null 2>&1
   echo "    $WORK/css-$mode.png"
 done
 

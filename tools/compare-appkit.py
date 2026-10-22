@@ -2,7 +2,7 @@
 """把 AppKit 原生控件和 CSS 复刻逐个控件拼成对照图（一个组件一张）。
 
 用法：python3 tools/compare-appkit.py <WORK>
-  <WORK>/css-{light,dark}.png   verify.html 的截图
+  <WORK>/css-{light,dark}.png   verify/verify.html 的截图
   reference/shots/macos/appkit/native-{mode}-{row}.png   原生渲染
   shots/verify/macos/{row}-{mode}.png                    输出
 """

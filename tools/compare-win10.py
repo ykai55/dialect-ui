@@ -2,7 +2,7 @@
 """把 Win10 原生控件（uxtheme 离屏渲染）和 CSS 复刻逐个控件拼成对照图（一个控件一张）。
 
 用法：python3 tools/compare-win10.py <WORK>
-  <WORK>/css-{light,dark}.png                        verify-win10.html 的 2x 截图
+  <WORK>/css-{light,dark}.png                        verify/verify-win10.html 的 2x 截图
   reference/shots/windows/win10-uxtheme/matrix/
     win10-{row}-{mode}.png                          原生渲染（1x 的最近邻 2x 放大）
   shots/verify/win10/{row}-{mode}.png               输出
@@ -14,7 +14,7 @@
   - 整页缩略图不保留。
 
 【同步约定，改之前先读】
-  ROWS 的顺序和行高必须和 verify-win10.html 的 `rows` 数组逐项一致：
+  ROWS 的顺序和行高必须和 verify/verify-win10.html 的 `rows` 数组逐项一致：
   每行一个 .cell，普通行 48px、textarea 行 120px，截图是 2x。
   脚本按 48/120 累加切片，所以行序错一个，后面所有控件都会错位；
   加控件时两边一起加、只往后面加，别插队。改行高也要两边同时改。
@@ -24,7 +24,7 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
-# 顺序 = verify-win10.html 的 rows 顺序，逐项对应。
+# 顺序 = verify/verify-win10.html 的 rows 顺序，逐项对应。
 ROWS = [
     # button
     "button-normal",
@@ -124,7 +124,7 @@ def main():
         if css_strip.height != expect_h:
             sys.exit(
                 f"{strip_path} 高 {css_strip.height}px，按 ROWS 应该是 {expect_h}px。\n"
-                f"  行序或行高和 verify-win10.html 不同步了：先对齐两边再重跑。"
+                f"  行序或行高和 verify/verify-win10.html 不同步了：先对齐两边再重跑。"
             )
 
         # 按 48/120 累加切片，textarea 行更高

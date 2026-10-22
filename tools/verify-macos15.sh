@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 一条命令跑完 macOS 11–15 旧版外观的「原生 vs 复刻」核对：
 #   1. 调 tools/render-macos-legacy.sh 渲染原生控件（编译 → vtool 改 sdk 15.0 → 渲染 → 采样）
-#   2. 用无头 Chrome 2x 截 verify-macos15.html 的明暗两套
+#   2. 用无头 Chrome 2x 截 verify/verify-macos15.html 的明暗两套
 #   3. tools/compare-macos15.py 逐个控件拼对照图，输出逐行 ink bbox 差 + 颜色对照
 #
 # 产物：
@@ -24,7 +24,7 @@ WORK="${WORK:-/tmp/dialect-ui-macos15-verify}"
 PROFILE="$WORK/chrome-profile"
 
 # 页面：14 行 × 48px = 672（1x），截图 2x = 648×1344。
-# 和 verify-macos15.html 的 .cell、tools/compare-macos15.py 的 ROWS/CELL_H 同步。
+# 和 verify/verify-macos15.html 的 .cell、tools/compare-macos15.py 的 ROWS/CELL_H 同步。
 PAGE_W=324
 PAGE_H=672
 
@@ -47,8 +47,8 @@ fi
 
 mkdir -p "$WORK" "$PROFILE"
 
-if ! curl -sf -o /dev/null "$BASE/verify-macos15.html"; then
-  echo "静态服务没起：$BASE/verify-macos15.html 打不开。" >&2
+if ! curl -sf -o /dev/null "$BASE/verify/verify-macos15.html"; then
+  echo "静态服务没起：$BASE/verify/verify-macos15.html 打不开。" >&2
   echo "先跑：python3 -m http.server 4173 --bind 127.0.0.1" >&2
   exit 1
 fi
@@ -69,7 +69,7 @@ for mode in light dark; do
     --user-data-dir="$PROFILE" \
     --virtual-time-budget=1500 \
     --screenshot="$WORK/css-$mode.png" \
-    "$BASE/verify-macos15.html?mode=$mode&v=$(date +%s)" >/dev/null 2>&1
+    "$BASE/verify/verify-macos15.html?mode=$mode&v=$(date +%s)" >/dev/null 2>&1
   echo "    $WORK/css-$mode.png"
 done
 

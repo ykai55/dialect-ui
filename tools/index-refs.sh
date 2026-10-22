@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 把 reference/shots 里收到的图片列进 reference/manifest.js，compare.html 直接读它。
+# 把 reference/shots 里收到的图片列进 reference/manifest.js，demo/compare.html 直接读它。
 set -euo pipefail
 cd "$(dirname "$0")/.."
 

@@ -51,19 +51,19 @@ TMPDIR=/tmp/ak CLANG_MODULE_CACHE_PATH=/tmp/ak/mc \
 
 ## 第二步：截 CSS 版本
 
-`verify.html?mode=light|dark` 按同样的 12 行、同样的单元格尺寸（324×48）画出对应控件，
+`verify/verify.html?mode=light|dark` 按同样的 14 行、同样的单元格尺寸（324×48）画出对应控件，
 控件尺寸和原生对齐（按钮宽 200、输入框宽 300）。
 
 ```bash
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
   --headless=new --disable-gpu --hide-scrollbars \
   --force-device-scale-factor=2 \
-  --window-size=324,576 \
+  --window-size=324,672 \
   --screenshot=/tmp/css-light.png \
-  "http://127.0.0.1:4173/verify.html?mode=light"
+  "http://127.0.0.1:4173/verify/verify.html?mode=light"
 ```
 
-`324×576` 就是 12 行 × 48px。行高必须严格一致，否则拼图会错位。
+`324×672` 就是 14 行 × 48px。行高必须严格一致，否则拼图会错位。
 
 ## 第三步：一个组件一张对照图
 
@@ -165,7 +165,7 @@ python3 tools/anim-strip.py /tmp/native-rec check-light
 
 1. 在 `tools/appkit-render.swift` 的 `specs` 里加一行；
 2. 跑 `tools/verify-macos.sh`；
-3. 在 `verify.html` 的 `rows` 里加同样的一行（顺序必须一致）；
+3. 在 `verify/verify.html` 的 `rows` 里加同样的一行（顺序必须一致）；
 4. 看 `shots/verify/macos/{控件}-{mode}.png`，差在哪就改 `css/theme-macos.css` 里的令牌；
 5. 值有变化的话，回头更新上面那张表。
 

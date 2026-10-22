@@ -2,7 +2,7 @@
 """把 XP classic 原生控件（GDI / DrawFrameControl 离屏渲染）和 CSS 复刻逐个控件拼成对照图。
 
 用法：python3 tools/compare-winxp.py <WORK>
-  <WORK>/css-light.png                             verify-winxp.html 的 2x 截图
+  <WORK>/css-light.png                             verify/verify-winxp.html 的 2x 截图
   reference/shots/windows/classic/
     {row}-96dpi.png                                原生渲染（324×48 逻辑格，textarea 324×104，menu 324×112）
   shots/verify/winxp/{row}.png                   输出
@@ -24,7 +24,7 @@
 缺某张原生图时跳过该行、最后统一列出缺了哪些（探针图不全，正式矩阵齐了就不该缺）。
 
 【同步约定，改之前先读】
-  ROWS 的顺序和行高必须和 verify-winxp.html 的 rows 数组逐项一致：
+  ROWS 的顺序和行高必须和 verify/verify-winxp.html 的 rows 数组逐项一致：
   每行一个 .cell，普通行 48px，textarea 行 104px，menu 行 112px，截图是 2x。
   脚本按 48/104/112 累加切片，所以行序错一个，后面所有控件都会错位；
   加控件时两边一起加、只往后面加，别插队。改行高也要两边同时改。
@@ -35,7 +35,7 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
-# 顺序 = verify-winxp.html 的 rows 顺序，逐项对应。
+# 顺序 = verify/verify-winxp.html 的 rows 顺序，逐项对应。
 ROWS = [
     # button
     "button-normal",
@@ -67,7 +67,7 @@ ROWS = [
     "menu-popup-hover",
 ]
 
-# 行高（1x 逻辑像素）：和 verify-winxp.html 的 .cell / .cell--textarea / .cell--menu 对应。
+# 行高（1x 逻辑像素）：和 verify/verify-winxp.html 的 .cell / .cell--textarea / .cell--menu 对应。
 # textarea 104、menu 112，其余一律 48。
 ROW_HEIGHTS = {
     "textarea-normal": 104,
@@ -143,7 +143,7 @@ def main():
     if css_strip.height != expect_h:
         sys.exit(
             f"{strip_path} 高 {css_strip.height}px，按 ROWS 应该是 {expect_h}px。\n"
-            f"  行序或行高和 verify-winxp.html 不同步了：先对齐两边再重跑。"
+            f"  行序或行高和 verify/verify-winxp.html 不同步了：先对齐两边再重跑。"
         )
 
     # 按 48/104/112 累加切片，textarea 和 menu 行更高

@@ -41,10 +41,10 @@ if [ "$WHAT" = "all" ] || [ "$WHAT" = "harness" ]; then
   echo "harness"
   for theme in win11 win10 winxp macos macos15 gnome; do
     for mode in light dark; do
-      shot "harness.html?theme=${theme}&mode=${mode}" "matrix-${theme}-${mode}.png" 620 1060
+      shot "demo/harness.html?theme=${theme}&mode=${mode}" "matrix-${theme}-${mode}.png" 620 1060
     done
   done
-  shot "harness.html?mode=light" "matrix-all-light.png" 3000 1200
+  shot "demo/harness.html?mode=light" "matrix-all-light.png" 3000 1200
 fi
 
 echo "done"

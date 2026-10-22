@@ -180,7 +180,7 @@ knob 20×20 白色圆 + 约 1.5px 落影；可见宽 216（frame 220 左右各�
 4. **字体**：AppKit 做字体平滑，笔画比 Chrome 粗一档；同样 13px 的字，CSS 的 label 宽度
    会和原生差 1–3px。check / radio 行 bbox 宽 1px 的差主要来自这里，不是盒子画错。
 5. **绘制惯例差**：AppKit bezel 比 frame 小一圈（按钮 −12×−11、输入框 −1、开关 −4×−3、
-   下拉 −5×−4）。CSS 的盒子就是可见尺寸，所以 `verify-macos15.html` 按可见尺寸/位置对齐，
+   下拉 −5×−4）。CSS 的盒子就是可见尺寸，所以 `verify/verify-macos15.html` 按可见尺寸/位置对齐，
    report 里宽度差才能压到 0–2px。这不是主题值，是两套绘制模型的差别。
 6. **形状差**：
    - 下拉框 chevron：原生是圆头折线，现在用 SVG mask 画（`--select-chevron-mask`），
@@ -210,7 +210,7 @@ knob 20×20 白色圆 + 约 1.5px 落影；可见宽 216（frame 220 左右各�
 1. 在 `tools/appkit-render.swift` 的 `specs` 里加一行（需要窗口承载的控件在 `render` 调用处
    说明）；
 2. 跑 `bash tools/render-macos-legacy.sh`，看 `metrics.txt` 里新控件的可见尺寸和颜色；
-3. 在 `verify-macos15.html` 的 `rows` 里按同样顺序加一行，宽度/位置按可见尺寸对齐；
+3. 在 `verify/verify-macos15.html` 的 `rows` 里按同样顺序加一行，宽度/位置按可见尺寸对齐；
 4. 在 `tools/compare-macos15.py` 的 `ROWS`（以及需要的话 `SAMPLE_POINTS`）里同步加；
 5. 跑 `bash tools/verify-macos15.sh`，看 `shots/verify/macos15/{row}-{mode}.png`；
 6. 差在哪就改 `css/theme-macos15.css` 的令牌，值有变化回头更新上面那张表。
