@@ -60,6 +60,9 @@ macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26
 | `verify/verify-win10.html` | Windows 10 对齐页，供 `tools/verify-win10.sh` 使用。 |
 | `verify/verify-winxp.html` | Windows XP 对齐页，供 `tools/verify-winxp.sh` 使用。 |
 
+走廊里的鼠标指针是开源复刻资源，来源、许可和转换方式见
+[assets/cursors/SOURCES.md](assets/cursors/SOURCES.md)。
+
 截图与核对由 `tools/` 下的脚本完成：
 
 ```bash

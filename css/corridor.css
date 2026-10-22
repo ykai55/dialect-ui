@@ -173,13 +173,40 @@ body.corridor {
 
 .room[data-era="win11"] {
   --win-radius: 8px;
-  --win-bar-h: 36px;
+  --win-bar-h: 32px;
   --win-bar-bg: #2b2b2b;
   --win-bar-fg: #ffffff;
   --win-border: rgba(255, 255, 255, 0.08);
   --win-border-w: 1px;
   --win-body-bg: var(--ui-surface);
   --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+/* Win11 的窗口按钮同样是 46px 宽的整条命中区，悬停才显底色 */
+.room[data-era="win11"] .era-win__bar {
+  padding-right: 0;
+}
+
+.room[data-era="win11"] .era-win__caps {
+  gap: 0;
+  align-self: stretch;
+}
+
+.room[data-era="win11"] .era-win__cap {
+  width: 46px;
+  height: 100%;
+  border-radius: 0;
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+.room[data-era="win11"] .era-win__cap:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.room[data-era="win11"] .era-win__cap--close:hover {
+  background: #c42b1c;
+  color: #fff;
 }
 
 .room[data-era="win11"] .room__wall {
@@ -235,13 +262,42 @@ body.corridor {
 
 .room[data-era="win10"] {
   --win-radius: 0px;
-  --win-bar-h: 30px;
+  --win-bar-h: 31px;
+  --win-title-weight: 400;
   --win-bar-bg: #ffffff;
   --win-bar-fg: #000000;
   --win-border: #c8c8c8;
   --win-border-w: 1px;
   --win-body-bg: var(--ui-surface);
   --win-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+/* Win10 的标题栏按钮是 46px 宽、贴满高度的直角命中区，只有悬停才变灰 / 变红 */
+.room[data-era="win10"] .era-win__bar {
+  padding-right: 0;
+}
+
+.room[data-era="win10"] .era-win__caps {
+  gap: 0;
+  align-self: stretch;
+}
+
+.room[data-era="win10"] .era-win__cap {
+  width: 46px;
+  height: 100%;
+  border-radius: 0;
+  font-size: 10px;
+  opacity: 1;
+  color: #000;
+}
+
+.room[data-era="win10"] .era-win__cap:hover {
+  background: #e5e5e5;
+}
+
+.room[data-era="win10"] .era-win__cap--close:hover {
+  background: #e81123;
+  color: #fff;
 }
 
 .room[data-era="win10"] .room__wall {
@@ -752,27 +808,33 @@ body.corridor {
 
 .room[data-era="winxp"] {
   --era-accent: #3a93ff;
-  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.2'/></svg>") 3 2, default;
+  --era-cursor: url("../assets/cursors/winxp/arrow.png") 7 2, default;
+  --era-text-cursor: url("../assets/cursors/winxp/text.png") 16 16, text;
 }
 .room[data-era="win10"] {
   --era-accent: #0078d7;
-  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.2'/></svg>") 3 2, default;
+  --era-cursor: url("../assets/cursors/win11/arrow.png") 8 5, default;
+  --era-text-cursor: url("../assets/cursors/win11/text.png") 16 16, text;
 }
 .room[data-era="win11"] {
   --era-accent: #60cdff;
-  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.2'/></svg>") 3 2, default;
+  --era-cursor: url("../assets/cursors/win11/arrow.png") 8 5, default;
+  --era-text-cursor: url("../assets/cursors/win11/text.png") 16 16, text;
 }
 .room[data-era="macos15"] {
   --era-accent: #8b7bff;
-  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23000000' stroke='%23ffffff' stroke-width='1.4'/></svg>") 3 2, default;
+  --era-cursor: url("../assets/cursors/macos/arrow.png") 8 3, default;
+  --era-text-cursor: url("../assets/cursors/macos/text.png") 16 16, text;
 }
 .room[data-era="macos"] {
   --era-accent: #ff7ab6;
-  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23000000' stroke='%23ffffff' stroke-width='1.4'/></svg>") 3 2, default;
+  --era-cursor: url("../assets/cursors/macos/arrow.png") 8 3, default;
+  --era-text-cursor: url("../assets/cursors/macos/text.png") 16 16, text;
 }
 .room[data-era="gnome"] {
   --era-accent: #3584e4;
-  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23000000' stroke='%23ffffff' stroke-width='1.4'/></svg>") 3 2, default;
+  --era-cursor: url("../assets/cursors/gnome/arrow.png") 8 2, default;
+  --era-text-cursor: url("../assets/cursors/gnome/text.png") 16 16, text;
 }
 
 .room__wall {
@@ -976,8 +1038,9 @@ body.corridor {
 }
 
 .room input:not([type="range"]),
-.room textarea {
-  cursor: text;
+.room textarea,
+.room [contenteditable] {
+  cursor: var(--era-text-cursor, text);
 }
 
 .room button,
