@@ -455,17 +455,17 @@
 .window[data-window-frame="macos"] .window__traffic,
 .window[data-window-frame="macos15"] .window__traffic {
   position: absolute;
-  left: 12px;
+  left: 8px;
 }
 
-/* macOS 26：13px 圆、10px 间距，符号常显（AppKit 26 截图采样） */
+/* macOS 26：AppKit 26 采样，按钮 14pt、中心距 23.25pt，符号默认隐藏、悬停整组显示 */
 .window[data-window-frame="macos"] .window__traffic {
-  gap: 10px;
+  gap: 9px;
 }
 
 .window[data-window-frame="macos"] .window__traffic-dot {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
 }
 
 .window[data-window-frame="macos"] .window__traffic-dot--close {
