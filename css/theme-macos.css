@@ -147,10 +147,83 @@
   --menu-item-selected-bg: #095df8;
   --menu-item-selected-fg: #ffffff;
   --menu-item-font-size: 13px;
+  /* 菜单分隔线、禁用项、快捷键：Tahoe 的分隔线两端各内缩约 10px，
+     禁用项用 30% 黑，快捷键二级灰。均标估计。 */
+  --menu-sep-margin: 4px 10px; /* 估计 */
+  --menu-sep-color: rgba(0, 0, 0, 0.1); /* 估计 */
+  --menu-item-disabled-fg: rgba(0, 0, 0, 0.3); /* 估计 */
+  --menu-shortcut-opacity: 0.5; /* 估计 */
 
   --textarea-py: 5px;
   --switch-duration: 140ms;
   --switch-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  /* 分段控件：24 高、灰轨道 + 强调色实心选中块。尺寸和颜色来自 NSSegmentedControl
+     离屏渲染实测（详见 docs/segmented-notes.md）；悬停 / 按下 / 焦点环是估计。 */
+  --seg-h: 24px;
+  --seg-radius: 6px;
+  --seg-bg: #d5d5d5;
+  --seg-fg: #212121;
+  --seg-font-size: 13px;
+  --seg-item-pad-x: 10.5px;
+  --seg-item-radius: 6px;
+  --seg-selected-bg: #095df8;
+  --seg-selected-fg: #ffffff;
+  --seg-sep-color: #c0c0c0;
+  --seg-hover-bg: rgba(0, 0, 0, 0.06); /* 估计 */
+  --seg-active-bg: rgba(0, 0, 0, 0.1); /* 估计 */
+  --seg-focus-container: 0 0 0 3.5px rgba(10, 96, 254, 0.3); /* 估计：focus ring 由系统另画 */
+  /* 标签页：NSTabView 在 26 上是「居中胶囊分段条 + 圆角内容面板」，胶囊条就是
+     内部那颗 NSSegmentedControl。条 24 高（pill 20）、选中中性灰 #C7C7C7、
+     未选中近黑字；面板比窗口底暗一档、无实色描边。 */
+  --tabs-h: 20px;
+  --tabs-gap: 0px;
+  --tabs-list-width: fit-content;
+  --tabs-list-justify: center;
+  --tabs-list-pad-top: 2px;
+  --tabs-list-pad-x: 2px;
+  --tabs-list-pad-bottom: 2px;
+  --tabs-list-radius: 6px;
+  --tabs-list-overlap: -14px;
+  --tabs-list-focus: 0 0 0 3.5px rgba(10, 96, 254, 0.3); /* 估计：focus ring 由系统另画 */
+  --tabs-tab-radius: 5px;
+  --tabs-pad-x: 10.5px;
+  --tabs-font-size: 13px;
+  --tabs-fg: #252525;
+  --tabs-hover-bg: rgba(0, 0, 0, 0.05); /* 估计 */
+  --tabs-hover-fg: #1a1a1a;
+  --tabs-selected-bg: #c7c7c7;
+  --tabs-selected-fg: #1a1a1a;
+  --tabs-strip-bg: #dfdfdf; /* 半透明材质合成后的近似值 */
+  --tabs-strip-border-w: 0px;
+  --tabs-sep-color: #cdcdcd;
+  --tabs-panel-inset-x: 7px;
+  --tabs-panel-bg: #e8e8e8;
+  --tabs-panel-border-w: 0px;
+  --tabs-panel-radius: 5px;
+  --tabs-panel-pad: 12px;
+  --tabs-arrow-mode: none;
+  --tabs-focus-outline: none;
+  --tabs-duration: 0ms;
+  /* 进度条：NSProgressIndicator.bar 离屏实测：8 高、胶囊端头、轨道 #DEDEDE，
+     深色 #373739；填充是强调色（换算到 sRGB 读值 #007AFF，两代同值）。
+     不确定态 1.9s 的渐变光带往返，这里只做滑动。 */
+  --progress-h: 8px;
+  --progress-radius: 999px;
+  --progress-track: #dedede;
+  --progress-fill: var(--ui-accent);
+  --progress-indeterminate-duration: 1900ms;
+  /* 提示气泡：系统 help tag，取不到像素，下面都是估计 */
+  --tooltip-bg: rgba(255, 255, 255, 0.96);
+  --tooltip-fg: #1a1a1a;
+  --tooltip-border: #d0d0d0;
+  --tooltip-border-w: 1px;
+  --tooltip-radius: 6px;
+  --tooltip-pad-y: 4px;
+  --tooltip-pad-x: 8px;
+  --tooltip-font-size: 11px;
+  --tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --tooltip-show-delay: 1000ms;
+  --tooltip-focus-show: 0;
 }
 
 [data-theme="macos"][data-mode="dark"] {
@@ -222,4 +295,27 @@
   --menu-hover-bg: #1064fe;
   --menu-item-hover-bg: #1064fe;
   --menu-item-selected-bg: #1064fe;
+  --menu-sep-color: rgba(255, 255, 255, 0.12); /* 估计 */
+  --menu-item-disabled-fg: rgba(255, 255, 255, 0.3); /* 估计 */
+  --seg-bg: #29292a;
+  --seg-fg: #dedede;
+  --seg-selected-bg: #1064fe;
+  --seg-sep-color: #3e3e3f;
+  --seg-hover-bg: rgba(255, 255, 255, 0.06); /* 估计 */
+  --seg-active-bg: rgba(255, 255, 255, 0.1); /* 估计 */
+  --seg-focus-container: 0 0 0 3.5px rgba(16, 100, 254, 0.35); /* 估计 */
+  --tabs-fg: #dedede;
+  --tabs-hover-bg: rgba(255, 255, 255, 0.06); /* 估计 */
+  --tabs-hover-fg: #f5f5f7;
+  --tabs-selected-bg: #5b5b5d;
+  --tabs-selected-fg: #ffffff;
+  --tabs-strip-bg: #2c2c2e; /* 估计 */
+  --tabs-sep-color: #3e3e3f;
+  --tabs-panel-bg: #272729;
+  --tabs-selctor-bogus: 0;
+  --tabs-list-focus: 0 0 0 3.5px rgba(16, 100, 254, 0.35); /* 估计 */
+  --progress-track: #373739;
+  --tooltip-bg: rgba(44, 44, 46, 0.96);
+  --tooltip-fg: #f5f5f7;
+  --tooltip-border: rgba(255, 255, 255, 0.1);
 }

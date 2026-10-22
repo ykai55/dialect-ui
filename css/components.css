@@ -783,6 +783,21 @@
   background: var(--slider-thumb-bg-disabled, var(--slider-thumb-bg));
 }
 
+/* 滑块焦点：不写这条的话六个主题都是浏览器默认那圈蓝框。这里走各平台已有的
+   焦点令牌——Windows / GNOME 是描边，macOS 是外发光。 */
+.slider:is(:focus-visible, .s-focus) {
+  outline: var(--focus-outline);
+  outline-offset: var(--slider-focus-outline-offset, var(--focus-outline-offset));
+  box-shadow: var(--focus-ring);
+}
+
+/* 经典外观没有 focus-visible：鼠标点完也画焦点框，由主题决定要不要 */
+.slider:focus:not(:focus-visible) {
+  outline: var(--slider-focus-mouse-outline, none);
+  outline-offset: var(--slider-focus-mouse-outline-offset, var(--slider-focus-outline-offset, var(--focus-outline-offset)));
+  box-shadow: var(--slider-focus-mouse-ring, none);
+}
+
 .slider-row {
   display: flex;
   align-items: center;
@@ -804,9 +819,10 @@
   inset: auto;
   margin: 0;
   box-sizing: border-box;
-  min-width: max(var(--menu-min-w), 100%);
+  /* 下拉框打开时由脚本把最小宽度设成按钮宽度；独立菜单用 --menu-min-w，
+     这里不能写 100%，position:fixed 下那是视口宽度 */
+  min-width: var(--menu-min-w);
   max-height: 260px;
-  margin: 0;
   padding: var(--menu-pad);
   overflow-y: auto;
   list-style: none;
@@ -817,6 +833,8 @@
   box-shadow: var(--menu-shadow);
   font-size: var(--menu-item-font-size);
   user-select: none;
+  /* 焦点在菜单容器上，靠高亮项指示位置，原生菜单不画焦点环 */
+  outline: none;
 }
 
 .menu__item {
@@ -858,4 +876,321 @@
 .menu__item[aria-selected="true"] {
   background: var(--menu-item-selected-bg);
   color: var(--menu-item-selected-fg);
+}
+
+/* 禁用项：原生各平台都不给悬停 / 按下反馈，键盘也要跳过。
+   这条必须放在悬停 / 选中规则之后，靠同特异度、后写覆盖来压住它们的背景色。
+   指针事件仍会落到它身上（方便脚本清掉上一项的高亮），点击由脚本按 aria-disabled 拦。 */
+.menu__item[aria-disabled="true"],
+.menu__item:disabled {
+  background: transparent;
+  color: var(--menu-item-disabled-fg, var(--ui-text-disabled));
+}
+
+/* 分隔线：单线是多数平台的做法，Windows XP 是两条蚀刻线，
+   靠 --menu-sep-h / --menu-sep-shadow 表达，默认单线 */
+.menu__separator {
+  height: var(--menu-sep-h, 1px);
+  margin: var(--menu-sep-margin, 4px 8px);
+  padding: 0;
+  border: 0;
+  background: var(--menu-sep-color, rgba(0, 0, 0, 0.12));
+  box-shadow: var(--menu-sep-shadow, none);
+}
+
+/* 快捷键提示：靠右对齐，颜色比正文弱一档 */
+.menu__shortcut {
+  margin-left: auto;
+  padding-left: 24px;
+  color: var(--menu-shortcut-fg, currentColor);
+  opacity: var(--menu-shortcut-opacity, 0.55);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------------- 分段控件 ---------------- */
+
+/* 一排互斥的按钮。六个平台里只有 macOS 和 GNOME（48+）有原生分段控件，
+   Windows 三代的取值来自「最接近的原生组合」或扩展控件，见各主题注释。 */
+.segmented {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: stretch;
+  box-sizing: border-box;
+  height: var(--seg-h);
+  padding: var(--seg-pad, 0);
+  border: var(--seg-border-w, 0) solid var(--seg-border, transparent);
+  border-radius: var(--seg-radius);
+  background: var(--seg-bg);
+  box-shadow: var(--seg-shadow, none);
+  font-family: var(--ui-font);
+  user-select: none;
+}
+
+/* 焦点环：macOS 画整组，Windows / GNOME 画在单个段上 */
+.segmented:has(.segmented__item:focus-visible) {
+  box-shadow: var(--seg-focus-container, var(--seg-shadow, none));
+}
+
+.segmented__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--seg-item-min-w, 0);
+  margin: 0;
+  padding: 0 var(--seg-item-pad-x);
+  border: 0;
+  border-radius: var(--seg-item-radius, 0);
+  background: transparent;
+  color: var(--seg-fg);
+  font: inherit;
+  font-size: var(--seg-font-size);
+  font-weight: var(--seg-font-weight, 400);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+  transition: background-color var(--seg-duration, 0ms) var(--ui-ease),
+    color var(--seg-duration, 0ms) var(--ui-ease),
+    box-shadow var(--seg-duration, 0ms) var(--ui-ease);
+}
+
+/* 段间分隔线：只在两个未选中段之间出现，贴着选中段的左右不画 */
+.segmented__item + .segmented__item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--seg-sep-inset, 0);
+  bottom: var(--seg-sep-inset, 0);
+  width: var(--seg-sep-w, 0);
+  background: var(--seg-sep-color, transparent);
+  pointer-events: none;
+}
+
+.segmented__item[aria-checked="true"]::before,
+.segmented__item[aria-checked="true"] + .segmented__item::before {
+  display: none;
+}
+
+.segmented__item:is(:hover, .s-hover):not([aria-checked="true"]):not(:disabled) {
+  background: var(--seg-hover-bg);
+  color: var(--seg-hover-fg, var(--seg-fg));
+}
+
+.segmented__item:is(:active, .s-active):not([aria-checked="true"]):not(:disabled) {
+  background: var(--seg-active-bg, var(--seg-hover-bg));
+}
+
+.segmented__item[aria-checked="true"] {
+  background: var(--seg-selected-bg);
+  color: var(--seg-selected-fg);
+  box-shadow: var(--seg-selected-shadow, none);
+}
+
+.segmented__item:is(:hover, .s-hover)[aria-checked="true"] {
+  background: var(--seg-selected-hover-bg, var(--seg-selected-bg));
+}
+
+.segmented__item:is(:active, .s-active)[aria-checked="true"] {
+  background: var(--seg-selected-active-bg, var(--seg-selected-bg));
+}
+
+.segmented__item:disabled {
+  color: var(--seg-disabled-fg, var(--ui-text-disabled));
+  opacity: var(--seg-disabled-opacity, 1);
+}
+
+.segmented__item[aria-checked="true"]:disabled {
+  background: var(--seg-selected-disabled-bg, var(--seg-selected-bg));
+}
+
+.segmented__item:focus-visible {
+  outline: var(--seg-focus-outline, none);
+  outline-offset: var(--seg-focus-offset, -2px);
+  z-index: 1;
+}
+
+/* ---------------- 标签页 ---------------- */
+
+.tabs {
+  display: block;
+  min-width: 0;
+}
+
+.tabs__list:has(.tabs__tab:focus-visible) {
+  box-shadow: var(--tabs-list-focus, none);
+}
+
+.tabs__list {
+  display: flex;
+  align-items: flex-end;
+  justify-content: var(--tabs-list-justify, flex-start);
+  gap: var(--tabs-gap);
+  box-sizing: border-box;
+  width: var(--tabs-list-width, auto);
+  margin: 0 auto var(--tabs-list-overlap);
+  padding: var(--tabs-list-pad-top, 0) var(--tabs-list-pad-x, 0)
+    var(--tabs-list-pad-bottom, 0);
+  list-style: none;
+  border-bottom: var(--tabs-strip-border-w) solid var(--tabs-strip-border);
+  border-radius: var(--tabs-list-radius, 0);
+  background: var(--tabs-strip-bg);
+}
+
+.tabs__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: var(--tabs-h);
+  margin: 0;
+  padding: 0 var(--tabs-pad-x);
+  border: var(--tabs-tab-border-w) solid var(--tabs-tab-border);
+  border-bottom: 0;
+  border-radius: var(--tabs-tab-radius) var(--tabs-tab-radius) 0 0;
+  background: transparent;
+  box-shadow: var(--tabs-tab-shadow);
+  color: var(--tabs-fg);
+  font: inherit;
+  font-size: var(--tabs-font-size);
+  font-weight: var(--tabs-font-weight);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: default;
+  transition: background-color var(--tabs-duration) var(--ui-ease),
+    color var(--tabs-duration) var(--ui-ease);
+}
+
+/* 选中指示条：Windows 10 / 11 这种下划线式标签用；高度为 0 时不可见 */
+.tabs__tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(-1 * var(--tabs-strip-border-w));
+  height: var(--tabs-indicator-h);
+  background: var(--tabs-indicator-color);
+  pointer-events: none;
+}
+
+.tabs__tab + .tabs__tab {
+  margin-left: var(--tabs-tab-overlap, 0);
+}
+
+.tabs__tab:is(:hover, .s-hover):not([aria-selected="true"]):not(:disabled) {
+  background: var(--tabs-hover-bg);
+  color: var(--tabs-hover-fg);
+}
+
+.tabs__tab[aria-selected="true"] {
+  background: var(--tabs-selected-bg);
+  color: var(--tabs-selected-fg);
+  border-color: var(--tabs-selected-border);
+  box-shadow: var(--tabs-selected-shadow);
+  margin-bottom: var(--tabs-selected-lift, 0);
+  z-index: 1;
+}
+
+.tabs__tab:is(:hover, .s-hover)[aria-selected="true"] {
+  background: var(--tabs-selected-hover-bg, var(--tabs-selected-bg));
+}
+
+.tabs__tab:is(:active, .s-active)[aria-selected="true"] {
+  background: var(--tabs-selected-active-bg, var(--tabs-selected-hover-bg, var(--tabs-selected-bg)));
+}
+
+.tabs__tab:disabled {
+  color: var(--tabs-disabled-fg, var(--ui-text-disabled));
+}
+
+.tabs__tab:focus-visible {
+  outline: var(--tabs-focus-outline);
+  outline-offset: var(--tabs-focus-offset);
+  z-index: 2;
+}
+
+.tabs__panel {
+  margin: 0 var(--tabs-panel-inset-x, 0);
+  background: var(--tabs-panel-bg);
+  border: var(--tabs-panel-border-w) solid var(--tabs-panel-border);
+  border-radius: 0 0 var(--tabs-panel-radius) var(--tabs-panel-radius);
+  box-shadow: var(--tabs-panel-shadow);
+  padding: var(--tabs-panel-pad);
+  color: var(--ui-text);
+  font-size: var(--ui-font-size);
+}
+
+.tabs__panel[hidden] {
+  display: none;
+}
+
+/* ---------------- 进度条 ---------------- */
+
+.progress {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--progress-h);
+  overflow: hidden;
+  background-color: var(--progress-track);
+  background-image: var(--progress-track-image);
+  border: var(--progress-border-w) solid var(--progress-border);
+  border-radius: var(--progress-radius);
+  box-shadow: var(--progress-track-shadow);
+}
+
+.progress__fill {
+  width: var(--progress-value, 0%);
+  height: 100%;
+  background-color: var(--progress-fill);
+  background-image: var(--progress-fill-image);
+  border-radius: var(--progress-fill-radius);
+  box-shadow: var(--progress-fill-shadow);
+  transition: width var(--progress-duration) var(--ui-ease);
+}
+
+.progress[data-indeterminate] .progress__fill {
+  width: var(--progress-indeterminate-w);
+  animation: progress-indeterminate var(--progress-indeterminate-duration)
+    var(--progress-indeterminate-ease) infinite;
+}
+
+@keyframes progress-indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(var(--progress-indeterminate-travel));
+  }
+}
+
+/* ---------------- 提示气泡 ---------------- */
+
+.tooltip {
+  position: fixed;
+  z-index: 2000;
+  box-sizing: border-box;
+  max-width: var(--tooltip-max-w);
+  padding: var(--tooltip-pad-y) var(--tooltip-pad-x);
+  border: var(--tooltip-border-w) solid var(--tooltip-border);
+  border-radius: var(--tooltip-radius);
+  background: var(--tooltip-bg);
+  color: var(--tooltip-fg);
+  font-family: var(--ui-font);
+  font-size: var(--tooltip-font-size);
+  line-height: 1.3;
+  box-shadow: var(--tooltip-shadow);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--tooltip-duration) var(--ui-ease);
+}
+
+.tooltip[data-open] {
+  opacity: 1;
+}
+
+.tooltip[hidden] {
+  display: none;
 }

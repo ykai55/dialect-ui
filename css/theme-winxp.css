@@ -219,6 +219,14 @@
   --menu-item-marker: transparent;
   --menu-item-font-size: 11px;
   --menu-offset: 0px;
+  /* 经典菜单的分隔线是两条蚀刻线：上灰下白，左内缩 2px。
+     禁用文字用 COLOR_GRAYTEXT（XP 是 #808080，系统常量，不是估计）。 */
+  --menu-sep-h: 1px;
+  --menu-sep-margin: 2px;
+  --menu-sep-color: #808080;
+  --menu-sep-shadow: 0 1px 0 #ffffff;
+  --menu-item-disabled-fg: #808080;
+  --menu-shortcut-opacity: 1; /* 经典菜单快捷键和正文同色 */
 
   /* 滑块：实测 msctls_trackbar32（主题关闭）：
      控件 160×23，通道 4px、左右各缩进 8px；通道上暗下亮（凹槽）；
@@ -237,6 +245,9 @@
   --slider-thumb-h: 21px;
   --slider-thumb-radius: 0px;
   --slider-thumb-bg: #c0c0c0;
+  /* 经典外观没有 focus-visible，鼠标点完也画点线；trackbar 的焦点框没有单独实测，
+     沿用的是按钮那种 DrawFocusRect 做法（估计）。 */
+  --slider-focus-mouse-outline: 1px dotted #000000;
   --slider-thumb-border-w: 0px;
   --slider-thumb-shadow: inset 1px 1px 0 #ffffff, inset 2px 2px 0 #dfdfdf,
     inset -1px -1px 0 #000000, inset -2px -2px 0 #808080;
@@ -280,4 +291,76 @@
   --switch-label-focus-outline: var(--choice-label-focus-outline);
   --switch-label-focus-offset: var(--choice-label-focus-offset);
   --switch-label-focus-outline-mouse: var(--choice-label-focus-outline-mouse);
+  /* 分段控件：经典 Win32 没有分段控件，最接近的是 TCS_BUTTONS / BTNS_CHECKGROUP
+     的按钮组。这里用 1px 软边拼连体按钮，选中画成凹陷；原生 flat 变体还会叠 50%
+     网点，这里用面灰代替（见 docs/segmented-notes.md）。 */
+  --seg-h: 23px;
+  --seg-radius: 0px;
+  --seg-bg: #c0c0c0;
+  --seg-fg: #000000;
+  --seg-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+  --seg-font-size: 11px;
+  --seg-item-pad-x: 8px;
+  --seg-item-radius: 0px;
+  --seg-selected-bg: #c0c0c0;
+  --seg-selected-fg: #000000;
+  --seg-selected-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
+  --seg-hover-bg: transparent;
+  --seg-hover-fg: #000000;
+  --seg-active-bg: transparent;
+  --seg-sep-color: #808080;
+  --seg-focus-outline: 1px dotted #000000;
+  --seg-focus-offset: -3px;
+  --seg-disabled-fg: #808080;
+  /* 标签页：经典 SysTabControl32：标签 18 高（估计）、左右 6、1px 凸起软边；
+     选中标签与面板连通、不画下边；面板 1px 凹陷。 */
+  --tabs-h: 18px;
+  --tabs-gap: 0px;
+  --tabs-tab-overlap: -1px;
+  --tabs-selected-lift: 2px;
+  --tabs-tab-radius: 0px;
+  --tabs-pad-x: 6px;
+  --tabs-font-size: 11px;
+  --tabs-fg: #000000;
+  --tabs-hover-bg: transparent;
+  --tabs-hover-fg: #000000;
+  --tabs-selected-bg: #c0c0c0;
+  --tabs-selected-fg: #000000;
+  --tabs-tab-border-w: 0px;
+  --tabs-tab-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+  --tabs-selected-shadow: inset 1px 1px 0 #ffffff;
+  --tabs-strip-border-w: 0px;
+  --tabs-list-overlap: -1px;
+  --tabs-panel-bg: #c0c0c0;
+  --tabs-panel-border-w: 0px;
+  --tabs-panel-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
+  --tabs-panel-pad: 8px;
+  --tabs-arrow-mode: select;
+  --tabs-focus-outline: 1px dotted #000000;
+  --tabs-focus-offset: -3px;
+  --tabs-disabled-fg: #808080;
+  /* 进度条：经典 PROGRESS_CLASS：17 高、1px 凹陷边、HIGHLIGHT #0A246A 填充、
+     LED 分段（块宽约 2/3 高、间隙 2px，原生的精确块宽未实测）。
+     经典外观没有原生不确定态，这里的滑动是借来的。 */
+  --progress-h: 17px;
+  --progress-radius: 0px;
+  --progress-track: #c0c0c0;
+  --progress-track-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
+  --progress-fill: transparent;
+  --progress-fill-radius: 0px;
+  --progress-fill-image: repeating-linear-gradient(90deg, #0a246a 0 11px, transparent 11px 13px);
+  --progress-indeterminate-duration: 1500ms;
+  /* 提示气泡：经典 COLOR_INFOBK 淡黄底、黑字、1px 黑边、直角、Tahoma 11。
+     键盘 focus 不显示。 */
+  --tooltip-bg: #ffffe1;
+  --tooltip-fg: #000000;
+  --tooltip-border: #000000;
+  --tooltip-border-w: 1px;
+  --tooltip-radius: 0px;
+  --tooltip-pad-y: 3px;
+  --tooltip-pad-x: 4px;
+  --tooltip-font-size: 11px;
+  --tooltip-shadow: none;
+  --tooltip-show-delay: 500ms;
+  --tooltip-focus-show: 0;
 }

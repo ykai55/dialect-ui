@@ -214,6 +214,12 @@
   --menu-item-marker: transparent;
   --menu-item-font-size: 12px;
   --menu-offset: 0px;
+  /* 分隔线一条 1px 浅灰、内缩量按菜单项左缘对齐推；禁用文字取 Win32 的
+     COLOR_GRAYTEXT（经典值 #6D6D6D）；快捷键和正文同色，不弱化。均标估计。 */
+  --menu-sep-margin: 3px 4px;
+  --menu-sep-color: #d7d7d7; /* 估计 */
+  --menu-item-disabled-fg: #6d6d6d; /* 估计 */
+  --menu-shortcut-opacity: 1; /* 估计：Win32 菜单不弱化快捷键 */
 
   /* 滑块：轨道 4px（#E7EAEA + 1px #D6D6D6 边）、滑块 11×19 竖条。
      经典 Win32 trackbar 没有强调色填充，填充段与轨道同色。 */
@@ -233,6 +239,78 @@
   --slider-thumb-bg-hover: #171717;
   --slider-thumb-bg-active: #cccccc;
   --slider-thumb-bg-disabled: #cccccc;
+  /* 分段控件：Win10 没有原生分段控件。按 Win32 按钮组（BTNS_CHECKGROUP）拼：
+     23 高、方角、#E1E1E1 + #ADADAD 边框，选中沿用按下色 #CCE4F7（估计）。 */
+  --seg-h: 23px;
+  --seg-radius: 0px;
+  --seg-bg: #e1e1e1;
+  --seg-border: #adadad;
+  --seg-border-w: 1px;
+  --seg-fg: #000000;
+  --seg-font-size: 12px;
+  --seg-item-pad-x: 10px;
+  --seg-item-radius: 0px;
+  --seg-selected-bg: #cce4f7;
+  --seg-selected-fg: #000000;
+  --seg-selected-shadow: inset 0 0 0 1px #005499;
+  --seg-hover-bg: #e5f1fb;
+  --seg-active-bg: #cce4f7;
+  --seg-sep-color: #adadad;
+  --seg-focus-outline: 1px dotted #000000;
+  --seg-focus-offset: -3px;
+  --seg-disabled-fg: #838383;
+  /* 标签页：Win32 SysTabControl32 实测（box-win 22H2）：标签 18 高、左右留 6，
+     未选中 #F0F0F0 + 1px #D9D9D9，选中白底无边框、比未选中高 2px 并与面板连通。
+     没有悬停；焦点 1px 点线内缩 3px。 */
+  --tabs-h: 18px;
+  --tabs-gap: 0px;
+  --tabs-tab-overlap: -1px;
+  --tabs-selected-lift: 2px;
+  --tabs-tab-radius: 0px;
+  --tabs-pad-x: 6px;
+  --tabs-font-size: 12px;
+  --tabs-fg: #000000;
+  --tabs-hover-bg: transparent;
+  --tabs-hover-fg: #000000;
+  --tabs-selected-bg: #ffffff;
+  --tabs-selected-fg: #000000;
+  --tabs-selected-border: #ffffff;
+  --tabs-tab-border-w: 1px;
+  --tabs-tab-border: #d9d9d9;
+  --tabs-strip-border-w: 0px;
+  --tabs-list-overlap: -1px;
+  --tabs-panel-bg: #ffffff;
+  --tabs-panel-border: #d9d9d9;
+  --tabs-panel-border-w: 1px;
+  --tabs-panel-radius: 0px;
+  --tabs-panel-pad: 10px;
+  --tabs-arrow-mode: select;
+  --tabs-focus-outline: 1px dotted #000000;
+  --tabs-focus-offset: -3px;
+  --tabs-disabled-fg: #838383;
+  /* 进度条：Win32 msctls_progress32（box-win uxtheme 实测）：绿色 #06B025 填充、
+     #E6E6E6 槽、1px #BCBCBC 边、直角；part 最小高 14，实际布局常用 16。 */
+  --progress-h: 16px;
+  --progress-radius: 0px;
+  --progress-track: #e6e6e6;
+  --progress-border: #bcbcbc;
+  --progress-border-w: 1px;
+  --progress-fill: #06b025;
+  --progress-fill-radius: 0px;
+  --progress-indeterminate-duration: 1500ms;
+  /* 提示气泡：Win32 系统 tooltip（box-win 实测）：白底、#575757 字、1px #767676 边、
+     直角、无箭头。键盘 focus 不显示。 */
+  --tooltip-bg: #ffffff;
+  --tooltip-fg: #575757;
+  --tooltip-border: #767676;
+  --tooltip-border-w: 1px;
+  --tooltip-radius: 0px;
+  --tooltip-pad-y: 4px;
+  --tooltip-pad-x: 8px;
+  --tooltip-font-size: 12px;
+  --tooltip-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --tooltip-show-delay: 500ms;
+  --tooltip-focus-show: 0;
 }
 
 /* ============================================================
@@ -310,6 +388,8 @@
   --menu-fg: #ffffff;
   --menu-border: #9b9b9b;
   --menu-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --menu-sep-color: #6a6a6a; /* 估计 */
+  --menu-item-disabled-fg: #8c8c8c; /* 估计 */
 
   /* 滑块：暗色下原生没有变暗（实测仍是 #E7EAEA 轨道），照抄 */
   --slider-thumb-bg-hover: #171717;
@@ -319,4 +399,27 @@
   /* 开关：深色实测，轨道关态描边和滑块都是 #CCCCCC */
   --switch-border: #cccccc;
   --switch-knob-bg: #cccccc;
+  --seg-bg: #333333;
+  --seg-border: #9b9b9b;
+  --seg-fg: #ffffff;
+  --seg-selected-bg: #666666;
+  --seg-selected-fg: #ffffff;
+  --seg-selected-shadow: inset 0 0 0 1px #9b9b9b;
+  --seg-hover-bg: #454545;
+  --seg-active-bg: #666666;
+  --seg-sep-color: #9b9b9b;
+  --seg-focus-outline: 1px dotted #ffffff;
+  --seg-disabled-fg: #9b9b9b;
+  --tabs-fg: #ffffff;
+  --tabs-hover-bg: transparent;
+  --tabs-hover-fg: #ffffff;
+  --tabs-selected-bg: #2d2d2d;
+  --tabs-selected-fg: #ffffff;
+  --tabs-selected-border: #2d2d2d;
+  --tabs-tab-border: #6f6f6f; /* 估计：暗色 tab 未实测 */
+  --tabs-panel-bg: #2d2d2d;
+  --tabs-panel-border: #6f6f6f; /* 估计 */
+  --tabs-focus-outline: 1px dotted #ffffff;
+  --tabs-disabled-fg: #9b9b9b;
+  /* Win32 进度条和 tooltip 都没有暗色资源，暗色模式沿用浅色值 */
 }

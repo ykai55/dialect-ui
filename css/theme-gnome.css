@@ -143,10 +143,78 @@
   --menu-item-selected-bg: rgba(0, 0, 0, 0.1);
   --menu-item-selected-fg: #241f31;
   --menu-item-font-size: 14px;
+  /* 菜单分隔线、禁用项、快捷键：按 Adwaita popover 菜单的做法推，标估计 */
+  --menu-sep-margin: 6px 12px; /* 估计 */
+  --menu-sep-color: rgba(0, 0, 0, 0.1); /* 估计 */
+  --menu-item-disabled-fg: rgba(0, 0, 0, 0.5); /* 估计 */
+  --menu-shortcut-opacity: 0.5; /* 估计 */
 
   --textarea-py: 7px;
   --switch-duration: 120ms;
   --switch-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* 分段控件：AdwToggleGroup 的 SCSS 值（GNOME 48 / libadwaita 1.7），组高 34、
+     内边距 3、选中白色 pill + 双层阴影。字重和具体字号是推断。 */
+  --seg-h: 34px;
+  --seg-radius: 9px;
+  --seg-pad: 3px;
+  --seg-bg: rgba(0, 0, 6, 0.08);
+  --seg-fg: var(--ui-text);
+  --seg-font-size: 14px;
+  --seg-font-weight: 700;
+  --seg-item-pad-x: 8px;
+  --seg-item-min-w: 24px;
+  --seg-item-radius: 6px;
+  --seg-selected-bg: #ffffff;
+  --seg-selected-fg: rgba(0, 0, 6, 0.8);
+  --seg-selected-shadow: 0 1px 3px 1px rgba(0, 0, 6, 0.07), 0 2px 6px 2px rgba(0, 0, 6, 0.03);
+  --seg-hover-bg: rgba(0, 0, 6, 0.07);
+  --seg-active-bg: rgba(0, 0, 6, 0.16);
+  --seg-sep-color: rgba(0, 0, 6, 0.1);
+  --seg-sep-inset: 3px;
+  --seg-focus-outline: 2px solid rgba(53, 132, 228, 0.5);
+  --seg-focus-offset: 0px;
+  --seg-disabled-opacity: 0.5;
+  --seg-duration: 200ms;
+  /* 标签页：AdwTabBar 的 inline 变体（libadwaita _tab-view.scss）：高 34、
+     圆角 9、选中 currentColor 10%、悬停 7%、按下 16%、过渡 150ms。 */
+  --tabs-h: 34px;
+  --tabs-gap: 0px;
+  --tabs-tab-radius: 9px;
+  --tabs-pad-x: 10px; /* 估计：SCSS 只给了 padding 4 */
+  --tabs-font-size: 14px;
+  --tabs-fg: rgba(0, 0, 6, 0.8);
+  --tabs-hover-bg: rgba(0, 0, 6, 0.07);
+  --tabs-hover-fg: rgba(0, 0, 6, 0.9);
+  --tabs-selected-bg: rgba(0, 0, 6, 0.1);
+  --tabs-selected-fg: rgba(0, 0, 6, 0.9);
+  --tabs-selected-hover-bg: rgba(0, 0, 6, 0.13);
+  --tabs-selected-active-bg: rgba(0, 0, 6, 0.19);
+  --tabs-strip-border-w: 0px;
+  --tabs-panel-pad: 12px;
+  --tabs-arrow-mode: select;
+  --tabs-focus-outline: 2px solid rgba(53, 132, 228, 0.5);
+  --tabs-focus-offset: 0px;
+  --tabs-duration: 150ms;
+  /* 进度条：GtkProgressBar（libadwaita 只上样式）：8 高、99px 圆角胶囊、
+     轨道 currentColor 15%、填充强调色。不确定态由应用 pulse 驱动，没有固定周期。 */
+  --progress-h: 8px;
+  --progress-radius: 999px;
+  --progress-track: rgba(0, 0, 6, 0.15);
+  --progress-fill: var(--ui-accent);
+  --progress-indeterminate-duration: 1200ms;
+  /* 提示气泡：libadwaita _tooltip.scss 实测值：底色 80% 黑、白字、
+     1px 白 10% 描边、圆角 9、内边距 6×10、无阴影。出现延迟 500ms。 */
+  --tooltip-bg: rgb(0 0 6 / 80%);
+  --tooltip-fg: #ffffff;
+  --tooltip-border: rgba(255, 255, 255, 0.1);
+  --tooltip-border-w: 1px;
+  --tooltip-radius: 9px;
+  --tooltip-pad-y: 6px;
+  --tooltip-pad-x: 10px;
+  --tooltip-font-size: 14px;
+  --tooltip-shadow: none;
+  --tooltip-show-delay: 500ms;
+  --tooltip-focus-show: 0;
 }
 
 [data-theme="gnome"][data-mode="dark"] {
@@ -194,4 +262,20 @@
   --menu-item-hover-bg: rgba(255, 255, 255, 0.08);
   --menu-item-selected-bg: rgba(255, 255, 255, 0.12);
   --menu-item-selected-fg: #ffffff;
+  --menu-sep-color: rgba(255, 255, 255, 0.1); /* 估计 */
+  --menu-item-disabled-fg: rgba(255, 255, 255, 0.5); /* 估计 */
+  --seg-bg: rgba(255, 255, 255, 0.1);
+  --seg-selected-bg: rgba(255, 255, 255, 0.2);
+  --seg-selected-fg: #ffffff;
+  --seg-hover-bg: rgba(255, 255, 255, 0.07);
+  --seg-active-bg: rgba(255, 255, 255, 0.16);
+  --seg-sep-color: rgba(255, 255, 255, 0.1);
+  --tabs-fg: rgba(255, 255, 255, 0.8);
+  --tabs-hover-bg: rgba(255, 255, 255, 0.07);
+  --tabs-hover-fg: #ffffff;
+  --tabs-selected-bg: rgba(255, 255, 255, 0.1);
+  --tabs-selected-fg: #ffffff;
+  --tabs-selected-hover-bg: rgba(255, 255, 255, 0.13);
+  --tabs-selected-active-bg: rgba(255, 255, 255, 0.19);
+  --progress-track: rgba(255, 255, 255, 0.15);
 }

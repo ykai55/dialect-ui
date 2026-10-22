@@ -120,6 +120,8 @@
   --slider-thumb-border: #005fb8;
   --slider-thumb-border-w: 1.5px;
   --slider-thumb-shadow: none;
+  /* Fluent 的焦点框画在控件外侧，滑块也保持外扩 */
+  --slider-focus-outline-offset: 1px;
 
   --menu-bg: #fbfbfb;
   --menu-border: rgba(0, 0, 0, 0.06);
@@ -135,10 +137,86 @@
   --menu-item-selected-fg: #1a1a1a;
   --menu-item-marker: #005fb8;
   --menu-item-font-size: 14px;
+  /* 分隔线内缩 12px、禁用文字 36% 黑、快捷键弱一档。
+     这几项没有单独做过像素实测，按 Fluent 的 TextFillColorDisabled 推，标估计。 */
+  --menu-sep-margin: 4px 12px;
+  --menu-sep-color: rgba(0, 0, 0, 0.08); /* 估计 */
+  --menu-item-disabled-fg: rgba(0, 0, 0, 0.36); /* 估计 */
+  --menu-shortcut-opacity: 0.6; /* 估计 */
 
   --textarea-py: 6px;
   --switch-duration: 167ms;
   --switch-ease: cubic-bezier(0, 0, 0, 1);
+  /* 分段控件：WinUI 3 系统控件集里没有分段控件。这组取值来自 CommunityToolkit 的
+     Segmented 扩展控件（4px 圆角、12px 内边距、强调色填充、167ms），不是系统原生像素。 */
+  --seg-h: 32px;
+  --seg-radius: 4px;
+  --seg-pad: 3px;
+  --seg-bg: rgba(0, 0, 0, 0.04);
+  --seg-fg: #1a1a1a;
+  --seg-font-size: 14px;
+  --seg-item-pad-x: 12px;
+  --seg-item-radius: 4px;
+  --seg-selected-bg: #005fb8;
+  --seg-selected-fg: #ffffff;
+  --seg-hover-bg: rgba(0, 0, 0, 0.04);
+  --seg-active-bg: rgba(0, 0, 0, 0.06);
+  --seg-sep-w: 0px;
+  --seg-focus-outline: 2px solid var(--ui-text);
+  --seg-focus-offset: -3px;
+  --seg-duration: 167ms;
+  /* 标签页：WinUI 3 TabView（贴边标签）。条上方留 8px、标签 32 高、上圆角 8；
+     选中是 #F9F9F9 实底 + 1px 描边，没有下划线。底部 4px 反向肩膀没做。 */
+  --tabs-h: 32px;
+  --tabs-gap: 0px;
+  --tabs-list-pad-top: 8px;
+  --tabs-tab-radius: 8px;
+  --tabs-pad-x: 8px;
+  --tabs-font-size: 12px;
+  --tabs-fg: rgba(0, 0, 0, 0.62);
+  --tabs-hover-bg: rgba(0, 0, 0, 0.04);
+  --tabs-hover-fg: rgba(0, 0, 0, 0.89);
+  --tabs-selected-bg: #f9f9f9;
+  --tabs-selected-fg: rgba(0, 0, 0, 0.89);
+  --tabs-selected-border: rgba(0, 0, 0, 0.06);
+  --tabs-tab-border-w: 1px;
+  --tabs-tab-border: transparent;
+  --tabs-strip-border-w: 1px;
+  --tabs-strip-border: rgba(0, 0, 0, 0.06);
+  --tabs-list-overlap: -1px;
+  --tabs-indicator-h: 0px;
+  --tabs-panel-pad: 12px;
+  --tabs-arrow-mode: focus;
+  --tabs-focus-outline: 2px solid #000000;
+  --tabs-focus-offset: 1px;
+  --tabs-duration: 167ms;
+  /* 进度条：WinUI 3 ProgressBar 源码值：3 高、1.5 圆角，底下只有 1px 轨道；
+     不确定态是两条 40% / 60% 的 pill 扫过（2s 循环），这里简化成一条光带。 */
+  --progress-h: 3px;
+  --progress-radius: 1.5px;
+  --progress-track: transparent;
+  --progress-track-image: linear-gradient(
+    to bottom,
+    transparent calc(50% - 0.5px),
+    rgba(0, 0, 0, 0.45) calc(50% - 0.5px) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+  --progress-fill: var(--ui-accent);
+  --progress-fill-radius: 1.5px;
+  --progress-indeterminate-duration: 2000ms;
+  /* 提示气泡：WinUI 3 ToolTip 令牌：底色 #F9F9F9、89% 黑字、1px 边、圆角 4、
+     内边距 9×6、最大宽 320。跟随指针和 Ctrl 关闭没做。 */
+  --tooltip-bg: #f9f9f9;
+  --tooltip-fg: rgba(0, 0, 0, 0.89);
+  --tooltip-border: rgba(0, 0, 0, 0.06);
+  --tooltip-border-w: 1px;
+  --tooltip-radius: 4px;
+  --tooltip-pad-y: 6px;
+  --tooltip-pad-x: 9px;
+  --tooltip-font-size: 12px;
+  --tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  --tooltip-show-delay: 400ms;
+  --tooltip-focus-show: 1;
 }
 
 [data-theme="win11"][data-mode="dark"] {
@@ -218,4 +296,30 @@
   --menu-item-selected-bg: rgba(255, 255, 255, 0.04);
   --menu-item-selected-fg: #ffffff;
   --menu-item-marker: #60cdff;
+  --menu-sep-color: rgba(255, 255, 255, 0.10); /* 估计 */
+  --menu-item-disabled-fg: rgba(255, 255, 255, 0.36); /* 估计 */
+  --seg-bg: rgba(255, 255, 255, 0.06);
+  --seg-fg: #ffffff;
+  --seg-selected-bg: #60cdff;
+  --seg-selected-fg: #1a1a1a;
+  --seg-hover-bg: rgba(255, 255, 255, 0.06);
+  --seg-active-bg: rgba(255, 255, 255, 0.08);
+  --seg-focus-outline: 2px solid #ffffff;
+  --tabs-fg: rgba(255, 255, 255, 0.77);
+  --tabs-hover-bg: rgba(255, 255, 255, 0.06);
+  --tabs-hover-fg: #ffffff;
+  --tabs-selected-bg: #282828;
+  --tabs-selected-fg: #ffffff;
+  --tabs-selected-border: rgba(255, 255, 255, 0.08);
+  --tabs-strip-border: rgba(255, 255, 255, 0.08);
+  --tabs-focus-outline: 2px solid #ffffff;
+  --progress-track-image: linear-gradient(
+    to bottom,
+    transparent calc(50% - 0.5px),
+    rgba(255, 255, 255, 0.55) calc(50% - 0.5px) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+  --tooltip-bg: #2c2c2c;
+  --tooltip-fg: #ffffff;
+  --tooltip-border: rgba(0, 0, 0, 0.2);
 }

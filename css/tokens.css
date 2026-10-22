@@ -176,6 +176,15 @@
   --menu-offset: 4px;
   --menu-item-font-size: 13px;
 
+  /* 菜单分隔线、禁用项、快捷键提示。默认按常见单线菜单给，
+     各主题在自己的文件里按原生画法覆盖（XP 是两条蚀刻线）。 */
+  --menu-sep-h: 1px;
+  --menu-sep-margin: 4px 8px;
+  --menu-sep-color: rgba(0, 0, 0, 0.12);
+  --menu-sep-shadow: none;
+  --menu-shortcut-fg: currentColor;
+  --menu-shortcut-opacity: 0.55;
+
   /* 滑块 */
   --slider-h: 24px;
   --slider-track-h: 4px;
@@ -185,9 +194,133 @@
   --slider-thumb-bg: #ffffff;
   --slider-thumb-border: rgba(0, 0, 0, 0.12);
   --slider-thumb-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --slider-focus-mouse-outline: none;
+  --slider-focus-mouse-ring: none;
+  /* 按钮那种 -3px 内缩套在扁平的滑块上会把焦点框压得比轨道还窄，
+     滑块默认贴着控件边缘画，主题可以再调 */
+  --slider-focus-outline-offset: -1px;
 
   /* 多行输入 */
   --textarea-min-h: 76px;
   --textarea-py: 6px;
   --switch-ease: var(--ui-ease);
+}
+
+/* 分段控件：兜底用一套中性值，六个主题各自覆盖 */
+:root {
+  --seg-h: 28px;
+  --seg-radius: 6px;
+  --seg-pad: 0px;
+  --seg-bg: rgba(0, 0, 0, 0.06);
+  --seg-border: transparent;
+  --seg-border-w: 0px;
+  --seg-shadow: none;
+  --seg-fg: var(--ui-text);
+  --seg-font-size: 13px;
+  --seg-font-weight: 400;
+  --seg-item-radius: 4px;
+  --seg-item-pad-x: 10px;
+  --seg-item-min-w: 0px;
+  --seg-selected-bg: var(--ui-accent);
+  --seg-selected-fg: var(--ui-accent-text);
+  --seg-selected-shadow: none;
+      --seg-hover-bg: rgba(0, 0, 0, 0.05);
+  --seg-hover-fg: inherit;
+  --seg-active-bg: rgba(0, 0, 0, 0.08);
+  --seg-sep-w: 1px;
+  --seg-sep-color: rgba(0, 0, 0, 0.12);
+  --seg-sep-inset: 0px;
+  --seg-disabled-opacity: 1;
+  --seg-focus-outline: none;
+  --seg-focus-offset: -2px;
+  --seg-focus-container: none;
+  --seg-duration: 0ms;
+}
+
+/* 标签页：兜底用一套中性值，六个主题各自覆盖 */
+:root {
+  --tabs-h: 30px;
+  --tabs-gap: 2px;
+  --tabs-list-width: auto;
+  --tabs-list-justify: flex-start;
+  --tabs-list-pad-top: 0px;
+  --tabs-list-pad-x: 0px;
+  --tabs-list-pad-bottom: 0px;
+  --tabs-list-radius: 0px;
+  --tabs-tab-overlap: 0px;
+  --tabs-selected-lift: 0px;
+  --tabs-panel-inset-x: 0px;
+  /* 键盘分档：select = 方向键直接切；focus = 只移焦点、空格/回车确认；
+     none = 方向键不动（macOS 的 NSTabView 就是这样） */
+  --tabs-arrow-mode: select;
+  --tabs-list-focus: none;
+  --tabs-tab-radius: 6px;
+  --tabs-pad-x: 12px;
+  --tabs-font-size: 13px;
+  --tabs-font-weight: 400;
+  --tabs-fg: var(--ui-text-2);
+  --tabs-hover-bg: rgba(0, 0, 0, 0.04);
+  --tabs-hover-fg: var(--ui-text);
+  --tabs-selected-bg: transparent;
+  --tabs-selected-fg: var(--ui-text);
+  --tabs-selected-border: transparent;
+  --tabs-selected-shadow: none;
+      --tabs-tab-border: transparent;
+  --tabs-tab-border-w: 0px;
+  --tabs-tab-shadow: none;
+  --tabs-strip-bg: transparent;
+  --tabs-strip-border: rgba(0, 0, 0, 0.12);
+  --tabs-strip-border-w: 1px;
+  --tabs-list-overlap: 0px;
+  --tabs-indicator-h: 0px;
+  --tabs-indicator-color: var(--ui-accent);
+  --tabs-panel-bg: transparent;
+  --tabs-panel-border: rgba(0, 0, 0, 0.12);
+  --tabs-panel-border-w: 0px;
+  --tabs-panel-shadow: none;
+  --tabs-panel-radius: 0px;
+  --tabs-panel-pad: 14px;
+  --tabs-focus-outline: none;
+  --tabs-focus-offset: -2px;
+  --tabs-duration: 0ms;
+}
+
+/* 进度条：兜底中性值，六个主题各自覆盖 */
+:root {
+  --progress-h: 6px;
+  --progress-radius: 999px;
+  --progress-track: rgba(0, 0, 0, 0.12);
+  --progress-track-shadow: none;
+  --progress-track-image: none;
+  --progress-border-w: 0px;
+  --progress-border: transparent;
+  --progress-fill: var(--ui-accent);
+  --progress-fill-radius: var(--progress-radius);
+  --progress-fill-shadow: none;
+  --progress-fill-image: none;
+  --progress-duration: 0ms;
+  --progress-indeterminate-w: 30%;
+  --progress-indeterminate-travel: 333%;
+  --progress-indeterminate-duration: 1500ms;
+  --progress-indeterminate-ease: ease-in-out;
+}
+
+/* 提示气泡：兜底中性值 */
+:root {
+  --tooltip-bg: rgba(32, 32, 32, 0.92);
+  --tooltip-fg: #ffffff;
+  --tooltip-border: transparent;
+  --tooltip-border-w: 0px;
+  --tooltip-radius: 6px;
+  --tooltip-pad-y: 5px;
+  --tooltip-pad-x: 8px;
+  --tooltip-font-size: 12px;
+  --tooltip-max-w: 320px;
+  --tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --tooltip-offset: 8px;
+  --tooltip-show-delay: 500ms;
+  --tooltip-hide-delay: 100ms;
+  --tooltip-duration: 0ms;
+  /* 原生只有 Win11 的 XAML tooltip 会在键盘 focus 时显示，其余平台不显示 */
+  --tooltip-focus-show: 1;
 }

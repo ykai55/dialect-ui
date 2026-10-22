@@ -327,6 +327,43 @@ body.mode-dark .board__cap b {
   align-items: flex-start;
 }
 
+/* ---------------- 菜单演示（index.html 的 Menu 组） ---------------- */
+
+.menu-demo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 右键区域：虚线框只是告诉读者这里能点右键，不属于组件本身 */
+.menu-target {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 58px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px dashed #c9c9d0;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.015);
+  color: var(--ui-text-2);
+  font-size: 12px;
+  user-select: none;
+  cursor: default;
+}
+
+body.mode-dark .menu-target {
+  border-color: #3f3f46;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.menu-target:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+}
+
 /* ---------------- 状态矩阵（demo/harness.html） ---------------- */
 
 .harness {

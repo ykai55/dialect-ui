@@ -230,12 +230,89 @@
   --menu-item-selected-bg: #0a82ff; /* 估计 */
   --menu-item-selected-fg: #ffffff; /* 估计 */
   --menu-item-font-size: 13px; /* 估计 */
+  /* 菜单分隔线、禁用项、快捷键：估计，理由同上面这几项 */
+  --menu-sep-margin: 4px 10px; /* 估计 */
+  --menu-sep-color: rgba(0, 0, 0, 0.12); /* 估计 */
+  --menu-item-disabled-fg: rgba(0, 0, 0, 0.32); /* 估计 */
+  --menu-shortcut-opacity: 0.5; /* 估计 */
 
   /* ---------- 多行输入 ----------
      估计：离屏只渲染了单行输入框。多行输入沿用同一套底色 / 描边，圆角 5。 */
   --textarea-py: 4px; /* 估计 */
   --textarea-border: #c6c6c6; /* 估计 */
   --textarea-focus-border: #0a82ff; /* 估计 */
+  /* 分段控件：24 高、灰轨道，选中是白色 pill 浮起（描边 + 落影），不用强调色。
+     数值来自旧版外观兼容路径的离屏渲染实测（详见 docs/segmented-notes.md）。 */
+  --seg-h: 22px;
+  --seg-radius: 5px;
+  --seg-pad: 0px;
+  --seg-bg: #dbdbdb;
+  --seg-shadow: inset 0 1px 0 #d9d9d9;
+  --seg-fg: #050505;
+  --seg-font-size: 13px;
+  --seg-item-pad-x: 6.5px;
+  --seg-item-radius: 5px;
+  --seg-selected-bg: #ffffff;
+  --seg-selected-fg: #050505;
+  --seg-selected-shadow: 0 0 0 0.5px #c5c5c5, 0 1px 1px rgba(0, 0, 0, 0.12); /* 描边 + 落影，拟合 */
+  --seg-sep-color: #c5c5c5;
+  --seg-sep-w: 0.5px;
+  --seg-hover-bg: rgba(0, 0, 0, 0.04); /* 估计 */
+  --seg-active-bg: rgba(0, 0, 0, 0.07); /* 估计 */
+  --seg-focus-container: 0 0 0 3.5px rgba(10, 130, 255, 0.3); /* 估计 */
+  /* 标签页：旧版 NSTabView 也是「居中胶囊 + 圆角面板」，差别在选中态：
+     白色 pill 浮起（0.5pt 描边 + 落影），不是 26 的中性灰。 */
+  --tabs-h: 20px;
+  --tabs-gap: 0px;
+  --tabs-list-width: fit-content;
+  --tabs-list-justify: center;
+  --tabs-list-pad-top: 1px;
+  --tabs-list-pad-x: 1px;
+  --tabs-list-pad-bottom: 1px;
+  --tabs-list-radius: 6px;
+  --tabs-list-overlap: -11px;
+  --tabs-list-focus: none; /* 旧版标签条不是焦点站 */
+  --tabs-tab-radius: 5px;
+  --tabs-pad-x: 10.5px;
+  --tabs-font-size: 13px;
+  --tabs-fg: #2c2c2c;
+  --tabs-hover-bg: rgba(0, 0, 0, 0.05); /* 估计 */
+  --tabs-hover-fg: #050505;
+  --tabs-selected-bg: #ffffff;
+  --tabs-selected-fg: #050505;
+  --tabs-selected-border: #c5c5c5;
+  --tabs-selected-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+  --tabs-tab-border-w: 1px;
+  --tabs-tab-border: transparent;
+  --tabs-strip-bg: #e4e4e4;
+  --tabs-strip-border-w: 0px;
+  --tabs-sep-color: #d1d0d1;
+  --tabs-panel-inset-x: 7px;
+  --tabs-panel-bg: #e8e8e8;
+  --tabs-panel-border-w: 0px;
+  --tabs-panel-radius: 5px;
+  --tabs-panel-pad: 12px;
+  --tabs-arrow-mode: none;
+  --tabs-focus-outline: none;
+  /* 进度条：旧版兼容路径实测 6 高、胶囊端头、轨道 #DBDBDB / 深 #3C3C3C，
+     填充强调色（实测 #0A82FF），不确定态 2.667s 条纹带往返。 */
+  --progress-h: 6px;
+  --progress-radius: 999px;
+  --progress-track: #dbdbdb;
+  --progress-fill: var(--ui-accent);
+  --progress-indeterminate-duration: 2667ms;
+  /* 提示气泡：旧版 help tag，估计值 */
+  --tooltip-bg: rgba(247, 247, 247, 0.96);
+  --tooltip-fg: #1a1a1a;
+  --tooltip-border: #d0d0d0;
+  --tooltip-border-w: 1px;
+  --tooltip-radius: 5px;
+  --tooltip-pad-y: 4px;
+  --tooltip-pad-x: 8px;
+  --tooltip-font-size: 11px;
+  --tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --tooltip-show-delay: 1000ms;
+  --tooltip-focus-show: 0;
 }
 
 [data-theme="macos15"][data-mode="dark"] {
@@ -327,7 +404,31 @@
     0 0 0 0.5px rgba(0, 0, 0, 0.4); /* 估计 */
   --menu-item-hover-bg: #166ae6; /* 估计 */
   --menu-item-selected-bg: #166ae6; /* 估计 */
+  --menu-sep-color: rgba(255, 255, 255, 0.14); /* 估计 */
+  --menu-item-disabled-fg: rgba(255, 255, 255, 0.32); /* 估计 */
 
   --textarea-border: #646464; /* 估计 */
   --textarea-focus-border: #166ae6; /* 估计 */
+  --seg-bg: #232324;
+  --seg-fg: #fafafa;
+  --seg-selected-bg: #5a5a5b;
+  --seg-selected-fg: #fafafa;
+  --seg-selected-shadow: 0 0 0 0.5px #6f6f70, 0 1px 1px rgba(0, 0, 0, 0.4); /* 估计 */
+  --seg-sep-color: #3e3e3f;
+  --seg-hover-bg: rgba(255, 255, 255, 0.06); /* 估计 */
+  --seg-active-bg: rgba(255, 255, 255, 0.1); /* 估计 */
+  --tabs-fg: #dedede; /* 估计 */
+  --tabs-hover-bg: rgba(255, 255, 255, 0.06); /* 估计 */
+  --tabs-hover-fg: #f2f2f2;
+  --tabs-selected-bg: #2c2c2c;
+  --tabs-selected-fg: #f2f2f2;
+  --tabs-selected-border: rgba(255, 255, 255, 0.12);
+  --tabs-selected-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  --tabs-strip-bg: #232324; /* 估计 */
+  --tabs-sep-color: #3e3e3f;
+  --tabs-panel-bg: #2c2c2c;
+  --progress-track: #3c3c3c;
+  --tooltip-bg: rgba(44, 44, 46, 0.96);
+  --tooltip-fg: #f5f5f7;
+  --tooltip-border: rgba(255, 255, 255, 0.12);
 }
