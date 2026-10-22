@@ -433,10 +433,17 @@
   --scrollbar-thumb-hover: #a6a6a6;
   --scrollbar-radius: 0px;
   --scrollbar-border: 0px;
+  --scrollbar-buttons: block;
+  --scrollbar-button-bg: #f0f0f0;
+  --scrollbar-arrow-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M4 2L7 6H1Z' fill='%23000000'/%3E%3C/svg%3E");
+  --scrollbar-arrow-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M4 6L1 2H7Z' fill='%23000000'/%3E%3C/svg%3E");
 }
 
 [data-theme="win10"][data-mode="dark"] {
   --scrollbar-track: #1f1f1f;
+  --scrollbar-button-bg: #1f1f1f;
+  --scrollbar-arrow-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M4 2L7 6H1Z' fill='%23ffffff'/%3E%3C/svg%3E");
+  --scrollbar-arrow-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M4 6L1 2H7Z' fill='%23ffffff'/%3E%3C/svg%3E");
   --scrollbar-thumb: #5a5a5a;
   --scrollbar-thumb-hover: #7a7a7a;
 }

@@ -559,8 +559,15 @@
 
 /* 窗口内容区滚动条：尺寸、颜色走主题的 --scrollbar-* 令牌 */
 .window__body {
-  scrollbar-width: var(--scrollbar-width, auto);
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  /* 不用 scrollbar-width / scrollbar-color：Chromium 一旦用标准属性，
+     就不再用 ::-webkit-scrollbar 的宽度和圆角。Firefox 才需要它们。 */
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .window__body {
+    scrollbar-width: var(--scrollbar-width, auto);
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
 }
 
 .window__body::-webkit-scrollbar {
@@ -577,6 +584,7 @@
   border-radius: var(--scrollbar-radius, 0px);
   border: var(--scrollbar-border, 0px) solid transparent;
   background-clip: padding-box;
+  box-shadow: var(--scrollbar-thumb-shadow, none);
 }
 
 .window__body::-webkit-scrollbar-thumb:hover {
@@ -589,4 +597,27 @@
 
 .window__body::-webkit-scrollbar-corner {
   background: var(--scrollbar-track, transparent);
+}
+
+/* 只保留顶部「上」和底部「下」两个按钮；Chrome 自己会生成四个 button 盒子 */
+.window__body::-webkit-scrollbar-button {
+  display: none;
+}
+
+.window__body::-webkit-scrollbar-button:vertical:start:decrement,
+.window__body::-webkit-scrollbar-button:vertical:end:increment {
+  display: var(--scrollbar-buttons, none);
+  height: var(--scrollbar-size, 0px);
+  background-color: var(--scrollbar-button-bg, var(--scrollbar-track));
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: var(--scrollbar-button-shadow, none);
+}
+
+.window__body::-webkit-scrollbar-button:vertical:start:decrement {
+  background-image: var(--scrollbar-arrow-up, none);
+}
+
+.window__body::-webkit-scrollbar-button:vertical:end:increment {
+  background-image: var(--scrollbar-arrow-down, none);
 }

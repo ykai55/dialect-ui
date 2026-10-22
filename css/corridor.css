@@ -27,10 +27,15 @@ body.corridor {
 .rooms {
   height: 100vh;
   overflow-y: auto;
-  scrollbar-width: var(--scrollbar-width, auto);
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .rooms {
+    scrollbar-width: var(--scrollbar-width, auto);
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
 }
 
 /* 走廊自己的滚动条也跟当前时代走；主题令牌由 js/corridor.js 挂到 .rooms 上 */
@@ -47,6 +52,7 @@ body.corridor {
   border-radius: var(--scrollbar-radius, 0px);
   border: var(--scrollbar-border, 0px) solid transparent;
   background-clip: padding-box;
+  box-shadow: var(--scrollbar-thumb-shadow, none);
 }
 
 .rooms::-webkit-scrollbar-thumb:hover {
@@ -764,4 +770,27 @@ body.corridor {
 .room .switch,
 .room input[type="range"] {
   cursor: inherit;
+}
+
+/* 只保留顶部「上」和底部「下」两个按钮；Chrome 自己会生成四个 button 盒子 */
+.rooms::-webkit-scrollbar-button {
+  display: none;
+}
+
+.rooms::-webkit-scrollbar-button:vertical:start:decrement,
+.rooms::-webkit-scrollbar-button:vertical:end:increment {
+  display: var(--scrollbar-buttons, none);
+  height: var(--scrollbar-size, 0px);
+  background-color: var(--scrollbar-button-bg, var(--scrollbar-track));
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: var(--scrollbar-button-shadow, none);
+}
+
+.rooms::-webkit-scrollbar-button:vertical:start:decrement {
+  background-image: var(--scrollbar-arrow-up, none);
+}
+
+.rooms::-webkit-scrollbar-button:vertical:end:increment {
+  background-image: var(--scrollbar-arrow-down, none);
 }

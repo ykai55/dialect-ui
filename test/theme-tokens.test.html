@@ -102,6 +102,15 @@
           return getComputedStyle(w10).getPropertyValue("--scrollbar-size").trim() === "17px" &&
             getComputedStyle(mac).getPropertyValue("--scrollbar-size").trim() === "8px";
         });
+        check("Win10 / XP 滚动条有方形滑块和上下按钮", function () {
+          var w10 = stage.querySelector('[data-theme="win10"]');
+          var xp = stage.querySelector('[data-theme="winxp"]');
+          var c10 = getComputedStyle(w10), cxp = getComputedStyle(xp);
+          return c10.getPropertyValue("--scrollbar-radius").trim() === "0px" &&
+            c10.getPropertyValue("--scrollbar-buttons").trim() === "block" &&
+            cxp.getPropertyValue("--scrollbar-buttons").trim() === "block" &&
+            cxp.getPropertyValue("--scrollbar-thumb-shadow").trim() !== "";
+        });
 
         var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
         document.getElementById("result").textContent =
