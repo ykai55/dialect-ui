@@ -17,17 +17,19 @@
             <span class="select__chevron-down"></span>
           </span>
         </button>
-        <ul class="menu" popover>
+        <ul class="menu" popover="manual">
           <li class="menu__item" aria-selected="true">Option A</li>
           <li class="menu__item" aria-selected="false">Option B</li>
           <li class="menu__item" aria-selected="false">Option C</li>
           <li class="menu__item" aria-selected="false">Option D</li>
         </ul>
       </div>
+      <button type="button" id="other">other control</button>
     </div>
 
     <pre id="result">RUNNING</pre>
 
+    <script src="../js/menu.js"></script>
     <script src="../js/select.js"></script>
     <script>
       (function () {
@@ -87,6 +89,12 @@
             key(btn, "Escape");
             await wait();
             check("Esc 关闭", function () { return !menu.matches(":popover-open"); });
+
+            btn.click();
+            await wait();
+            document.getElementById("other").focus();
+            await wait();
+            check("焦点移走后关闭", function () { return !menu.matches(":popover-open"); });
           } catch (e) {
             lines.push("FAIL 测试中断 — " + e.message);
           }

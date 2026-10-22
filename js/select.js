@@ -1,3 +1,10 @@
+/* ============================================================
+   select.js — 下拉框：一条按钮 + 一个 .menu 展开层
+
+   展开层的行为（打开、定位、键盘、关闭）全部在 menu.js，这里只做
+   下拉框自己的事：把选中项写回按钮、维护 aria-selected、给按钮
+   挂展开 / 收起的状态类。
+   ============================================================ */
 (function () {
   "use strict";
 
@@ -6,137 +13,80 @@
   function initSelect(root) {
     var button = root.querySelector(".select__button");
     var menu = root.querySelector(".menu");
-    if (!button || !menu) return;
+    if (!button || !menu || !window.Dialect || !Dialect.createMenu) return;
 
-    var items = Array.prototype.slice.call(menu.querySelectorAll(".menu__item"));
-    var active = -1;
-    var id = "select-menu-" + ++uid;
-
+    var id = menu.id || "select-menu-" + ++uid;
     menu.id = id;
-    menu.setAttribute("role", "listbox");
-    menu.setAttribute("tabindex", "-1");
+
+    var value = button.querySelector(".select__value");
+    var items = menu.querySelectorAll(".menu__item");
+
+    Array.prototype.forEach.call(items, function (item) {
+      if (!item.hasAttribute("aria-selected")) item.setAttribute("aria-selected", "false");
+    });
+
+    var ctrl = Dialect.createMenu(menu, {
+      role: "listbox",
+      anchor: button,
+      activeHost: button,
+      triggers: [button],
+      focusOnOpen: false,
+      matchAnchorWidth: true,
+      initialActive: "selected",
+      onOpen: function () {
+        button.classList.add("is-open");
+        button.setAttribute("aria-expanded", "true");
+      },
+      onClose: function () {
+        button.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+      },
+      onChoose: function (item, index) {
+        var all = menu.querySelectorAll(".menu__item");
+        Array.prototype.forEach.call(all, function (it, n) {
+          it.setAttribute("aria-selected", n === index ? "true" : "false");
+        });
+        if (value) value.textContent = item.textContent.trim();
+      }
+    });
+
     button.setAttribute("aria-haspopup", "listbox");
     button.setAttribute("aria-expanded", "false");
     button.setAttribute("aria-controls", id);
-    items.forEach(function (item, i) {
-      item.setAttribute("role", "option");
-      item.id = id + "-" + i;
-      if (item.getAttribute("aria-selected") !== "true") item.setAttribute("aria-selected", "false");
-    });
 
-    function isOpen() {
-      return menu.matches(":popover-open");
-    }
-
-    function setActive(i) {
-      if (items[active]) items[active].classList.remove("is-active");
-      active = i;
-      if (items[active]) {
-        items[active].classList.add("is-active");
-        button.setAttribute("aria-activedescendant", items[active].id);
-        var it = items[active];
-        var top = it.offsetTop - menu.clientHeight / 2 + it.offsetHeight / 2;
-        menu.scrollTop = Math.max(0, top);
-      } else {
-        button.removeAttribute("aria-activedescendant");
-      }
-    }
-
-    function place() {
-      var r = button.getBoundingClientRect();
-      menu.style.minWidth = r.width + "px";
-      menu.style.left = r.left + "px";
-      var below = window.innerHeight - r.bottom;
-      var up = below < menu.offsetHeight + 12 && r.top > menu.offsetHeight + 12;
-      menu.style.top = (up ? r.top - menu.offsetHeight - 4 : r.bottom + 4) + "px";
-    }
-
-    function open() {
-      if (isOpen()) return;
-      menu.showPopover();
-      place();
-      button.classList.add("is-open");
-      button.setAttribute("aria-expanded", "true");
-      var selected = items.findIndex(function (it) {
-        return it.getAttribute("aria-selected") === "true";
-      });
-      setActive(selected >= 0 ? selected : 0);
-      // 菜单位置是打开时算一次的，滚动或缩放后就不准了，直接关掉
-      window.addEventListener("resize", close);
-      window.addEventListener("scroll", close, true);
-    }
-
-    function close() {
-      if (!isOpen()) return;
-      menu.hidePopover();
-      window.removeEventListener("resize", close);
-      window.removeEventListener("scroll", close, true);
-      button.classList.remove("is-open");
-      button.setAttribute("aria-expanded", "false");
-      setActive(-1);
-    }
-
-    function choose(i) {
-      if (i < 0 || !items[i]) return;
-      items.forEach(function (it, n) {
-        it.setAttribute("aria-selected", n === i ? "true" : "false");
-      });
-      var value = button.querySelector(".select__value");
-      if (value) value.textContent = items[i].textContent.trim();
-      close();
-      button.focus();
-    }
-
-    menu.addEventListener("toggle", function (e) {
-      // 用户点外部或按 Esc 时浏览器会自己关掉，这里只同步状态
-      if (e.newState === "closed") {
-        button.classList.remove("is-open");
-        button.setAttribute("aria-expanded", "false");
-        setActive(-1);
-      }
-    });
-
+    // 展开时按下按钮会先把菜单关掉（menu.js 的 pointerdown 处理），
+    // 这次 click 不能再把它打开
     button.addEventListener("click", function (e) {
       e.preventDefault();
-      isOpen() ? close() : open();
+      if (ctrl.consumePointerDismiss()) return;
+      if (ctrl.isOpen()) ctrl.close({ restoreFocus: true });
+      else ctrl.open({ invoker: button });
     });
 
     button.addEventListener("keydown", function (e) {
       if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        if (!isOpen()) { open(); return; }
-        if (e.key === "ArrowDown") setActive(Math.min(items.length - 1, active + 1));
-        else if (e.key === "ArrowUp") setActive(Math.max(0, active - 1));
-        else if (active >= 0) choose(active);
-      } else if (e.key === "Escape") {
+        if (!ctrl.isOpen()) {
+          ctrl.open({ invoker: button });
+          return;
+        }
+        if (e.key === "ArrowDown") ctrl.move(1);
+        else if (e.key === "ArrowUp") ctrl.move(-1);
+        else ctrl.activate();
+      } else if (e.key === "Escape" && ctrl.isOpen()) {
         e.preventDefault();
-        close();
+        ctrl.close({ restoreFocus: true });
       }
     });
 
-    menu.addEventListener("click", function (e) {
-      var item = e.target.closest(".menu__item");
-      if (item) choose(items.indexOf(item));
-    });
-
-    menu.addEventListener("mousemove", function (e) {
-      var item = e.target.closest(".menu__item");
-      if (item) setActive(items.indexOf(item));
-    });
-
-    menu.addEventListener("keydown", function (e) {
-      var keys = ["ArrowDown", "ArrowUp", "Home", "End", "Enter", "Escape", "Tab"];
-      if (keys.indexOf(e.key) === -1) return;
-      e.preventDefault();
-      if (e.key === "ArrowDown") setActive(Math.min(items.length - 1, active + 1));
-      else if (e.key === "ArrowUp") setActive(Math.max(0, active - 1));
-      else if (e.key === "Home") setActive(0);
-      else if (e.key === "End") setActive(items.length - 1);
-      else if (e.key === "Enter") { if (active >= 0) choose(active); }
-      else if (e.key === "Escape" || e.key === "Tab") { close(); button.focus(); }
-    });
-
-    root._select = { open: open, close: close };
+    root._select = {
+      open: function () {
+        ctrl.open({ invoker: button });
+      },
+      close: function () {
+        ctrl.close({ restoreFocus: true });
+      }
+    };
   }
 
   document.querySelectorAll("[data-select]").forEach(initSelect);
@@ -145,7 +95,9 @@
   if (new URLSearchParams(location.search).get("open") === "1") {
     var visible = Array.prototype.slice
       .call(document.querySelectorAll("[data-select]"))
-      .filter(function (el) { return el.getBoundingClientRect().width > 0; })[0];
+      .filter(function (el) {
+        return el.getBoundingClientRect().width > 0;
+      })[0];
     if (visible && visible._select) visible._select.open();
   }
 })();

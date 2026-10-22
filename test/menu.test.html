@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>menu test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <div data-menu>
+        <button id="trigger" type="button" class="btn" data-menu-trigger>Actions</button>
+        <ul id="menu" class="menu" popover="manual">
+          <li class="menu__item">New window</li>
+          <li class="menu__item" aria-disabled="true">Duplicate</li>
+          <li class="menu__separator" role="separator"></li>
+          <li class="menu__item">Rename<span class="menu__shortcut">F2</span></li>
+          <li class="menu__item">Delete</li>
+        </ul>
+      </div>
+
+      <div data-menu>
+        <div id="ctx" class="menu-target" data-menu-context tabindex="0">Right-click here</div>
+        <ul id="ctxmenu" class="menu" popover="manual">
+          <li class="menu__item">Copy</li>
+          <li class="menu__item" aria-disabled="true">Paste</li>
+          <li class="menu__separator" role="separator"></li>
+          <li class="menu__item">Delete</li>
+        </ul>
+      </div>
+    </div>
+
+    <pre id="result">RUNNING</pre>
+
+    <script src="../js/menu.js"></script>
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+        function wait(ms) {
+          return new Promise(function (r) { setTimeout(r, ms || 40); });
+        }
+        function key(el, k, opts) {
+          var ev = new KeyboardEvent("keydown", Object.assign({ key: k, bubbles: true, cancelable: true }, opts || {}));
+          el.dispatchEvent(ev);
+          return ev;
+        }
+        function rightClick(el, x, y) {
+          el.dispatchEvent(new MouseEvent("contextmenu", {
+            bubbles: true, cancelable: true, clientX: x, clientY: y
+          }));
+        }
+
+        var trigger = document.getElementById("trigger");
+        var menu = document.getElementById("menu");
+        var items = Array.prototype.slice.call(menu.querySelectorAll(".menu__item"));
+        var ctx = document.getElementById("ctx");
+        var ctxMenu = document.getElementById("ctxmenu");
+
+        var picked = [];
+        [menu, ctxMenu].forEach(function (el) {
+          el.addEventListener("click", function (e) {
+            var item = e.target.closest(".menu__item");
+            if (item && item.getAttribute("aria-disabled") !== "true") picked.push(item.textContent.trim());
+          }, true);
+        });
+
+        function activeIndex() {
+          return items.findIndex(function (it) { return it.classList.contains("is-active"); });
+        }
+
+        (async function () {
+          try {
+            check("菜单初始化出 role=menu 和 menuitem", function () {
+              return menu.getAttribute("role") === "menu" &&
+                items.every(function (it) { return it.getAttribute("role") === "menuitem"; });
+            });
+
+            /* ---------- 打开 ---------- */
+            trigger.click();
+            await wait();
+            check("点击触发器打开菜单", function () {
+              return menu.matches(":popover-open") && trigger.getAttribute("aria-expanded") === "true";
+            });
+            check("打开后焦点在菜单里", function () { return document.activeElement === menu; });
+            check("打开时没有初始高亮", function () { return activeIndex() === -1; });
+            check("触发器 aria-controls 指向菜单", function () {
+              return trigger.getAttribute("aria-controls") === menu.id;
+            });
+
+            /* ---------- 键盘 ---------- */
+            key(menu, "ArrowDown");
+            await wait(10);
+            check("下方向键高亮第一项", function () { return activeIndex() === 0; });
+            check("aria-activedescendant 跟随", function () {
+              return menu.getAttribute("aria-activedescendant") === items[0].id;
+            });
+
+            key(menu, "ArrowDown");
+            await wait(10);
+            check("下方向键跳过禁用项和分隔线", function () { return activeIndex() === 2; });
+
+            key(menu, "End");
+            await wait(10);
+            check("End 到最后一个可导航项", function () { return activeIndex() === 3; });
+
+            key(menu, "ArrowDown");
+            await wait(10);
+            check("方向键循环回第一项", function () { return activeIndex() === 0; });
+
+            key(menu, "ArrowUp");
+            await wait(10);
+            check("上方向键循环到最后一项", function () { return activeIndex() === 3; });
+
+            key(menu, "Home");
+            await wait(10);
+            check("Home 到第一项", function () { return activeIndex() === 0; });
+
+            /* ---------- type-ahead ---------- */
+            key(menu, "d");
+            await wait(10);
+            check("输入字母跳到 Delete", function () { return activeIndex() === 3; });
+
+            key(menu, "r");
+            await wait(10);
+            check("输入字母跳到 Rename", function () { return activeIndex() === 2; });
+
+            /* ---------- Enter 激活 ---------- */
+            var chosen = [];
+            menu.addEventListener("menu:choose", function (e) {
+              chosen.push(e.detail.item.textContent.trim());
+            });
+            key(menu, "Enter");
+            await wait();
+            check("回车触发当前项", function () { return chosen[chosen.length - 1].indexOf("Rename") === 0; });
+            check("回车后菜单关闭", function () { return !menu.matches(":popover-open"); });
+            check("回车后焦点回到触发器", function () { return document.activeElement === trigger; });
+            check("关闭后 aria-expanded 还原", function () {
+              return trigger.getAttribute("aria-expanded") === "false";
+            });
+
+            /* ---------- 鼠标点击 ---------- */
+            trigger.click();
+            await wait();
+            items[0].click();
+            await wait();
+            check("点菜单项触发选择并关闭", function () {
+              return picked[picked.length - 1] === "New window" && !menu.matches(":popover-open");
+            });
+
+            trigger.click();
+            await wait();
+            var before = picked.length;
+            items[1].click();
+            await wait();
+            check("点禁用项不关闭也不触发", function () {
+              return menu.matches(":popover-open") && picked.length === before;
+            });
+
+            menu.querySelector(".menu__separator").click();
+            await wait();
+            check("点分隔线不关闭也不触发", function () {
+              return menu.matches(":popover-open") && picked.length === before;
+            });
+
+            key(menu, "Escape");
+            await wait();
+            check("Esc 关闭菜单", function () { return !menu.matches(":popover-open"); });
+            check("Esc 后焦点回到触发器", function () { return document.activeElement === trigger; });
+
+            trigger.click();
+            await wait();
+            key(menu, "Tab");
+            await wait();
+            check("Tab 关闭菜单", function () { return !menu.matches(":popover-open"); });
+
+            /* ---------- 右键菜单 ---------- */
+            rightClick(ctx, 120, 80);
+            await wait();
+            var rect = ctxMenu.getBoundingClientRect();
+            check("右键在指针位置打开", function () {
+              return ctxMenu.matches(":popover-open") &&
+                Math.abs(rect.left - 120) < 2 &&
+                Math.abs(rect.top - 80) < 2;
+            });
+            check("右键菜单里没有初始高亮", function () {
+              return ctxMenu.querySelector(".is-active") === null;
+            });
+            check("右键打开后焦点进菜单", function () { return document.activeElement === ctxMenu; });
+
+            key(ctxMenu, "Escape");
+            await wait();
+            check("Esc 后焦点回到右键目标", function () { return document.activeElement === ctx; });
+
+            // 贴近右下角打开，菜单要被夹回视口内
+            rightClick(ctx, window.innerWidth - 4, window.innerHeight - 4);
+            await wait();
+            rect = ctxMenu.getBoundingClientRect();
+            check("右下角打开不越出视口", function () {
+              return rect.right <= window.innerWidth && rect.bottom <= window.innerHeight;
+            });
+
+            key(ctxMenu, "Escape");
+            await wait();
+
+            ctx.focus();
+            key(ctx, "ContextMenu");
+            await wait();
+            check("ContextMenu 键打开右键菜单", function () {
+              return ctxMenu.matches(":popover-open");
+            });
+            key(ctxMenu, "Escape");
+            await wait();
+
+            ctx.focus();
+            key(ctx, "F10", { shiftKey: true });
+            await wait();
+            check("Shift+F10 打开右键菜单", function () { return ctxMenu.matches(":popover-open"); });
+
+            /* ---------- 滚动 / 缩放 ---------- */
+            window.dispatchEvent(new Event("scroll"));
+            await wait();
+            check("滚动后菜单关闭", function () { return !ctxMenu.matches(":popover-open"); });
+
+            trigger.click();
+            await wait();
+            window.dispatchEvent(new Event("resize"));
+            await wait();
+            check("窗口缩放后菜单关闭", function () { return !menu.matches(":popover-open"); });
+
+            /* ---------- 点外部 ---------- */
+            trigger.click();
+            await wait();
+            document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+            document.body.click();
+            await wait();
+            check("点菜单外关闭", function () { return !menu.matches(":popover-open"); });
+          } catch (e) {
+            lines.push("FAIL 测试中断 — " + e.message);
+          }
+
+          var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+          document.getElementById("result").textContent =
+            lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+          document.title = failed ? "FAIL" : "PASS";
+        })();
+      })();
+    </script>
+  </body>
+</html>

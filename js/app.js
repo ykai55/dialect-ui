@@ -172,6 +172,14 @@
     render();
   });
 
+  /* ---------- 6. 右键 ----------
+     演示页按原生窗口处理：浏览器默认菜单不再弹出来，右键留给组件。
+     这是页面壳的决定，组件自己不做，用的人按需在容器上加这段。 */
+
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
+
   render();
   detectMacosGeneration();
 })();

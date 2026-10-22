@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>text menu test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+  </head>
+  <body>
+    <div id="panel" class="panel" data-theme="macos" data-mode="light">
+      <label class="field">
+        <span class="field__wrap">
+          <input id="field" class="field__input" type="text" value="hello world" />
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__wrap">
+          <textarea id="area" class="field__input field__input--multiline" rows="2">line one</textarea>
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__wrap">
+          <input id="readonly" class="field__input" type="text" value="read only" readonly />
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__wrap">
+          <input id="disabled" class="field__input" type="text" value="disabled" disabled />
+        </span>
+      </label>
+
+      <ul id="textmenu" class="menu" popover="manual" data-text-menu>
+        <li class="menu__item" role="menuitem" data-action="cut">Cut</li>
+        <li class="menu__item" role="menuitem" data-action="copy">Copy</li>
+        <li class="menu__item" role="menuitem" data-action="paste">Paste</li>
+        <li class="menu__separator" role="separator"></li>
+        <li class="menu__item" role="menuitem" data-action="delete">Delete</li>
+        <li class="menu__separator" role="separator"></li>
+        <li class="menu__item" role="menuitem" data-action="selectall">Select All</li>
+      </ul>
+    </div>
+
+    <pre id="result">RUNNING</pre>
+
+    <script src="../js/menu.js"></script>
+    <script src="../js/text-menu.js"></script>
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+        function wait(ms) {
+          return new Promise(function (r) { setTimeout(r, ms || 40); });
+        }
+        function rightClick(el, x, y) {
+          el.dispatchEvent(new MouseEvent("contextmenu", {
+            bubbles: true, cancelable: true, clientX: x || 100, clientY: y || 100
+          }));
+        }
+        function disabled(name) {
+          var el = menu.querySelector('[data-action="' + name + '"]');
+          return el.getAttribute("aria-disabled") === "true";
+        }
+
+        var panel = document.getElementById("panel");
+        var field = document.getElementById("field");
+        var area = document.getElementById("area");
+        var readonly = document.getElementById("readonly");
+        var disabledField = document.getElementById("disabled");
+        var menu = document.getElementById("textmenu");
+
+        var fired = 0;
+        field.addEventListener("input", function () { fired++; });
+
+        (async function () {
+          try {
+            /* ---------- 没选中 ---------- */
+            field.focus();
+            field.setSelectionRange(4, 4);
+            rightClick(field, 120, 80);
+            await wait();
+            check("无选区也能打开菜单", function () { return menu.matches(":popover-open"); });
+            check("无选区时 Cut / Copy / Delete 变灰", function () {
+              return disabled("cut") && disabled("copy") && disabled("delete");
+            });
+            check("无选区时 Select All 可用", function () { return !disabled("selectall"); });
+            check("菜单在指针处展开", function () {
+              var r = menu.getBoundingClientRect();
+              return Math.abs(r.left - 120) < 2 && Math.abs(r.top - 80) < 2;
+            });
+
+            keyEscape(menu);
+            await wait();
+            check("Esc 关闭并把焦点还给输入框", function () {
+              return !menu.matches(":popover-open") && document.activeElement === field;
+            });
+
+            /* ---------- 有选区 ---------- */
+            field.focus();
+            field.setSelectionRange(0, 5);
+            rightClick(field, 140, 90);
+            await wait();
+            check("有选区时 Cut / Copy / Delete 可用", function () {
+              return !disabled("cut") && !disabled("copy") && !disabled("delete");
+            });
+
+            /* Delete：选区被删掉，input 事件发出来 */
+            var before = fired;
+            menu.querySelector('[data-action="delete"]').click();
+            await wait();
+            check("Delete 删掉选中文字", function () { return field.value === " world"; });
+            check("Delete 后发 input 事件", function () { return fired > before; });
+            check("Delete 后菜单关闭", function () { return !menu.matches(":popover-open"); });
+
+            /* Select All */
+            field.focus();
+            field.setSelectionRange(3, 3);
+            rightClick(field, 140, 90);
+            await wait();
+            menu.querySelector('[data-action="selectall"]').click();
+            await wait();
+            check("Select All 选中全部文字", function () {
+              return field.selectionStart === 0 && field.selectionEnd === field.value.length;
+            });
+
+            /* Cut：值被删掉（剪贴板写失败也照删） */
+            field.focus();
+            field.value = "hello world";
+            field.setSelectionRange(0, 5);
+            rightClick(field, 140, 90);
+            await wait();
+            menu.querySelector('[data-action="cut"]').click();
+            await wait(80);
+            check("Cut 删掉选中文字", function () { return field.value === " world"; });
+
+            /* Copy 不改变值，也不报错 */
+            field.focus();
+            field.value = "copy me";
+            field.setSelectionRange(0, 4);
+            rightClick(field, 140, 90);
+            await wait();
+            menu.querySelector('[data-action="copy"]').click();
+            await wait(80);
+            check("Copy 不改动文字", function () {
+              return field.value === "copy me" && !menu.matches(":popover-open");
+            });
+
+            /* 多行输入也绑定 */
+            area.focus();
+            area.setSelectionRange(0, 4);
+            rightClick(area, 160, 120);
+            await wait();
+            check("多行输入也能右键出菜单", function () { return menu.matches(":popover-open"); });
+            keyEscape(menu);
+            await wait();
+
+            /* readOnly：只给 Copy / Select All */
+            readonly.focus();
+            readonly.setSelectionRange(0, 4);
+            rightClick(readonly, 140, 90);
+            await wait();
+            check("只读字段 Copy 可用", function () { return !disabled("copy"); });
+            check("只读字段 Cut / Paste / Delete 变灰", function () {
+              return disabled("cut") && disabled("paste") && disabled("delete");
+            });
+            keyEscape(menu);
+            await wait();
+
+            /* disabled 字段不绑定 */
+            rightClick(disabledField, 140, 90);
+            await wait();
+            check("禁用字段右键不弹菜单", function () { return !menu.matches(":popover-open"); });
+          } catch (e) {
+            lines.push("FAIL 测试中断 — " + e.message);
+          }
+
+          var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+          document.getElementById("result").textContent =
+            lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+          document.title = failed ? "FAIL" : "PASS";
+        })();
+
+        function keyEscape(el) {
+          el.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true }));
+        }
+      })();
+    </script>
+  </body>
+</html>
