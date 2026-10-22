@@ -236,6 +236,8 @@
 
 .window__traffic-glyph {
   opacity: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -243,10 +245,8 @@
 }
 
 .window__traffic-glyph svg {
-  width: 12px;
-  height: 12px;
-  padding: 1px;
-  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
   display: block;
 }
 
@@ -489,11 +489,7 @@
   opacity: 1;
 }
 
-.window[data-window-frame="macos"] .window__traffic-glyph svg {
-  width: 13px;
-  height: 13px;
-  padding: 1.5px;
-}
+
 
 .window[data-window-frame="macos"] .window__traffic-dot--close .window__traffic-glyph {
   color: #802e30;
