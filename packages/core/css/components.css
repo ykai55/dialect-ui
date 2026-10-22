@@ -1227,7 +1227,8 @@
   flex: 1;
   min-height: 0;
   background: var(--scrollbar-track, transparent);
-  pointer-events: auto;
+  /* 轨道不吃滚轮；滚轮落到内容上，和原生滚动条一致 */
+  pointer-events: none;
 }
 
 .dsb__thumb {
@@ -1271,8 +1272,16 @@
   background-image: var(--scrollbar-arrow-down, none);
 }
 
-@supports (-moz-appearance: none) {
-  [data-dialect-scrollbar].dsb-on {
-    scrollbar-width: none;
-  }
+.dsb__btn:active {
+  background-color: var(--scrollbar-button-active-bg, var(--scrollbar-button-bg));
+  box-shadow: var(--scrollbar-button-active-shadow, var(--scrollbar-button-shadow));
+}
+
+/* DOM 接管后不再显示原生滚动条 */
+[data-dialect-scrollbar].dsb-on {
+  scrollbar-width: none;
+}
+
+[data-dialect-scrollbar].dsb-on::-webkit-scrollbar {
+  display: none;
 }

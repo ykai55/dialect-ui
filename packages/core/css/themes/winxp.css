@@ -377,7 +377,9 @@
   --scrollbar-thumb-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
   --scrollbar-buttons: block;
   --scrollbar-button-bg: #d4d0c8;
+  --scrollbar-button-active-bg: #c0c0c0;
   --scrollbar-button-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+  --scrollbar-button-active-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
   --scrollbar-arrow-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M4 2L7 6H1Z' fill='%23000000'/%3E%3C/svg%3E");
   --scrollbar-arrow-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M4 6L1 2H7Z' fill='%23000000'/%3E%3C/svg%3E");
 }

@@ -9,10 +9,6 @@
    标记：给滚动容器加 data-dialect-scrollbar。
    ============================================================ */
 
-function isFirefox() {
-  return typeof CSS !== "undefined" && CSS.supports && CSS.supports("-moz-appearance", "none");
-}
-
 function makeOverlay(target) {
   var overlay = document.createElement("div");
   overlay.className = "dsb";
@@ -69,11 +65,16 @@ function attach(target) {
   window.addEventListener("resize", sync);
   if (window.ResizeObserver) new ResizeObserver(sync).observe(target);
 
+  function stepScroll(dir) {
+    var step = Math.max(40, Math.round(target.clientHeight * 0.1));
+    target.scrollBy({ top: dir * step, behavior: "auto" });
+  }
+
   up.addEventListener("click", function () {
-    target.scrollBy({ top: -target.clientHeight * 0.9, behavior: "auto" });
+    stepScroll(-1);
   });
   down.addEventListener("click", function () {
-    target.scrollBy({ top: target.clientHeight * 0.9, behavior: "auto" });
+    stepScroll(1);
   });
 
   /* 拖拽滑块 */
@@ -103,7 +104,6 @@ function attach(target) {
 }
 
 export function initScrollbars(root = document) {
-  if (!isFirefox()) return;
   var scope = root || document;
   var targets = Array.prototype.slice.call(scope.querySelectorAll("[data-dialect-scrollbar]"));
   if (scope.nodeType === 1 && scope.matches("[data-dialect-scrollbar]")) targets.unshift(scope);
