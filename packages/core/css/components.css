@@ -1089,7 +1089,9 @@
   color: var(--tabs-selected-fg);
   border-color: var(--tabs-selected-border);
   box-shadow: var(--tabs-selected-shadow);
-  margin-bottom: var(--tabs-selected-lift, 0);
+  /* Win10/WinXP 的选中项比未选中高 2px，底边和面板连通；不能只往上抬，
+     否则面板顶边会从下面露出来 */
+  height: calc(var(--tabs-h) + var(--tabs-selected-lift, 0px));
   z-index: 1;
 }
 

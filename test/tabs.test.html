@@ -114,6 +114,19 @@
               return tabs[0].tabIndex === 0 && tabs[1].tabIndex === -1 && tabs[2].tabIndex === -1;
             });
 
+            /* Win10：选中项比未选中高 2px，且底边盖住面板上边框、与面板连通 */
+            check("Win10 选中标签比未选中高 2px", function () {
+              var a = tabs[0].getBoundingClientRect();
+              var b = tabs[1].getBoundingClientRect();
+              return Math.abs(a.height - b.height - 2) < 0.1 &&
+                Math.abs(a.top - (b.top - 2)) < 0.6;
+            });
+            check("Win10 选中标签盖住面板上边框", function () {
+              var t = tabs[0].getBoundingClientRect();
+              var p = panels[0].getBoundingClientRect();
+              return t.bottom >= p.top - 0.1;
+            });
+
             /* 点禁用标签 */
             tabs[1].click();
             check("点禁用标签不切换", function () { return selectedValue() === "general"; });
