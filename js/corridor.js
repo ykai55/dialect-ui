@@ -175,7 +175,7 @@
   window.addEventListener("resize", update);
 
   // 滚轮/触控板：累计到阈值才切一页，然后锁一小段时间。
-  // 窗口内容自己能滚的时候先让它滚，滚到底再交给走廊。
+  // 窗口内部滚动到底也不穿透到走廊：窗口范围永远只滚窗口内容。
   var wheelAccum = 0;
   var wheelTimer = 0;
   var wheelLocked = false;
@@ -184,13 +184,18 @@
     "wheel",
     function (e) {
       if (e.ctrlKey) return; // 触控板捏合缩放，不拦
-      var body = e.target.closest && e.target.closest(".window__body");
-      if (body && body.scrollHeight > body.clientHeight + 1) {
-        var canDown =
-          e.deltaY > 0 && body.scrollTop + body.clientHeight < body.scrollHeight - 1;
-        var canUp = e.deltaY < 0 && body.scrollTop > 0;
-        if (canDown || canUp) return;
+
+      var win = e.target.closest && e.target.closest(".window");
+      if (win) {
+        e.preventDefault();
+        var scroller = win.querySelector(".window__body");
+        if (scroller && scroller.scrollHeight > scroller.clientHeight + 1) {
+          var unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? scroller.clientHeight : 1;
+          scroller.scrollTop += e.deltaY * unit;
+        }
+        return;
       }
+
       e.preventDefault();
       if (wheelLocked) return;
       wheelAccum += e.deltaY;
