@@ -27,13 +27,38 @@ body.corridor {
 .rooms {
   height: 100vh;
   overflow-y: auto;
-  scrollbar-width: none;
+  scrollbar-width: var(--scrollbar-width, auto);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
 }
 
+/* 走廊自己的滚动条也跟当前时代走；主题令牌由 js/corridor.js 挂到 .rooms 上 */
 .rooms::-webkit-scrollbar {
+  width: var(--scrollbar-size, 8px);
+}
+
+.rooms::-webkit-scrollbar-track {
+  background: var(--scrollbar-track, transparent);
+}
+
+.rooms::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb, rgba(0, 0, 0, 0.35));
+  border-radius: var(--scrollbar-radius, 0px);
+  border: var(--scrollbar-border, 0px) solid transparent;
+  background-clip: padding-box;
+}
+
+.rooms::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover, var(--scrollbar-thumb));
+}
+
+.rooms::-webkit-scrollbar-button {
   display: none;
+}
+
+.rooms::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track, transparent);
 }
 
 .room {

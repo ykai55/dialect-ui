@@ -95,6 +95,7 @@
       /* file:// 下忽略 */
     }
     refreshHudSub();
+    syncScrollTheme();
   }
 
   modeButtons.forEach(function (btn) {
@@ -108,10 +109,18 @@
     return raw || "#ffffff";
   }
 
+  function syncScrollTheme() {
+    var room = rooms[current];
+    if (!room) return;
+    roomsEl.dataset.theme = room.dataset.theme || room.dataset.era || "";
+    roomsEl.dataset.mode = room.dataset.mode || "light";
+  }
+
   function setCurrent(i) {
     if (i === current) return;
     current = i;
     var room = rooms[i];
+    syncScrollTheme();
     rooms.forEach(function (r, n) {
       r.classList.toggle("is-active", n === i);
     });
