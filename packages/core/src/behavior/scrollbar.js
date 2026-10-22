@@ -39,7 +39,9 @@ function attach(target) {
   function sync() {
     var sh = target.scrollHeight;
     var ch = target.clientHeight;
-    if (sh <= ch + 1) {
+    var overflow = sh > ch + 1;
+    target.classList.toggle("dsb-overflow", overflow);
+    if (!overflow) {
       overlay.hidden = true;
       return;
     }

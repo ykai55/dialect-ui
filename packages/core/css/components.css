@@ -1277,6 +1277,15 @@
   box-shadow: var(--scrollbar-button-active-shadow, var(--scrollbar-button-shadow));
 }
 
+/* 有滚动条时把它的宽度从内容区让出来，别压在控件上 */
+.window__body.dsb-overflow {
+  padding-right: calc(18px + var(--scrollbar-size, 0px));
+}
+
+.rooms.dsb-overflow {
+  padding-right: var(--scrollbar-size, 0px);
+}
+
 /* DOM 接管后不再显示原生滚动条 */
 [data-dialect-scrollbar].dsb-on {
   scrollbar-width: none;
