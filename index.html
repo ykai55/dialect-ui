@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/tokens.css" />
     <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/window.css" />
     <link rel="stylesheet" href="css/theme-win11.css" />
     <link rel="stylesheet" href="css/theme-win10.css" />
     <link rel="stylesheet" href="css/theme-winxp.css" />
@@ -39,16 +40,16 @@
                data-name="Windows XP" data-sub="Classic · 2001" aria-label="Windows XP">
         <div class="room__wall"></div>
         <div class="room__stage">
-          <div class="era-win">
-            <div class="era-win__bar">
-              <div class="era-win__title">Display Properties</div>
-              <div class="era-win__caps">
-                <span class="era-win__cap">_</span>
-                <span class="era-win__cap">□</span>
-                <span class="era-win__cap era-win__cap--close">✕</span>
+          <div class="window" data-window data-window-frame="winxp">
+            <div class="window__bar">
+              <div class="window__title">Display Properties</div>
+              <div class="window__controls">
+                <button type="button" class="window__caption" data-window-action="minimize" aria-label="最小化">_</button>
+                <button type="button" class="window__caption" data-window-action="maximize" aria-label="最大化">□</button>
+                <button type="button" class="window__caption window__caption--close" data-window-action="close" aria-label="关闭">✕</button>
               </div>
             </div>
-            <div class="era-win__body" data-specimen></div>
+            <div class="window__body" data-specimen></div>
           </div>
         </div>
         <div class="shell shell--xp">
@@ -63,16 +64,16 @@
                data-name="Windows 10" data-sub="Aero · 2015" aria-label="Windows 10">
         <div class="room__wall"></div>
         <div class="room__stage">
-          <div class="era-win">
-            <div class="era-win__bar">
-              <div class="era-win__title">Settings</div>
-              <div class="era-win__caps">
-                <span class="era-win__cap">–</span>
-                <span class="era-win__cap">□</span>
-                <span class="era-win__cap era-win__cap--close">✕</span>
+          <div class="window" data-window data-window-frame="win10">
+            <div class="window__bar">
+              <div class="window__title">Settings</div>
+              <div class="window__controls">
+                <button type="button" class="window__caption" data-window-action="minimize" aria-label="最小化">–</button>
+                <button type="button" class="window__caption" data-window-action="maximize" aria-label="最大化">□</button>
+                <button type="button" class="window__caption window__caption--close" data-window-action="close" aria-label="关闭">✕</button>
               </div>
             </div>
-            <div class="era-win__body" data-specimen></div>
+            <div class="window__body" data-specimen></div>
           </div>
         </div>
         <div class="shell shell--win10">
@@ -88,16 +89,16 @@
                data-name="Windows 11" data-sub="Fluent · 2021" aria-label="Windows 11">
         <div class="room__wall"></div>
         <div class="room__stage">
-          <div class="era-win">
-            <div class="era-win__bar">
-              <div class="era-win__title">Settings</div>
-              <div class="era-win__caps">
-                <span class="era-win__cap">–</span>
-                <span class="era-win__cap">□</span>
-                <span class="era-win__cap era-win__cap--close">✕</span>
+          <div class="window" data-window data-window-frame="win11">
+            <div class="window__bar">
+              <div class="window__title">Settings</div>
+              <div class="window__controls">
+                <button type="button" class="window__caption" data-window-action="minimize" aria-label="最小化">–</button>
+                <button type="button" class="window__caption" data-window-action="maximize" aria-label="最大化">□</button>
+                <button type="button" class="window__caption window__caption--close" data-window-action="close" aria-label="关闭">✕</button>
               </div>
             </div>
-            <div class="era-win__body" data-specimen></div>
+            <div class="window__body" data-specimen></div>
           </div>
         </div>
         <div class="shell shell--win11">
@@ -111,12 +112,12 @@
                data-name="macOS 15" data-sub="Sequoia · 2024" aria-label="macOS 15">
         <div class="room__wall"></div>
         <div class="room__stage">
-          <div class="era-win">
-            <div class="era-win__bar">
-              <span class="traffic"><i></i><i></i><i></i></span>
-              <div class="era-win__title">Settings</div>
+          <div class="window" data-window data-window-frame="macos15">
+            <div class="window__bar">
+              <span class="window__traffic" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="window__title">Settings</div>
             </div>
-            <div class="era-win__body" data-specimen></div>
+            <div class="window__body" data-specimen></div>
           </div>
         </div>
         <div class="shell shell--mac">
@@ -134,12 +135,12 @@
                data-name="macOS 26" data-sub="Tahoe · 2025" aria-label="macOS 26">
         <div class="room__wall"></div>
         <div class="room__stage">
-          <div class="era-win">
-            <div class="era-win__bar">
-              <span class="traffic"><i></i><i></i><i></i></span>
-              <div class="era-win__title">Settings</div>
+          <div class="window" data-window data-window-frame="macos">
+            <div class="window__bar">
+              <span class="window__traffic" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="window__title">Settings</div>
             </div>
-            <div class="era-win__body" data-specimen></div>
+            <div class="window__body" data-specimen></div>
           </div>
         </div>
         <div class="shell shell--mac">
@@ -157,14 +158,14 @@
                data-name="GNOME 48" data-sub="Adwaita · 2025" aria-label="GNOME 48">
         <div class="room__wall"></div>
         <div class="room__stage">
-          <div class="era-win">
-            <div class="era-win__bar">
-              <div class="era-win__title">Settings</div>
-              <div class="era-win__caps">
-                <span class="era-win__cap">✕</span>
+          <div class="window" data-window data-window-frame="gnome">
+            <div class="window__bar">
+              <div class="window__title">Settings</div>
+              <div class="window__controls">
+                <button type="button" class="window__caption" data-window-action="close" aria-label="关闭">✕</button>
               </div>
             </div>
-            <div class="era-win__body" data-specimen></div>
+            <div class="window__body" data-specimen></div>
           </div>
         </div>
         <div class="shell shell--gnome">
@@ -305,20 +306,13 @@
           </div>
         </section>
 
-        <ul class="menu" data-text-menu popover="manual">
-          <li class="menu__item" data-action="cut">Cut</li>
-          <li class="menu__item" data-action="copy">Copy</li>
-          <li class="menu__item" data-action="paste">Paste</li>
-          <li class="menu__separator" role="separator"></li>
-          <li class="menu__item" data-action="delete">Delete</li>
-          <li class="menu__item" data-action="selectall">Select All</li>
-        </ul>
       </div>
     </template>
 
     <script src="js/corridor.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/text-menu.js"></script>
+    <script src="js/window.js"></script>
     <script src="js/select.js"></script>
     <script src="js/segmented.js"></script>
     <script src="js/tabs.js"></script>

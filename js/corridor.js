@@ -183,7 +183,7 @@
     "wheel",
     function (e) {
       if (e.ctrlKey) return; // 触控板捏合缩放，不拦
-      var body = e.target.closest && e.target.closest(".era-win__body");
+      var body = e.target.closest && e.target.closest(".window__body");
       if (body && body.scrollHeight > body.clientHeight + 1) {
         var canDown =
           e.deltaY > 0 && body.scrollTop + body.clientHeight < body.scrollHeight - 1;
@@ -336,8 +336,12 @@
   applyMode(mode);
   startRoom();
 
-  // 演示页按原生窗口处理：浏览器默认右键菜单不弹，右键交给组件
-  document.addEventListener("contextmenu", function (e) {
-    e.preventDefault();
-  });
+  // 桌面空白处也按原生桌面处理；窗口内部的右键由 window.js 接管
+  roomsEl.addEventListener(
+    "contextmenu",
+    function (e) {
+      if (!e.target.closest || !e.target.closest(".window")) e.preventDefault();
+    },
+    true
+  );
 })();

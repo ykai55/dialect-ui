@@ -1,0 +1,425 @@
+/* ============================================================
+   window.css — 窗口组件
+
+   窗口骨架 + 标题栏：标题栏 / 标题 / 窗口按钮 / 内容区都在组件里。
+   data-window-frame 选窗口按钮档位（win10 / win11 / winxp / macos /
+   macos15 / gnome）；颜色和尺寸走 --window-* 令牌，宿主可以覆盖。
+   ============================================================ */
+
+.window {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--window-radius, 8px);
+  border: var(--window-border-width, 1px) solid
+    var(--window-border, rgba(0, 0, 0, 0.12));
+  background: var(--window-bg, #ffffff);
+  box-shadow: var(--window-shadow, 0 24px 60px rgba(0, 0, 0, 0.35));
+}
+
+.window__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  height: var(--window-bar-height, 32px);
+  padding: 0 10px;
+  background: var(--window-bar-bg, #f3f3f3);
+  color: var(--window-bar-fg, #1a1a1a);
+  font-size: var(--window-title-size, 12px);
+  user-select: none;
+}
+
+.window__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--window-title-weight, 600);
+  letter-spacing: 0.01em;
+}
+
+.window__controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.window__caption {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--window-caption-width, 30px);
+  height: var(--window-caption-height, 24px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--window-caption-radius, 4px);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--window-caption-size, 12px);
+  line-height: 1;
+  cursor: inherit;
+}
+
+.window__caption:hover {
+  background: var(--window-caption-hover-bg, rgba(0, 0, 0, 0.08));
+}
+
+.window__caption--close:hover {
+  background: var(--window-caption-close-hover-bg, #c42b1c);
+  color: var(--window-caption-close-hover-fg, #ffffff);
+}
+
+.window__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--window-body-padding, 16px);
+  background: var(--window-body-bg, #ffffff);
+  color: var(--window-fg, var(--ui-text, #1a1a1a));
+}
+
+
+/* ---- 从走廊样式迁入的窗口外观（Window 组件自带标题栏） ---- */
+
+
+
+/* ---------------- 通用窗口框 ---------------- */
+
+.window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: var(--window-radius, 8px);
+  border: var(--window-border-w, 1px) solid var(--window-border, transparent);
+  background: var(--window-body-bg, #fff);
+  box-shadow: var(--window-shadow, 0 24px 60px rgba(0, 0, 0, 0.35));
+}
+
+
+
+.window__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  height: var(--window-bar-h, 34px);
+  padding: 0 10px;
+  background: var(--window-bar-bg, #f3f3f3);
+  color: var(--window-bar-fg, #1a1a1a);
+  font-size: 12px;
+  user-select: none;
+}
+
+
+
+.window__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--window-title-weight, 600);
+  letter-spacing: 0.01em;
+}
+
+
+
+.window__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px 18px 16px;
+  background: var(--window-body-bg, #fff);
+  color: var(--ui-text);
+}
+
+
+
+.window__body .panel {
+  padding: 0;
+  gap: 12px;
+  background: transparent;
+}
+
+
+
+.window__body .group {
+  gap: 8px;
+}
+
+
+
+/* 窗口按钮：默认是 Windows 那种扁平 caption */
+.window__controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+
+
+.window__caption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: calc(var(--window-bar-h, 34px) - 8px);
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.75;
+}
+
+
+
+.window__caption--close {
+  opacity: 1;
+}
+
+
+
+.window__caption--close:hover {
+  background: #c42b1c;
+  color: #fff;
+}
+
+
+
+/* 红绿灯（macOS） */
+.window__traffic {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+
+
+.window__traffic i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #c9c9c9;
+  display: block;
+}
+
+
+
+.window__traffic i:nth-child(1) {
+  background: #ff5f57;
+}
+
+
+
+.window__traffic i:nth-child(2) {
+  background: #febc2e;
+}
+
+
+
+.window__traffic i:nth-child(3) {
+  background: #28c840;
+}
+
+
+
+/* Win11 的窗口按钮同样是 46px 宽的整条命中区，悬停才显底色 */
+.window[data-window-frame="win11"] .window__bar {
+  padding-right: 0;
+}
+
+
+
+.window[data-window-frame="win11"] .window__controls {
+  gap: 0;
+  align-self: stretch;
+}
+
+
+
+.window[data-window-frame="win11"] .window__caption {
+  width: 46px;
+  height: 100%;
+  border-radius: 0;
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+
+
+.window[data-window-frame="win11"] .window__caption:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+
+.window[data-window-frame="win11"] .window__caption--close:hover {
+  background: #c42b1c;
+  color: #fff;
+}
+
+
+
+/* Win10 的标题栏按钮是 46px 宽、贴满高度的直角命中区，只有悬停才变灰 / 变红 */
+.window[data-window-frame="win10"] .window__bar {
+  padding-right: 0;
+}
+
+
+
+.window[data-window-frame="win10"] .window__controls {
+  gap: 0;
+  align-self: stretch;
+}
+
+
+
+.window[data-window-frame="win10"] .window__caption {
+  width: 46px;
+  height: 100%;
+  border-radius: 0;
+  font-size: 10px;
+  opacity: 1;
+  color: #000;
+}
+
+
+
+.window[data-window-frame="win10"] .window__caption:hover {
+  background: #e5e5e5;
+}
+
+
+
+.window[data-window-frame="win10"] .window__caption--close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+
+
+.window[data-window-frame="winxp"] {
+  --window-body-bg: #ece9d8;
+}
+
+
+
+.window[data-window-frame="winxp"] .window__bar {
+  padding: 0 4px;
+}
+
+
+
+.window[data-window-frame="winxp"] .window__title {
+  font-size: 11px;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+
+
+/* XP 的窗口按钮是 16×14 的凸起小方块 */
+.window[data-window-frame="winxp"] .window__controls {
+  gap: 2px;
+}
+
+
+
+.window[data-window-frame="winxp"] .window__caption {
+  width: 17px;
+  height: 15px;
+  border-radius: 0;
+  background: linear-gradient(180deg, #4a9bff 0%, #0a58d8 100%);
+  box-shadow: inset 1px 1px 0 #b8d9ff, inset -1px -1px 0 #00318a;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  opacity: 1;
+}
+
+
+
+.window[data-window-frame="winxp"] .window__caption--close {
+  background: linear-gradient(180deg, #f08a68 0%, #c4320f 100%);
+  box-shadow: inset 1px 1px 0 #ffc9b8, inset -1px -1px 0 #7a1200;
+}
+
+
+
+.window[data-window-frame="macos"] .window__bar,
+.window[data-window-frame="macos15"] .window__bar {
+  justify-content: center;
+}
+
+
+
+.window[data-window-frame="macos"] .window__title,
+.window[data-window-frame="macos15"] .window__title {
+  text-align: center;
+  font-size: 12px;
+}
+
+
+
+.window[data-window-frame="macos"] .window__traffic,
+.window[data-window-frame="macos15"] .window__traffic {
+  position: absolute;
+  left: 12px;
+}
+
+
+
+.window[data-window-frame="macos"] .window__bar,
+.window[data-window-frame="macos15"] .window__bar {
+  position: relative;
+}
+
+
+
+.window[data-window-frame="gnome"] .window__bar {
+  justify-content: center;
+  position: relative;
+}
+
+
+
+.window[data-window-frame="gnome"] .window__title {
+  text-align: center;
+  font-size: 13px;
+}
+
+
+
+.window[data-window-frame="gnome"] .window__controls {
+  position: absolute;
+  right: 8px;
+}
+
+
+
+.window[data-window-frame="gnome"] .window__caption {
+  width: 24px;
+  height: 24px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 11px;
+}
+
+
+
+.room.is-active .window {
+  animation: win-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+
+
+.window {
+  position: relative;
+}

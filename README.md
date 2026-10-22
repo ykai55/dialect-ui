@@ -6,7 +6,7 @@
 Windows 10（Aero）、Windows XP（classic）、macOS 26（Tahoe）、macOS 11–15、GNOME（Adwaita）。
 
 八种控件：按钮、输入框、多行输入、下拉框（含展开层）、滑块、复选框、单选框、开关。状态有默认、
-悬停、按下、焦点、禁用，明暗两套。Windows XP 没有暗色。另有五个扩展组件：独立菜单与右键菜单（见下文「菜单」）、分段控件、标签页、进度条和提示气泡。
+悬停、按下、焦点、禁用，明暗两套。Windows XP 没有暗色。另有六个扩展组件：独立菜单与右键菜单（见下文「菜单」）、窗口（见下文「窗口」）、分段控件、标签页、进度条和提示气泡。
 
 纯静态，无构建步骤，无框架依赖。
 
@@ -27,6 +27,7 @@ python3 -m http.server 4173 --bind 127.0.0.1
 ```html
 <link rel="stylesheet" href="css/tokens.css" />
 <link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/window.css" />
 <link rel="stylesheet" href="css/theme-macos.css" />
 
 <div class="panel" data-theme="macos" data-mode="dark">
@@ -164,7 +165,7 @@ Win10 / WinXP / macOS 的「方向键不循环」只是估计，没有为估计�
 弹层用 `popover="manual"`，关不关由脚本判断：点菜单外、滚动、窗口缩放都直接关，位置只在打开时算
 一次。贴着视口边缘打开会夹回可视区，盖住触发器时翻到上方。
 
-组件本身不接管浏览器默认右键菜单，宿主自己决定。
+独立菜单不接管浏览器默认右键菜单；窗口组件会在窗口内统一接管，见下文「窗口」。
 
 输入框和多行输入接了自己的右键菜单：[js/text-menu.js](js/text-menu.js) 复用 `.menu` 外观，右键时按
 选区状态决定哪些项可用。Cut / Copy / Paste / Delete / Select All 五项，没选中时前三项变灰，只读字段
@@ -178,6 +179,28 @@ Win10 / WinXP / macOS 的「方向键不循环」只是估计，没有为估计�
 ```
 
 同一个容器里的 `.field__input` 会自动绑定，菜单跟着容器的 `data-theme` 走。
+
+## 窗口
+
+窗口组件把标题栏、窗口按钮和内容区放在一起，也接管窗口内的右键。`data-window` 自动初始化，
+`data-window-frame` 选窗口按钮档位（`win10` / `win11` / `winxp` / `macos` / `macos15` / `gnome`）。
+
+```html
+<div class="window" data-window data-window-frame="win11">
+  <div class="window__bar">
+    <div class="window__title">Settings</div>
+    <div class="window__controls">
+      <button type="button" class="window__caption" data-window-action="minimize">–</button>
+      <button type="button" class="window__caption window__caption--close" data-window-action="close">✕</button>
+    </div>
+  </div>
+  <div class="window__body">…</div>
+</div>
+```
+
+窗口内不弹浏览器右键；文本框右键会自动生成 Cut / Copy / Paste / Delete / Select All 菜单；禁用控件上的
+右键也不会漏出浏览器菜单。`window:action` 由宿主处理最小化 / 关闭。细节见
+[docs/window-component.md](docs/window-component.md)。
 
 ## 分段控件
 

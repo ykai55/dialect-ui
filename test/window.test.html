@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Window 组件测试</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/window.css" />
+    <link rel="stylesheet" href="../css/theme-win10.css" />
+  </head>
+  <body data-theme="win10" data-mode="light">
+    <div class="window" data-window id="win">
+      <div class="window__bar">
+        <div class="window__title">Test window</div>
+        <div class="window__controls">
+          <button type="button" class="window__caption" data-window-action="close">✕</button>
+        </div>
+      </div>
+      <div class="window__body">
+        <input class="field__input" type="text" value="hello" />
+        <button type="button" class="btn" id="disabled" disabled>Disabled</button>
+      </div>
+    </div>
+    <button type="button" class="btn" id="outside">outside</button>
+    <pre id="result">RUNNING</pre>
+
+    <script src="../js/menu.js"></script>
+    <script src="../js/text-menu.js"></script>
+    <script src="../js/window.js"></script>
+    <script>
+      (async function () {
+        var lines = [];
+        function check(name, ok) {
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+          document.getElementById("result").textContent = lines.join("\n");
+        }
+        function fire(el) {
+          var e = new MouseEvent("contextmenu", {
+            bubbles: true,
+            cancelable: true,
+            clientX: 30,
+            clientY: 30
+          });
+          el.dispatchEvent(e);
+          return e;
+        }
+        function wait() {
+          return new Promise(function (r) { setTimeout(r, 30); });
+        }
+
+        var win = document.getElementById("win");
+        var body = win.querySelector(".window__body");
+        var field = win.querySelector(".field__input");
+        var disabled = document.getElementById("disabled");
+
+        check("自动初始化", win.hasAttribute("data-window-ready"));
+        check("窗口内默认不弹浏览器菜单", fire(body).defaultPrevented === true);
+
+        var actionFired = null;
+        win.addEventListener("window:action", function (e) { actionFired = e.detail.action; });
+        win.querySelector("[data-window-action]").click();
+        check("窗口按钮派发 window:action", actionFired === "close");
+
+        check("右键文本前还没有菜单", !win.querySelector("[data-text-menu]"));
+        var ctxEvent = fire(field);
+        await wait();
+        var menu = win.querySelector("[data-text-menu]");
+        check("文本框右键懒创建菜单", !!menu);
+        check("文本框右键拦住浏览器菜单", ctxEvent.defaultPrevented === true);
+        check("菜单已展开", !!menu && menu.matches(":popover-open"));
+        check("菜单项齐全", !!menu && menu.querySelectorAll(".menu__item").length === 5);
+        check("菜单挂在窗口内容区", !!menu && menu.parentElement === body);
+
+        if (menu) menu.hidePopover();
+        check("关闭后菜单收起", !!menu && !menu.matches(":popover-open"));
+
+        var disabledEvent = fire(disabled);
+        check("禁用按钮右键也被拦截", disabledEvent.defaultPrevented === true);
+        check("禁用按钮不会弹出文本菜单", !!menu && !menu.matches(":popover-open"));
+
+        check("窗口外不拦截浏览器菜单", fire(document.getElementById("outside")).defaultPrevented === false);
+
+        var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+        lines.push(failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+        document.getElementById("result").textContent = lines.join("\n");
+      })();
+    </script>
+  </body>
+</html>

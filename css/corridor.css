@@ -57,156 +57,17 @@ body.corridor {
   margin-bottom: 72px;
 }
 
-/* ---------------- 通用窗口框 ---------------- */
-
-.era-win {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-height: 100%;
-  overflow: hidden;
-  border-radius: var(--win-radius, 8px);
-  border: var(--win-border-w, 1px) solid var(--win-border, transparent);
-  background: var(--win-body-bg, #fff);
-  box-shadow: var(--win-shadow, 0 24px 60px rgba(0, 0, 0, 0.35));
-}
-
-.era-win__bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 0 0 auto;
-  height: var(--win-bar-h, 34px);
-  padding: 0 10px;
-  background: var(--win-bar-bg, #f3f3f3);
-  color: var(--win-bar-fg, #1a1a1a);
-  font-size: 12px;
-  user-select: none;
-}
-
-.era-win__title {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: var(--win-title-weight, 600);
-  letter-spacing: 0.01em;
-}
-
-.era-win__body {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  padding: 14px 18px 16px;
-  background: var(--win-body-bg, #fff);
-  color: var(--ui-text);
-}
-
-.era-win__body .panel {
-  padding: 0;
-  gap: 12px;
-  background: transparent;
-}
-
-.era-win__body .group {
-  gap: 8px;
-}
-
-/* 窗口按钮：默认是 Windows 那种扁平 caption */
-.era-win__caps {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.era-win__cap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: calc(var(--win-bar-h, 34px) - 8px);
-  border-radius: 4px;
-  font-size: 12px;
-  line-height: 1;
-  color: inherit;
-  opacity: 0.75;
-}
-
-.era-win__cap--close {
-  opacity: 1;
-}
-
-.era-win__cap--close:hover {
-  background: #c42b1c;
-  color: #fff;
-}
-
-/* 红绿灯（macOS） */
-.traffic {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.traffic i {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #c9c9c9;
-  display: block;
-}
-
-.traffic i:nth-child(1) {
-  background: #ff5f57;
-}
-
-.traffic i:nth-child(2) {
-  background: #febc2e;
-}
-
-.traffic i:nth-child(3) {
-  background: #28c840;
-}
-
 /* ---------------- Windows 11 ---------------- */
 
 .room[data-era="win11"] {
-  --win-radius: 8px;
-  --win-bar-h: 32px;
-  --win-bar-bg: #2b2b2b;
-  --win-bar-fg: #ffffff;
-  --win-border: rgba(255, 255, 255, 0.08);
-  --win-border-w: 1px;
-  --win-body-bg: var(--ui-surface);
-  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-}
-
-/* Win11 的窗口按钮同样是 46px 宽的整条命中区，悬停才显底色 */
-.room[data-era="win11"] .era-win__bar {
-  padding-right: 0;
-}
-
-.room[data-era="win11"] .era-win__caps {
-  gap: 0;
-  align-self: stretch;
-}
-
-.room[data-era="win11"] .era-win__cap {
-  width: 46px;
-  height: 100%;
-  border-radius: 0;
-  font-size: 10px;
-  opacity: 0.9;
-}
-
-.room[data-era="win11"] .era-win__cap:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.room[data-era="win11"] .era-win__cap--close:hover {
-  background: #c42b1c;
-  color: #fff;
+  --window-radius: 8px;
+  --window-bar-h: 32px;
+  --window-bar-bg: #2b2b2b;
+  --window-bar-fg: #ffffff;
+  --window-border: rgba(255, 255, 255, 0.08);
+  --window-border-w: 1px;
+  --window-body-bg: var(--ui-surface);
+  --window-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
 }
 
 .room[data-era="win11"] .room__wall {
@@ -261,43 +122,15 @@ body.corridor {
 /* ---------------- Windows 10 ---------------- */
 
 .room[data-era="win10"] {
-  --win-radius: 0px;
-  --win-bar-h: 31px;
-  --win-title-weight: 400;
-  --win-bar-bg: #ffffff;
-  --win-bar-fg: #000000;
-  --win-border: #c8c8c8;
-  --win-border-w: 1px;
-  --win-body-bg: var(--ui-surface);
-  --win-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
-}
-
-/* Win10 的标题栏按钮是 46px 宽、贴满高度的直角命中区，只有悬停才变灰 / 变红 */
-.room[data-era="win10"] .era-win__bar {
-  padding-right: 0;
-}
-
-.room[data-era="win10"] .era-win__caps {
-  gap: 0;
-  align-self: stretch;
-}
-
-.room[data-era="win10"] .era-win__cap {
-  width: 46px;
-  height: 100%;
-  border-radius: 0;
-  font-size: 10px;
-  opacity: 1;
-  color: #000;
-}
-
-.room[data-era="win10"] .era-win__cap:hover {
-  background: #e5e5e5;
-}
-
-.room[data-era="win10"] .era-win__cap--close:hover {
-  background: #e81123;
-  color: #fff;
+  --window-radius: 0px;
+  --window-bar-h: 31px;
+  --window-title-weight: 400;
+  --window-bar-bg: #ffffff;
+  --window-bar-fg: #000000;
+  --window-border: #c8c8c8;
+  --window-border-w: 1px;
+  --window-body-bg: var(--ui-surface);
+  --window-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
 }
 
 .room[data-era="win10"] .room__wall {
@@ -355,34 +188,21 @@ body.corridor {
 /* ---------------- Windows XP ---------------- */
 
 .room[data-era="winxp"] {
-  --win-radius: 0px;
-  --win-bar-h: 26px;
-  --win-bar-bg: linear-gradient(180deg, #0058e6 0%, #3a93ff 8%, #0054e3 92%, #003bb5 100%);
-  --win-bar-fg: #ffffff;
-  --win-border: #0054e3;
-  --win-border-w: 3px;
-  --win-body-bg: var(--ui-surface);
-  --win-title-weight: 700;
-  --win-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+  --window-radius: 0px;
+  --window-bar-h: 26px;
+  --window-bar-bg: linear-gradient(180deg, #0058e6 0%, #3a93ff 8%, #0054e3 92%, #003bb5 100%);
+  --window-bar-fg: #ffffff;
+  --window-border: #0054e3;
+  --window-border-w: 3px;
+  --window-body-bg: var(--ui-surface);
+  --window-title-weight: 700;
+  --window-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
 }
 
 .room[data-era="winxp"] .room__wall {
   background:
     radial-gradient(120% 62% at 50% 112%, #2f7a1f 0 38%, #4aa32b 52%, #8fce6a 64%, transparent 72%),
     linear-gradient(180deg, #2f6cb3 0%, #6ea6dd 42%, #a8cdec 68%, #d9e8f5 100%);
-}
-
-.room[data-era="winxp"] .era-win {
-  --win-body-bg: #ece9d8;
-}
-
-.room[data-era="winxp"] .era-win__bar {
-  padding: 0 4px;
-}
-
-.room[data-era="winxp"] .era-win__title {
-  font-size: 11px;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
 }
 
 .shell--xp {
@@ -439,41 +259,19 @@ body.corridor {
   border-left: 1px solid #1a49b8;
 }
 
-/* XP 的窗口按钮是 16×14 的凸起小方块 */
-.room[data-era="winxp"] .era-win__caps {
-  gap: 2px;
-}
-
-.room[data-era="winxp"] .era-win__cap {
-  width: 17px;
-  height: 15px;
-  border-radius: 0;
-  background: linear-gradient(180deg, #4a9bff 0%, #0a58d8 100%);
-  box-shadow: inset 1px 1px 0 #b8d9ff, inset -1px -1px 0 #00318a;
-  color: #fff;
-  font-size: 9px;
-  font-weight: 700;
-  opacity: 1;
-}
-
-.room[data-era="winxp"] .era-win__cap--close {
-  background: linear-gradient(180deg, #f08a68 0%, #c4320f 100%);
-  box-shadow: inset 1px 1px 0 #ffc9b8, inset -1px -1px 0 #7a1200;
-}
-
 /* ---------------- macOS 26 / 11–15 ---------------- */
 
 .room[data-era="macos"],
 .room[data-era="macos15"] {
-  --win-radius: 10px;
-  --win-bar-h: 28px;
-  --win-bar-bg: rgba(246, 246, 246, 0.92);
-  --win-bar-fg: #1a1a1a;
-  --win-border: rgba(0, 0, 0, 0.12);
-  --win-border-w: 1px;
-  --win-body-bg: var(--ui-surface);
-  --win-title-weight: 600;
-  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  --window-radius: 10px;
+  --window-bar-h: 28px;
+  --window-bar-bg: rgba(246, 246, 246, 0.92);
+  --window-bar-fg: #1a1a1a;
+  --window-border: rgba(0, 0, 0, 0.12);
+  --window-border-w: 1px;
+  --window-body-bg: var(--ui-surface);
+  --window-title-weight: 600;
+  --window-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 }
 
 .room[data-era="macos"] .room__wall {
@@ -485,9 +283,9 @@ body.corridor {
 }
 
 .room[data-era="macos15"] {
-  --win-bar-bg: rgba(38, 38, 41, 0.94);
-  --win-bar-fg: #f5f5f7;
-  --win-border: rgba(255, 255, 255, 0.1);
+  --window-bar-bg: rgba(38, 38, 41, 0.94);
+  --window-bar-fg: #f5f5f7;
+  --window-border: rgba(255, 255, 255, 0.1);
 }
 
 .room[data-era="macos15"] .room__wall {
@@ -495,28 +293,6 @@ body.corridor {
     radial-gradient(70% 60% at 20% 18%, rgba(120, 90, 200, 0.65), transparent 60%),
     radial-gradient(80% 70% at 85% 25%, rgba(60, 120, 230, 0.6), transparent 65%),
     linear-gradient(180deg, #191d33 0%, #0e1224 60%, #060814 100%);
-}
-
-.room[data-era="macos"] .era-win__bar,
-.room[data-era="macos15"] .era-win__bar {
-  justify-content: center;
-}
-
-.room[data-era="macos"] .era-win__title,
-.room[data-era="macos15"] .era-win__title {
-  text-align: center;
-  font-size: 12px;
-}
-
-.room[data-era="macos"] .traffic,
-.room[data-era="macos15"] .traffic {
-  position: absolute;
-  left: 12px;
-}
-
-.room[data-era="macos"] .era-win__bar,
-.room[data-era="macos15"] .era-win__bar {
-  position: relative;
 }
 
 .shell--mac {
@@ -604,15 +380,15 @@ body.corridor {
 /* ---------------- GNOME ---------------- */
 
 .room[data-era="gnome"] {
-  --win-radius: 12px;
-  --win-bar-h: 38px;
-  --win-bar-bg: #2b2b2f;
-  --win-bar-fg: #ffffff;
-  --win-border: rgba(255, 255, 255, 0.08);
-  --win-border-w: 1px;
-  --win-body-bg: var(--ui-surface);
-  --win-title-weight: 700;
-  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  --window-radius: 12px;
+  --window-bar-h: 38px;
+  --window-bar-bg: #2b2b2f;
+  --window-bar-fg: #ffffff;
+  --window-border: rgba(255, 255, 255, 0.08);
+  --window-border-w: 1px;
+  --window-body-bg: var(--ui-surface);
+  --window-title-weight: 700;
+  --window-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
 }
 
 .room[data-era="gnome"] .room__wall {
@@ -620,29 +396,6 @@ body.corridor {
     radial-gradient(70% 60% at 25% 20%, rgba(53, 132, 228, 0.35), transparent 62%),
     radial-gradient(70% 60% at 78% 75%, rgba(145, 65, 172, 0.35), transparent 60%),
     linear-gradient(180deg, #2b2b33 0%, #1c1c22 55%, #121216 100%);
-}
-
-.room[data-era="gnome"] .era-win__bar {
-  justify-content: center;
-  position: relative;
-}
-
-.room[data-era="gnome"] .era-win__title {
-  text-align: center;
-  font-size: 13px;
-}
-
-.room[data-era="gnome"] .era-win__caps {
-  position: absolute;
-  right: 8px;
-}
-
-.room[data-era="gnome"] .era-win__cap {
-  width: 24px;
-  height: 24px;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.12);
-  font-size: 11px;
 }
 
 .shell--gnome .topbar {
@@ -852,14 +605,10 @@ body.corridor {
 }
 
 .room__stage {
-  transform: translateY(var(--win-y, 0px)) scale(var(--win-scale, 1));
-  opacity: var(--win-opacity, 1);
-  filter: blur(var(--win-blur, 0px));
+  transform: translateY(var(--window-y, 0px)) scale(var(--window-scale, 1));
+  opacity: var(--window-opacity, 1);
+  filter: blur(var(--window-blur, 0px));
   will-change: transform, opacity, filter;
-}
-
-.room.is-active .era-win {
-  animation: win-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes win-in {
@@ -871,10 +620,6 @@ body.corridor {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-}
-
-.era-win {
-  position: relative;
 }
 
 /* 尘埃粒子画布 */
@@ -1023,7 +768,7 @@ body.corridor {
     transform: none;
   }
 
-  .room.is-active .era-win {
+  .room.is-active .window {
     animation: none;
   }
 
