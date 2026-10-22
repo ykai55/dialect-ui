@@ -151,17 +151,29 @@
 
     function jumpTo(prefix) {
       var nav = navigableIndexes();
-      if (!nav.length) return;
+      if (!nav.length) return -1;
       var start = active >= 0 ? nav.indexOf(active) + 1 : 0;
       for (var k = 0; k < nav.length; k++) {
         var idx = nav[(start + k + nav.length) % nav.length];
         if (itemText(items[idx]).indexOf(prefix) === 0) {
           setActive(idx);
-          return;
+          return idx;
         }
       }
       // 缓冲里没有能对上的项：连按同一个字母时退化成单字符匹配
-      if (prefix.length > 1) jumpTo(prefix.charAt(prefix.length - 1));
+      if (prefix.length > 1) return jumpTo(prefix.charAt(prefix.length - 1));
+      return -1;
+    }
+
+    // 供下拉框在按钮上复用：输入一个字符，返回命中的项下标（没命中 -1）
+    function typeaheadInput(key) {
+      if (typeof key !== "string" || key.length !== 1 || !/\S/.test(key)) return -1;
+      typeahead += key.toLowerCase();
+      window.clearTimeout(typeaheadTimer);
+      typeaheadTimer = window.setTimeout(function () {
+        typeahead = "";
+      }, TYPEAHEAD_MS);
+      return jumpTo(typeahead);
     }
 
     function typeaheadKey(e) {
@@ -169,12 +181,7 @@
       if (e.key === " " || e.key === "Enter" || e.key === "Escape" || e.key === "Tab") return false;
       if (e.key.length !== 1 || !/\S/.test(e.key)) return false;
       e.preventDefault();
-      typeahead += e.key.toLowerCase();
-      window.clearTimeout(typeaheadTimer);
-      typeaheadTimer = window.setTimeout(function () {
-        typeahead = "";
-      }, TYPEAHEAD_MS);
-      jumpTo(typeahead);
+      typeaheadInput(e.key);
       return true;
     }
 
@@ -389,6 +396,7 @@
       first: firstItem,
       last: lastItem,
       activate: activate,
+      typeahead: typeaheadInput,
       consumePointerDismiss: consumePointerDismiss,
       refresh: collect,
       menu: menuEl

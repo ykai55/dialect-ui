@@ -14,8 +14,10 @@
   </head>
   <body>
     <div id="stage"></div>
+    <input id="live" class="slider" type="range" min="0" max="100" value="40" aria-label="live" />
     <pre id="result">RUNNING</pre>
 
+    <script src="../js/slider.js"></script>
     <script>
       (function () {
         var lines = [];
@@ -97,6 +99,25 @@
             return styles[t].mouseOutline === "none" || styles[t].mouseOutline === "";
           });
         });
+
+        /* 键盘：Home/End/PageUp/PageDown */
+        var live = document.getElementById("live");
+        var fired = 0;
+        live.addEventListener("input", function () { fired++; });
+        function press(k) {
+          live.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
+        }
+        live.focus();
+        press("Home");
+        check("Home 到最小值", function () { return live.value === "0"; });
+        press("End");
+        check("End 到最大值", function () { return live.value === "100"; });
+        live.value = "50";
+        press("PageUp");
+        check("PageUp 走量程 10%", function () { return live.value === "60"; });
+        press("PageDown");
+        check("PageDown 走量程 10%", function () { return live.value === "50"; });
+        check("键盘改值会发 input 事件", function () { return fired === 4; });
 
         var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
         document.getElementById("result").textContent =

@@ -76,6 +76,25 @@
       } else if (e.key === "Escape" && ctrl.isOpen()) {
         e.preventDefault();
         ctrl.close({ restoreFocus: true });
+      } else if (e.key === "Home" || e.key === "End") {
+        // 收起状态按 Home/End：直接选首 / 末项（和原生 combo 一样）；展开时只移高亮
+        e.preventDefault();
+        var wasOpen = ctrl.isOpen();
+        if (!wasOpen) ctrl.open({ invoker: button });
+        if (e.key === "Home") ctrl.first();
+        else ctrl.last();
+        if (!wasOpen) ctrl.activate();
+      } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // 收起状态输入字母：跳到前缀匹配项并选中；展开时只移高亮
+        var opened = ctrl.isOpen();
+        if (!opened) ctrl.open({ invoker: button });
+        var hit = ctrl.typeahead(e.key);
+        e.preventDefault();
+        if (hit < 0) {
+          if (!opened) ctrl.close({ restoreFocus: true });
+          return;
+        }
+        if (!opened) ctrl.activate();
       }
     });
 

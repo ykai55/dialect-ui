@@ -25,6 +25,22 @@
         </ul>
       </div>
       <button type="button" id="other">other control</button>
+
+      <div class="select" data-select id="sel2">
+        <button type="button" class="select__button">
+          <span class="select__value">Alpha</span>
+          <span class="select__chevron">
+            <span class="select__chevron-up"></span>
+            <span class="select__chevron-down"></span>
+          </span>
+        </button>
+        <ul class="menu" popover="manual">
+          <li class="menu__item" aria-selected="true">Alpha</li>
+          <li class="menu__item" aria-selected="false">Bravo</li>
+          <li class="menu__item" aria-selected="false">Charlie</li>
+          <li class="menu__item" aria-selected="false">Delta</li>
+        </ul>
+      </div>
     </div>
 
     <pre id="result">RUNNING</pre>
@@ -51,6 +67,13 @@
         var menu = sel.querySelector(".menu");
         var items = menu.querySelectorAll(".menu__item");
         var value = btn.querySelector(".select__value");
+        var sel2 = document.getElementById("sel2");
+        var btn2 = sel2.querySelector(".select__button");
+        var value2 = btn2.querySelector(".select__value");
+
+        function menu2Open() {
+          return sel2.querySelector(".menu").matches(":popover-open");
+        }
 
         (async function () {
           try {
@@ -95,6 +118,33 @@
             document.getElementById("other").focus();
             await wait();
             check("焦点移走后关闭", function () { return !menu.matches(":popover-open"); });
+
+            /* Home / End 在收起状态直接选首尾 */
+            btn.focus();
+            key(btn, "End");
+            await wait();
+            check("收起时 End 选最后一项", function () {
+              return value.textContent === "Option D" && !menu.matches(":popover-open");
+            });
+            key(btn, "Home");
+            await wait();
+            check("收起时 Home 选第一项", function () {
+              return value.textContent === "Option A" && !menu.matches(":popover-open");
+            });
+
+            /* type-ahead：输入字母直接选到前缀匹配项 */
+            btn2.focus();
+            key(btn2, "c");
+            await wait();
+            check("输入字母跳到 Charlie", function () {
+              return value2.textContent === "Charlie" && !menu2Open();
+            });
+            key(btn2, "d");
+            await wait();
+            check("再输入字母跳到 Delta", function () { return value2.textContent === "Delta"; });
+            key(btn2, "b");
+            await wait();
+            check("输入字母跳到 Bravo", function () { return value2.textContent === "Bravo"; });
           } catch (e) {
             lines.push("FAIL 测试中断 — " + e.message);
           }

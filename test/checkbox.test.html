@@ -96,6 +96,26 @@
           });
         });
 
+        /* 焦点样式：每个平台都要能看出焦点落在哪儿（键盘用户靠这个） */
+        function focusSignature(theme, mode) {
+          var base = makeCheck(theme, mode, true, "", false);
+          var focus = makeCheck(theme, mode, true, "s-focus", false);
+          function sig(el) {
+            var box = getComputedStyle(el.box);
+            var label = getComputedStyle(el.label);
+            return [box.outlineStyle, box.outlineWidth, box.outlineOffset, box.boxShadow,
+              label.outlineStyle, label.outlineWidth, label.outlineOffset, label.boxShadow].join(" / ");
+          }
+          return sig(base) !== sig(focus);
+        }
+        THEMES.forEach(function (theme) {
+          MODES.forEach(function (mode) {
+            check(theme + " " + mode + " 焦点态有可见焦点框", function () {
+              return focusSignature(theme, mode);
+            });
+          });
+        });
+
         /* 守卫不能误伤正常态的悬停：Win10 / Win11 的悬停有可见变化。 */
         check("Win10 未选中悬停仍变蓝边", function () {
           var el = makeCheck("win10", "light", false, "s-hover", false);
