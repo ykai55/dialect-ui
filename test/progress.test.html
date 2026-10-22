@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>progress test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-win11.css" />
+    <link rel="stylesheet" href="../css/theme-win10.css" />
+    <link rel="stylesheet" href="../css/theme-winxp.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+    <link rel="stylesheet" href="../css/theme-macos15.css" />
+    <link rel="stylesheet" href="../css/theme-gnome.css" />
+  </head>
+  <body>
+    <div id="stage"></div>
+    <pre id="result">RUNNING</pre>
+
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+
+        var THEMES = ["win11", "win10", "winxp", "macos", "macos15", "gnome"];
+        var stage = document.getElementById("stage");
+        var bars = {};
+        var indets = {};
+
+        THEMES.forEach(function (theme) {
+          var wrap = document.createElement("div");
+          wrap.setAttribute("data-theme", theme);
+          wrap.setAttribute("data-mode", "light");
+          wrap.style.width = "240px";
+
+          var bar = document.createElement("div");
+          bar.className = "progress";
+          bar.setAttribute("role", "progressbar");
+          bar.setAttribute("aria-valuenow", "40");
+          bar.style.setProperty("--progress-value", "40%");
+          bar.innerHTML = '<div class="progress__fill"></div>';
+          wrap.appendChild(bar);
+          bars[theme] = bar;
+
+          var indet = document.createElement("div");
+          indet.className = "progress";
+          indet.setAttribute("data-indeterminate", "");
+          indet.innerHTML = '<div class="progress__fill"></div>';
+          wrap.appendChild(indet);
+          indets[theme] = indet;
+
+          stage.appendChild(wrap);
+        });
+
+        function trackH(theme) {
+          return getComputedStyle(bars[theme]).height;
+        }
+        function fillW(theme) {
+          return bars[theme].querySelector(".progress__fill").getBoundingClientRect().width;
+        }
+
+        check("确定进度按 --progress-value 画到 40%", function () {
+          return THEMES.every(function (theme) {
+            var track = bars[theme].getBoundingClientRect().width;
+            var fill = fillW(theme);
+            return Math.abs(fill / track - 0.4) < 0.02;
+          });
+        });
+        check("六个平台的高度不一样（macOS 8 / 15 6 / Win11 3 / Win10 16 / XP 17 / GNOME 8）", function () {
+          return trackH("macos") === "8px" && trackH("macos15") === "6px" &&
+            trackH("win11") === "3px" && trackH("win10") === "16px" &&
+            trackH("winxp") === "17px" && trackH("gnome") === "8px";
+        });
+        check("macOS 两代用强调色填充", function () {
+          return ["macos", "macos15"].every(function (theme) {
+            return getComputedStyle(bars[theme].querySelector(".progress__fill")).backgroundColor !== "rgba(0, 0, 0, 0)";
+          });
+        });
+        check("XP 的填充是分段块（有背景图、底色透明）", function () {
+          var cs = getComputedStyle(bars.winxp.querySelector(".progress__fill"));
+          return cs.backgroundImage.indexOf("gradient") > -1 && cs.backgroundColor === "rgba(0, 0, 0, 0)";
+        });
+        check("Win10 是绿色 Win32 进度条", function () {
+          var cs = getComputedStyle(bars.win10.querySelector(".progress__fill"));
+          return cs.backgroundColor === "rgb(6, 176, 37)";
+        });
+        check("Win11 是 3px 细条 + 1px 轨道", function () {
+          return getComputedStyle(bars.win11).backgroundImage.indexOf("gradient") > -1;
+        });
+        check("XP 的轨道有 1px 凹陷边", function () {
+          return getComputedStyle(bars.winxp).boxShadow.indexOf("inset") > -1;
+        });
+        check("不确定态有滑动动画", function () {
+          return THEMES.every(function (theme) {
+            var fill = indets[theme].querySelector(".progress__fill");
+            var cs = getComputedStyle(fill);
+            return cs.animationName === "progress-indeterminate" && parseFloat(cs.animationDuration) > 0;
+          });
+        });
+        check("不确定态的填充比轨道短", function () {
+          return THEMES.every(function (theme) {
+            var fill = indets[theme].querySelector(".progress__fill").getBoundingClientRect().width;
+            return fill < indets[theme].getBoundingClientRect().width * 0.6;
+          });
+        });
+        check("aria-valuenow 只在确定进度上", function () {
+          return THEMES.every(function (theme) {
+            return bars[theme].getAttribute("aria-valuenow") === "40" &&
+              !indets[theme].hasAttribute("aria-valuenow");
+          });
+        });
+
+        var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+        document.getElementById("result").textContent =
+          lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+        document.title = failed ? "FAIL" : "PASS";
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>theme token fallback test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-win11.css" />
+    <link rel="stylesheet" href="../css/theme-win10.css" />
+    <link rel="stylesheet" href="../css/theme-winxp.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+    <link rel="stylesheet" href="../css/theme-macos15.css" />
+    <link rel="stylesheet" href="../css/theme-gnome.css" />
+  </head>
+  <body>
+    <div id="stage"></div>
+    <pre id="result">RUNNING</pre>
+
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+
+        var THEMES = ["win11", "win10", "winxp", "macos", "macos15", "gnome"];
+        var stage = document.getElementById("stage");
+        var segments = {};
+        var tabs = {};
+
+        THEMES.forEach(function (theme) {
+          var wrap = document.createElement("div");
+          wrap.setAttribute("data-theme", theme);
+          wrap.setAttribute("data-mode", "light");
+
+          var seg = document.createElement("div");
+          seg.className = "segmented";
+          seg.innerHTML =
+            '<button type="button" class="segmented__item" aria-checked="false">One</button>' +
+            '<button type="button" class="segmented__item" aria-checked="true">Two</button>';
+          wrap.appendChild(seg);
+          segments[theme] = seg.querySelector('[aria-checked="true"]');
+          segments[theme].classList.add("s-hover");
+
+          var tabsEl = document.createElement("div");
+          tabsEl.className = "tabs";
+          tabsEl.innerHTML =
+            '<div class="tabs__list"><button type="button" class="tabs__tab" aria-selected="false">A</button>' +
+            '<button type="button" class="tabs__tab" aria-selected="true">B</button></div>' +
+            '<div class="tabs__panel">panel</div>';
+          wrap.appendChild(tabsEl);
+          tabs[theme] = tabsEl.querySelector('[aria-selected="true"]');
+          tabs[theme].classList.add("s-hover");
+
+          stage.appendChild(wrap);
+        });
+
+        function bg(el) {
+          return getComputedStyle(el).backgroundColor;
+        }
+
+        /* 曾经的 bug：--seg-selected-hover-bg 在 :root 里写成 var(--seg-selected-bg)，
+           var() 在 :root 上就把值算死了，主题覆盖 --seg-selected-bg 之后它还是 :root 的
+           强调色，于是 Win10 / XP / macOS 选中段一悬停就变成亮蓝。 */
+        check("悬停选中段不再是 :root 的强调色", function () {
+          return THEMES.every(function (theme) {
+            return bg(segments[theme]) !== "rgb(53, 132, 228)";
+          });
+        });
+        check("Win10 悬停选中段保持按下色", function () {
+          return bg(segments.win10) === "rgb(204, 228, 247)";
+        });
+        check("WinXP 悬停选中段保持面灰", function () {
+          return bg(segments.winxp) === "rgb(192, 192, 192)";
+        });
+        check("macOS 悬停选中段保持强调色实心块", function () {
+          return bg(segments.macos) === "rgb(9, 93, 248)";
+        });
+
+        /* 标签页之前也在 :root 里写了 var(--tabs-selected-bg) 的悬停兜底，
+           同样会在悬停时把选中底弄丢，这里守住。 */
+        check("悬停选中标签不会掉成透明（Win10 的 Pivot 选中底本来就是透明）", function () {
+          return THEMES.filter(function (t) { return t !== "win10"; }).every(function (theme) {
+            return bg(tabs[theme]) !== "rgba(0, 0, 0, 0)";
+          });
+        });
+
+        var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+        document.getElementById("result").textContent =
+          lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+        document.title = failed ? "FAIL" : "PASS";
+      })();
+    </script>
+  </body>
+</html>

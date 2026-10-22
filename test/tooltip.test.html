@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>tooltip test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-win11.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+  </head>
+  <body>
+    <div id="wrap" data-theme="win11" data-mode="light" style="padding:120px 40px">
+      <button type="button" id="tip" class="btn" data-tooltip="Saves your changes">Save</button>
+      <button type="button" id="other" class="btn" data-tooltip="Another tip">Other</button>
+      <button type="button" id="top" class="btn" data-tooltip="Below the button"
+              style="position:fixed;top:2px;left:45%">Top</button>
+      <div id="layer" class="tooltip" role="tooltip" data-tooltip-layer hidden
+           style="--tooltip-show-delay: 0ms; --tooltip-hide-delay: 0ms"></div>
+    </div>
+
+    <div id="wrap-macos" data-theme="macos" data-mode="light" style="padding:20px 40px">
+      <button type="button" id="mac-tip" class="btn" data-tooltip="macOS help tag">mac</button>
+      <div id="mac-layer" class="tooltip" role="tooltip" data-tooltip-layer hidden
+           style="--tooltip-show-delay: 0ms; --tooltip-hide-delay: 0ms"></div>
+    </div>
+
+    <pre id="result">RUNNING</pre>
+
+    <script src="../js/tooltip.js"></script>
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+        function wait(ms) {
+          return new Promise(function (r) { setTimeout(r, ms || 30); });
+        }
+        var tip = document.getElementById("tip");
+        var other = document.getElementById("other");
+        var top = document.getElementById("top");
+        var layer = document.getElementById("layer");
+        var macTip = document.getElementById("mac-tip");
+        var macLayer = document.getElementById("mac-layer");
+
+        function hover(el) {
+          el.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+        }
+        function leave(el) {
+          el.dispatchEvent(new MouseEvent("mouseout", { bubbles: true, relatedTarget: document.body }));
+        }
+        function esc() {
+          document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+        }
+
+        (async function () {
+          try {
+            hover(tip);
+            await wait();
+            check("悬停后出现提示", function () {
+              return !layer.hidden && layer.hasAttribute("data-open") && layer.textContent === "Saves your changes";
+            });
+            check("提示写在角色 tooltip 的层里", function () {
+              return layer.getAttribute("role") === "tooltip" && tip.getAttribute("aria-describedby") === layer.id;
+            });
+            check("提示在目标上方居中", function () {
+              var r = tip.getBoundingClientRect();
+              var l = layer.getBoundingClientRect();
+              return l.bottom <= r.top && Math.abs((l.left + l.width / 2) - (r.left + r.width / 2)) < 2;
+            });
+
+            leave(tip);
+            await wait();
+            check("移开后消失并清掉 aria-describedby", function () {
+              return layer.hidden && !tip.hasAttribute("aria-describedby");
+            });
+
+            hover(other);
+            await wait();
+            check("换一个目标会更新文字", function () {
+              return layer.textContent === "Another tip" && !layer.hidden;
+            });
+            leave(other);
+            await wait();
+
+            tip.focus();
+            await wait();
+            check("键盘聚焦也显示提示", function () { return !layer.hidden; });
+            tip.blur();
+            await wait();
+            check("失焦后消失", function () { return layer.hidden; });
+
+            hover(tip);
+            await wait();
+            esc();
+            await wait();
+            check("Esc 关闭提示", function () { return layer.hidden; });
+            leave(tip);
+
+            hover(top);
+            await wait();
+            check("上方放不下时翻到下方", function () {
+              var r = top.getBoundingClientRect();
+              var l = layer.getBoundingClientRect();
+              return l.top >= r.bottom;
+            });
+            window.dispatchEvent(new Event("scroll"));
+            await wait();
+            check("滚动时关闭", function () { return layer.hidden; });
+
+            hover(tip);
+            await wait();
+            document.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+            await wait();
+            check("按下鼠标时关闭", function () { return layer.hidden; });
+
+            macTip.focus();
+            await wait();
+            check("macOS 的 help tag 不因键盘聚焦出现", function () { return macLayer.hidden; });
+            macTip.blur();
+          } catch (e) {
+            lines.push("FAIL 测试中断 — " + e.message);
+          }
+
+          var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+          document.getElementById("result").textContent =
+            lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+          document.title = failed ? "FAIL" : "PASS";
+        })();
+      })();
+    </script>
+  </body>
+</html>
