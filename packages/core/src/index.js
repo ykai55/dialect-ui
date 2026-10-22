@@ -23,7 +23,7 @@ import { initTabs } from "./behavior/tabs.js";
 import { initSliders } from "./behavior/slider.js";
 import { initTooltips } from "./behavior/tooltip.js";
 
-export { createMenu, initMenuBox, initMenus } from "./behavior/menu.js";
+export { createMenu, createMenuBox, initMenuBox, initMenus } from "./behavior/menu.js";
 export { createTextMenu, initTextMenus } from "./behavior/text-menu.js";
 export { createWindow, initWindows } from "./behavior/window.js";
 export { createSelect, initSelects } from "./behavior/select.js";

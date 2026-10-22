@@ -438,27 +438,39 @@ export function createMenu(menuEl, options) {
 
 /* ---------- 声明式绑定：data-menu / data-menu-trigger / data-menu-context ---------- */
 
-export function initMenuBox(box) {
-  var menuEl = box.querySelector(".menu");
-  if (!menuEl) return;
-  if (menuEl._menuCtrl) return;
+export function createMenuBox(box, options) {
+  options = options || {};
+  var menuEl = options.menu || box.querySelector(".menu");
+  if (!menuEl) return null;
+  if (menuEl._menuBoxCtrl) return menuEl._menuBoxCtrl;
 
-  var triggers = toArray(box.querySelectorAll("[data-menu-trigger]"));
-  var contextTargets = toArray(box.querySelectorAll("[data-menu-context]"));
+  var triggers = options.triggers || toArray(box.querySelectorAll("[data-menu-trigger]"));
+  var contextTargets =
+    options.contextTargets || toArray(box.querySelectorAll("[data-menu-context]"));
   var disposers = [];
-  var ctrl;
+  var userOnOpen = options.onOpen;
+  var userOnClose = options.onClose;
 
-  ctrl = createMenu(menuEl, {
+  var ctrl = createMenu(menuEl, {
+    role: options.role,
+    anchor: options.anchor,
+    activeHost: options.activeHost,
+    focusOnOpen: options.focusOnOpen,
+    initialActive: options.initialActive,
+    matchAnchorWidth: options.matchAnchorWidth,
+    onChoose: options.onChoose,
     triggers: triggers,
     onOpen: function () {
       triggers.forEach(function (t) {
         t.setAttribute("aria-expanded", "true");
       });
+      if (userOnOpen) userOnOpen();
     },
     onClose: function () {
       triggers.forEach(function (t) {
         t.setAttribute("aria-expanded", "false");
       });
+      if (userOnClose) userOnClose();
     }
   });
 
@@ -470,9 +482,9 @@ export function initMenuBox(box) {
       fn();
     });
     disposers.length = 0;
-    if (menuEl._menuCtrl === ctrl) menuEl._menuCtrl = null;
+    if (menuEl._menuBoxCtrl === ctrl) menuEl._menuBoxCtrl = null;
   };
-  menuEl._menuCtrl = ctrl;
+  menuEl._menuBoxCtrl = ctrl;
 
   triggers.forEach(function (trigger) {
     trigger.setAttribute("aria-haspopup", "menu");
@@ -507,9 +519,10 @@ export function initMenuBox(box) {
     function openAt(x, y) {
       ctrl.open({
         point: { x: x, y: y },
-        invoker: document.activeElement && document.activeElement.nodeType === 1
-          ? document.activeElement
-          : null
+        invoker:
+          document.activeElement && document.activeElement.nodeType === 1
+            ? document.activeElement
+            : null
       });
     }
 
@@ -536,6 +549,14 @@ export function initMenuBox(box) {
       target.removeEventListener("keydown", onContextKeydown);
     });
   });
+
+  return ctrl;
+}
+
+// 声明式用法：在 [data-menu] 盒子里找 .menu、（可选）[data-menu-trigger] /
+// [data-menu-context]，和 createMenuBox 是同一份实现。
+export function initMenuBox(box) {
+  createMenuBox(box);
 }
 
 export function initMenus(root = document) {

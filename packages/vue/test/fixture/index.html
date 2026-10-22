@@ -3,6 +3,46 @@
   <head>
     <meta charset="utf-8" />
     <title>@dialect-ui/vue fixture</title>
+    <style>
+      /* v0.2 验收页：让布局可读，并把 tooltip 延迟压到 0，断言不用等 500ms。
+         行为层从元素的计算样式里读这些令牌，和主题 CSS 是同一套机制。 */
+      #theme-root {
+        padding: 16px;
+      }
+
+      .fixture-section {
+        margin: 12px 0;
+        padding: 12px;
+        border-top: 1px solid rgba(0, 0, 0, 0.15);
+      }
+
+      .fixture-section .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .fixture-section .check,
+      .fixture-section .radio,
+      .fixture-section .switch {
+        display: flex;
+      }
+
+      .fixture-context {
+        user-select: none;
+      }
+
+      .fixture-section .window {
+        width: 280px;
+        margin: 8px 0;
+      }
+
+      .tooltip[data-tooltip-layer] {
+        --tooltip-show-delay: 0ms;
+        --tooltip-hide-delay: 0ms;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

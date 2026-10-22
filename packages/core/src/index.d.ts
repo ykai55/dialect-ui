@@ -57,6 +57,16 @@ export interface MenuController {
   destroy(): void;
 }
 
+/** createMenuBox 的选项：在 MenuOptions 之上直接指定盒子里的元素。 */
+export interface MenuBoxOptions extends MenuOptions {
+  /** 菜单元素，缺省用 box.querySelector(".menu") */
+  menu?: HTMLElement;
+  /** 触发器，缺省扫描 box 里的 [data-menu-trigger] */
+  triggers?: Element[];
+  /** 右键目标，缺省扫描 box 里的 [data-menu-context] */
+  contextTargets?: Element[];
+}
+
 export interface SelectOptions {
   onChange?: (value: string, index: number, item: HTMLElement) => void;
   onOpenChange?: (open: boolean) => void;
@@ -136,6 +146,7 @@ export function initSliders(root?: ParentNode): void;
 export function initTooltips(root?: ParentNode): void;
 
 export function createMenu(menuEl: HTMLElement, options?: MenuOptions): MenuController;
+export function createMenuBox(box: Element, options?: MenuBoxOptions): MenuController | null;
 export function createSelect(rootEl: HTMLElement, options?: SelectOptions): SelectController | null;
 export function createSegmented(
   rootEl: HTMLElement,

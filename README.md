@@ -71,7 +71,9 @@ npm install @dialect-ui/core @dialect-ui/vue     # Vue 3
 ```
 
 适配层只渲染和静态站一模一样的 DOM 契约，行为（打开、定位、键盘、焦点）全部交给 core 的控制器，
-不存在第二套实现。当前纵切覆盖 Theme / Button / TextField / Select，其余组件按同一模子铺开。
+不存在第二套实现。组件已覆盖：Theme、Button、TextField（单行 / 多行）、Select、Checkbox、Radio、
+Switch、Slider、Progress、SegmentedControl、Tabs、Tooltip（TooltipProvider）、Menu、ContextMenu、
+Window。组件 API 和状态约定见 [docs/framework-packages.md](docs/framework-packages.md)。
 
 ```bash
 npm install

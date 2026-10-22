@@ -267,6 +267,67 @@ render function（不引入 SFC 编译链），`props` / `emits` 显式声明。
   `npm test` 等于站点测试 + 框架包测试。runner 直接调仓库根的 `node_modules/.bin/vite`，
   并对无头 Chrome 的偶发启动失败做 3 次重试（断言失败不重试）。
 
+## 组件 API（v0.2：剩余组件）
+
+约定不变：只渲染 DOM 契约 + 初始 ARIA，运行时状态由 core 控制器写；不渲染 `data-menu` /
+`data-select` / `data-segmented` / `data-tabs` 这类自动初始化标记；`createXxx` / `createXxx` 在
+effect / onMounted 里建、卸载时 destroy；受控值变化走 `ctrl.select(index, { silent: true })`。
+`className` 一律落根节点（表单控件是外层 `label` / 包裹元素），原生属性落真正可交互的控件。
+
+### 纯 CSS 控件（无控制器）
+
+| 组件 | props（React 同名，Vue 用 kebab-case） | DOM |
+| --- | --- | --- |
+| `Checkbox` | `label? checked? defaultChecked? onChange? disabled? name? value?`（其余 input 属性透传） | `label.check > input.check__input + span.check__box > svg.check__mark(path) + span.check__label` |
+| `Radio` | 同上，`type=radio`、`name` 必填式使用（同组同名） | `label.radio > input.radio__input + span.radio__dot + span.radio__label` |
+| `Switch` | `label? checked? defaultChecked? onChange? disabled?` | `label.switch > input.switch__input + span.switch__track > span.switch__knob + span.switch__label` |
+| `Progress` | `value? max?=100 indeterminate? aria-label?` | `div.progress[role=progressbar][aria-valuemin=0][aria-valuemax][aria-valuenow?][data-indeterminate?] > div.progress__fill`；确定态 style 写 `--progress-value: pct%` |
+| `Slider` | `value? defaultValue? min? max? step? showValue? disabled? onChange?`，ref 到 input | `input.slider[type=range]`；`showValue` 时外面包 `div.slider-row` + `span.slider__value`（显示值跟随输入，受控时用 prop）；挂载时 `createSlider(input)`，卸载 destroy |
+
+Checkbox 的 `svg.check__mark` 固定 `viewBox="0 0 20 20"`，`path d="M5.2 10.3 L8 14 L13.5 5.7"`。
+
+### 有控制器的组件
+
+| 组件 | props / 事件 | DOM 与行为 |
+| --- | --- | --- |
+| `SegmentedControl` | `options: {value,label,disabled?}[]; value?; defaultValue?; onValueChange?(value, option); disabled?; aria-label?` | `div.segmented[role=radiogroup] > button.segmented__item[role=radio][aria-checked][data-value]`；挂载 `createSegmented(root, { onChange })`，受控值 effect 里 `ctrl.select(index, { silent: true })` |
+| `Tabs` | `items: {value?,label,disabled?}[]; value?; defaultValue?; onValueChange?(value, index); aria-label?`；children/默认 slot 按顺序是面板内容 | `div.tabs > div.tabs__list[role=tablist] > button.tabs__tab[role=tab][aria-selected][data-value]`，面板 `div.tabs__panel`（初始选中项以外的加 `hidden`）；挂载 `createTabs(root, { onChange })`，受控值走 `ctrl.select` |
+| `TooltipProvider` / `Tooltip` | Provider 无 props；`Tooltip text` 包一个子元素 | Provider 渲染 `div.tooltip-host[style="display:contents"]` + children + `div.tooltip[role=tooltip][data-tooltip-layer][hidden]`，挂载 `createTooltip(layer)`；Tooltip 用 cloneElement/cloneVNode 给唯一子元素加 `data-tooltip` 并转发 ref，不产生额外布局节点。一个主题容器放一个 Provider |
+| `Menu` | `trigger: ReactNode/VNode; items: MenuEntry[]; onSelect?(entry, index); role?: "menu"; aria-label?` | `div.menu-box > 触发器 + ul.menu[popover=manual]`；`MenuEntry = { label, value?, shortcut?, disabled? } \| { separator: true }`；挂载 `createMenuBox(box, { menu, triggers: [triggerEl], role, onChoose })`，item 上写 `data-entry-index` 把下标映射回 entry |
+| `ContextMenu` | 同 `Menu` 的 items/onSelect，children 是右键区域 | `div.menu-box > div.menu-box__content(children) + ul.menu[popover=manual]`；挂载 `createMenuBox(box, { menu, contextTargets: [contentEl] })` |
+| `Window` | `frame: "win10"\|"win11"\|"winxp"\|"macos"\|"macos15"\|"gnome"; title?; controls?: ("minimize"\|"maximize"\|"close")[]; onAction?(action, event); className?` | 复刻 `index.html` 里各 frame 的 `.window` 结构：Windows 用 `.window__controls > .window__caption[data-window-action]`，macOS 用 `.window__traffic > .window__traffic-dot(--close/--min/--zoom) + .window__traffic-glyph > svg`，GNOME 只有关闭按钮；挂载 `createWindow(el)`，监听 `window:action` 映射到 `onAction` |
+
+`createMenuBox` 是这一轮给 core 加的唯一新 API（`packages/core/src/behavior/menu.js`）：等价于原来的
+`initMenuBox`，但可以显式传 `menu` / `triggers` / `contextTargets`，并返回带 `destroy()` 的控制器。
+框架适配层用它，不依赖 `data-menu*` 标记。
+
+### 验收要求
+
+两个包各自把新组件加进 `test/fixture/` 的断言里，跑 `bash tools/test-fixture.sh react` / `vue` 全绿。
+除 DOM 契约外至少覆盖：Checkbox/Switch 的受控与非受控切换、Radio 同组互斥；Slider 的 Home/End 键盘
+（走 core 的 createSlider）与值回调；Progress 确定/不确定的 ARIA 与 `--progress-value`；Segmented
+的点击选择、方向键、受控同步；Tabs 的点击切换、方向键分档、aria-selected/panel hidden；Tooltip 的
+悬停出现、Esc/滚动关闭、aria-describedby；Menu 的点击展开、选项回调、Esc 关闭、卸载清理；
+ContextMenu 的右键打开；Window 的窗口按钮派发 action、右键拦截。
+
+### v0.2 已落地的东西
+
+- **core 新增 `createMenuBox(box, options)`**：`initMenuBox` 的实现被抽成这个控制器工厂，
+  可以显式传 `menu` / `triggers` / `contextTargets`，返回带 `destroy()` 的菜单控制器；
+  React / Vue 的 `Menu` / `ContextMenu` 都走它，不依赖 `data-menu*` 标记。
+- React 端：`Menu` 用 `trigger` prop（单个元素，组件接管它的 ref / aria），`Tooltip` 用
+  `cloneElement` 给唯一子节点加 `data-tooltip`，`Window` 把 `window:action` 映射成
+  `onAction(action, event)`。`Slider` 因为 core 的 Home/End 是「写 `input.value` 再派发合成
+  input」，会被 React 的 value tracker 吞掉，适配层用原生 `input` 监听桥接用户回调，React 的
+  `onChange` 留空避免受控警告。
+- Vue 端：表单类统一 `checked/defaultChecked + update:checked`（Checkbox / Radio / Switch），
+  其余受控组件用 `v-model`（`modelValue`）；`Menu` 用 `trigger` 具名 slot；`Window` 额外暴露
+  `contextmenu(detail, event)`；`Tooltip` 用 `expose({ el })` 转发触发元素。
+- 两个框架的组件都不支持动态增删 `options` / `items`（Segmented / Tabs 无 `refresh()`，需要重挂）；
+  `TooltipProvider` 是「一个主题容器一个」，Provider 挂载后再加 `Tooltip` 不会被收进触发集合。
+- `--slider-pct` 目前没有写入方（静态站和框架包一致，滑块填充不随值变），属于 core 的遗留项，
+  适配层不代写样式。
+
 ## 构建与发布
 
 - 三个包版本锁步（0.1.0 起步），`@dialect-ui/react` / `@dialect-ui/vue` 的 `dependencies` 里写
@@ -298,11 +359,11 @@ render function（不引入 SFC 编译链），`props` / `emits` 显式声明。
 
 ## 迁移阶段
 
-1. **这一轮（已完成）**：core 收编 CSS / 字体 / 行为层，静态站改成 core 的消费者；React / Vue 各做
+1. **第一轮（已完成）**：core 收编 CSS / 字体 / 行为层，静态站改成 core 的消费者；React / Vue 各做
    Theme + Button + TextField + Select 纵切和浏览器验收。行为逻辑逐字节平移，不改键位。
-   验收结果：站点 234 条断言全绿；React 73 条、Vue 62 条浏览器断言全绿。
-2. 按同一模子铺完剩下的组件：复选框/单选框/开关、滑块、分段控件、标签页、进度条、提示气泡、
-   菜单/右键菜单、窗口。
+2. **第二轮（已完成）**：按同一模子铺完剩余组件——Checkbox、Radio、Switch、Slider、Progress、
+   SegmentedControl、Tabs、Tooltip / TooltipProvider、Menu、ContextMenu、Window。
+   验收结果：站点 234 条断言全绿；React 176 条、Vue 171 条浏览器断言全绿。
 3. 按组件拆 `components.css`（或提供每组件入口），做到真正的按需 CSS。
 4. 桌面壳（Electron / Tauri）接入层另起目录，负责系统信息 → `data-theme` / `data-mode`。
 

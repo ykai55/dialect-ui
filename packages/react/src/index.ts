@@ -15,3 +15,44 @@ export type { TextFieldProps } from "./text-field.js";
 
 export { Select } from "./select.js";
 export type { SelectOption, SelectProps } from "./select.js";
+
+/* ---------- 纯 CSS 控件（无控制器） ---------- */
+
+export { Checkbox } from "./checkbox.js";
+export type { CheckboxProps } from "./checkbox.js";
+
+export { Radio } from "./radio.js";
+export type { RadioProps } from "./radio.js";
+
+export { Switch } from "./switch.js";
+export type { SwitchProps } from "./switch.js";
+
+export { Progress } from "./progress.js";
+export type { ProgressProps } from "./progress.js";
+
+export { Slider } from "./slider.js";
+export type { SliderProps } from "./slider.js";
+
+/* ---------- 有控制器的组件 ---------- */
+
+export { SegmentedControl } from "./segmented.js";
+export type { SegmentedControlProps, SegmentedOption } from "./segmented.js";
+
+export { Tabs } from "./tabs.js";
+export type { TabItem, TabsProps } from "./tabs.js";
+
+export { Tooltip, TooltipProvider } from "./tooltip.js";
+export type { TooltipProps, TooltipProviderProps } from "./tooltip.js";
+
+export { ContextMenu, Menu } from "./menu.js";
+export type {
+  ContextMenuProps,
+  MenuEntry,
+  MenuItemEntry,
+  MenuProps,
+  MenuSelectHandler,
+  MenuSeparatorEntry,
+} from "./menu.js";
+
+export { Window } from "./window.js";
+export type { WindowAction, WindowFrame, WindowProps } from "./window.js";
