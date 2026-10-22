@@ -236,15 +236,32 @@
 
 .window__traffic-glyph {
   opacity: 0;
-  font-family: system-ui, sans-serif;
-  font-size: 9px;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
-  color: rgba(0, 0, 0, 0.55);
 }
 
-.window__traffic-dot:hover .window__traffic-glyph {
+.window__traffic-glyph svg {
+  width: 8px;
+  height: 8px;
+  display: block;
+}
+
+.window__traffic:hover .window__traffic-glyph {
   opacity: 1;
+}
+
+.window__traffic-dot--close .window__traffic-glyph {
+  color: #7a1410;
+}
+
+.window__traffic-dot--min .window__traffic-glyph {
+  color: #6b5200;
+}
+
+.window__traffic-dot--zoom .window__traffic-glyph {
+  color: #0c5a1f;
 }
 
 
@@ -437,6 +454,49 @@
 .window[data-window-frame="macos15"] .window__traffic {
   position: absolute;
   left: 12px;
+}
+
+/* macOS 26：13px 圆、10px 间距，符号常显（AppKit 26 截图采样） */
+.window[data-window-frame="macos"] .window__traffic {
+  gap: 10px;
+}
+
+.window[data-window-frame="macos"] .window__traffic-dot {
+  width: 13px;
+  height: 13px;
+}
+
+.window[data-window-frame="macos"] .window__traffic-dot--close {
+  background: #ff5c5f;
+}
+
+.window[data-window-frame="macos"] .window__traffic-dot--min {
+  background: #fac800;
+}
+
+.window[data-window-frame="macos"] .window__traffic-dot--zoom {
+  background: #34c759;
+}
+
+.window[data-window-frame="macos"] .window__traffic-glyph {
+  opacity: 1;
+}
+
+.window[data-window-frame="macos"] .window__traffic-glyph svg {
+  width: 10px;
+  height: 10px;
+}
+
+.window[data-window-frame="macos"] .window__traffic-dot--close .window__traffic-glyph {
+  color: #802e30;
+}
+
+.window[data-window-frame="macos"] .window__traffic-dot--min .window__traffic-glyph {
+  color: #7e6400;
+}
+
+.window[data-window-frame="macos"] .window__traffic-dot--zoom .window__traffic-glyph {
+  color: #1a642d;
 }
 
 
