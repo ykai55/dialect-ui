@@ -6,7 +6,7 @@
 Windows 10（Aero）、Windows XP（classic）、macOS 26（Tahoe）、macOS 11–15、GNOME（Adwaita）。
 
 八种控件：按钮、输入框、多行输入、下拉框（含展开层）、滑块、复选框、单选框、开关。状态有默认、
-悬停、按下、焦点、禁用，明暗两套。Windows XP 没有暗色。
+悬停、按下、焦点、禁用，明暗两套。Windows XP 没有暗色。另有五个扩展组件：独立菜单与右键菜单（见下文「菜单」）、分段控件、标签页、进度条和提示气泡。
 
 纯静态，无构建步骤，无框架依赖。
 
@@ -78,7 +78,14 @@ bash tools/test.sh            # 交互测试
 
 `bash tools/test.sh` 跑 `test/*.test.html`。没有测试框架：每个测试页在 DOM 上跑断言，结果写进
 `<pre id="result">`，脚本用 `--dump-dom` 读，出现 `FAIL` 就非零退出。覆盖下拉框的打开、选值、关闭、
-键盘操作和 Esc，以及六个主题下复选框禁用态的悬停、按下不变。
+键盘操作和 Esc，菜单的打开、方向键循环、Home / End、type-ahead、右键与 ContextMenu 键、视口夹取、
+滚动缩放关闭、焦点归还，文本框右键菜单的选区 / 只读 / 禁用分支，分段控件的单选语义、roving tabindex、
+方向键循环与禁用段跳过，标签页的 tablist / tabpanel 关联、roving tabindex、方向键分档（Win11 只移焦点、macOS 不动）
+与面板显隐，进度条的确定 / 不确定态与六平台高度差异，提示气泡的延迟出现、翻转、Esc / 滚动关闭，
+以及六个主题下复选框禁用态的悬停、按下不变。
+
+`index.html` 带 `?theme=macos&mode=dark` 固定平台和明暗，带 `?open=1` 展开第一个下拉框，带 `?menu=1`
+展开第一个菜单，方便截图。
 
 ## 数值来源
 
@@ -123,28 +130,179 @@ Windows 输入框底下那条强调色下划线是它的标志，用 `::after` �
 macOS 两代差得多，所以是两个主题文件：26 按钮是灰胶囊、开关 54×24、复选框 16px；11–15 白底加描边、
 开关 38×22、复选框 14px、主按钮纵向渐变。数值在两个主题文件的注释里。
 
+## 菜单
+
+菜单是行为层组件，不算八种控件里的一个。`.menu` 的外观令牌六个主题都有，独立菜单、右键菜单和
+下拉框展开层共用 `js/menu.js` 的行为。
+
+```html
+<div data-menu>
+  <button type="button" class="btn" data-menu-trigger>Actions</button>
+  <ul class="menu" popover="manual">
+    <li class="menu__item">New window</li>
+    <li class="menu__item" aria-disabled="true">Duplicate</li>
+    <li class="menu__separator" role="separator"></li>
+    <li class="menu__item">Rename<span class="menu__shortcut">F2</span></li>
+  </ul>
+</div>
+```
+
+右键区域放在同一个 `[data-menu]` 容器里，加 `data-menu-context`；也可以直接用脚本
+`Dialect.createMenu(menuEl, options)` 控制打开位置和选中回调，参数写在 `js/menu.js` 开头。
+
+键盘模型按原生菜单的通用做法：上下键在可导航项之间循环，Home / End 到首尾，Enter 或空格激活，
+Esc 关闭并把焦点还给打开它的元素，Tab 关闭后焦点继续往后走，输入字母按前缀跳转（600ms 内的输入
+算一次前缀）。禁用项和分隔线不参与导航。子菜单和可勾选项还没做。
+
+这套键位是三家原生的并集，不是逐平台复刻：Home/End 和 600ms 的 type-ahead 缓冲是 web 便利，
+Win10 / WinXP / macOS 的「方向键不循环」只是估计，没有为估计值拆行为。六平台的键位对照、子菜单
+参数和分隔线内缩的估计值都在 [docs/menu-behavior.md](docs/menu-behavior.md)。
+
+弹层用 `popover="manual"`，关不关由脚本判断：点菜单外、滚动、窗口缩放都直接关，位置只在打开时算
+一次。贴着视口边缘打开会夹回可视区，盖住触发器时翻到上方。
+
+演示页在窗口内关掉了浏览器默认右键菜单（`js/app.js` 里一行 `contextmenu` 的 `preventDefault`），
+和原生窗口一致。组件本身不关，宿主自己决定。
+
+输入框和多行输入接了自己的右键菜单：[js/text-menu.js](js/text-menu.js) 复用 `.menu` 外观，右键时按
+选区状态决定哪些项可用。Cut / Copy / Paste / Delete / Select All 五项，没选中时前三项变灰，只读字段
+只留 Copy 和 Select All，禁用字段不弹。Paste 要读剪贴板，浏览器没授权时这一项也是灰的，不是菜单坏了。
+
+```html
+<ul class="menu" popover="manual" data-text-menu>
+  <li class="menu__item" data-action="cut">Cut</li>
+  …
+</ul>
+```
+
+同一个容器里的 `.field__input` 会自动绑定，菜单跟着容器的 `data-theme` 走。
+
+## 分段控件
+
+一排互斥按钮，一次选一个。六个平台里只有 macOS 和 GNOME（48+）有原生分段控件，Windows 三代的取值
+来自最接近的原生组合或扩展控件，依据逐条记在 [docs/segmented-notes.md](docs/segmented-notes.md)。
+
+```html
+<div class="segmented" data-segmented role="radiogroup" aria-label="Interval">
+  <button type="button" class="segmented__item" role="radio" aria-checked="true"
+          data-value="day">Day</button>
+  <button type="button" class="segmented__item" role="radio" aria-checked="false"
+          data-value="week">Week</button>
+  <button type="button" class="segmented__item" role="radio" aria-checked="false"
+          data-value="month">Month</button>
+</div>
+```
+
+选中变化时容器上冒泡 `segmented:change`，`detail` 是 `{ item, index, value }`。键盘按 web 单选组
+（WAI-ARIA radiogroup）做：整组一个 Tab 站，方向键移动并立即选中，Home / End 到首尾，空格 / 回车
+确认。这套不是六家通用：macOS 实测方向键不切换，GNOME 是 Tab 逐段走，差异写在
+[docs/segmented-notes.md](docs/segmented-notes.md) 的键盘一节。
+
+macOS 两代的选中态完全不同，是两个主题文件里的两套值：26 是强调色实心块 + 白字，11–15 是白色
+pill 浮起 + 黑字。这两套都跑过「原生 vs CSS」逐控件对照，产物在 `shots/verify/macos/segmented-*.png`
+和 `shots/verify/macos15/segmented-*.png`。
+
+## 标签页
+
+横向、不可关闭的标签页。六个平台的形态差得很远：macOS 两代是「居中胶囊压在圆角面板上」，
+Win11 是顶圆角 8 的贴边标签、实底 + 1px 描边，Win10 / XP 是 Win32 标签控件（白标签连面板、
+或经典 3D 软边），GNOME 是 AdwTabBar 的圆角块。每个平台的取值和依据等级记在
+[docs/tabs-notes.md](docs/tabs-notes.md)。
+
+```html
+<div class="tabs" data-tabs>
+  <div class="tabs__list" role="tablist" aria-label="Sections">
+    <button type="button" class="tabs__tab" role="tab" aria-selected="true">General</button>
+    <button type="button" class="tabs__tab" role="tab" aria-selected="false">Advanced</button>
+  </div>
+  <div class="tabs__panel"><p>General settings live here.</p></div>
+  <div class="tabs__panel" hidden><p>Advanced settings live here.</p></div>
+</div>
+```
+
+标签和面板按顺序配对，所以不用手写 `id` / `aria-controls`；同一段 markup 复制到六个主题面板里
+也不会撞 id。切换时容器上冒泡 `tabs:change`，`detail` 是 `{ tab, panel, index, value }`。
+
+键盘分三档，由主题令牌 `--tabs-arrow-mode` 控制：Win10 / XP / GNOME 方向键直接切换并选中，
+Win11 方向键只移焦点、空格或回车确认，macOS 两代方向键不动、只能鼠标点。这三档来自实测和
+上游源码；Home / End 是 web 便利，原生基本没有。Ctrl+Tab、Ctrl+PageUp 这类切换快捷键没做。
+
+标签页没有进「原生 vs CSS」对照链：macOS 的 `NSTabView` 要放进真实 `NSWindow` 跑 runloop
+才画标签文字，现有渲染器是离屏 + 324×48 单行格子，装不下带内容面板的 tab view；Win10 的
+标签控件也是 420×200 的整块。要做需要给渲染器加「整块控件」的行类型。
+
+## 进度条
+
+确定进度靠 `--progress-value`，不确定态加 `data-indeterminate`。六个平台的形态差别很大：
+macOS 是 8pt / 6pt 的胶囊细条，Win11 是 3px 强调色细条压在 1px 轨道上，Win10 是 16px 高的绿色
+方块条（`#06B025` + `#BCBCBC` 边），XP 是 17px 凹槽加 `#0A246A` 分段填充，GNOME 是 8px 胶囊。
+数值和依据等级在 [docs/progress-tooltip-notes.md](docs/progress-tooltip-notes.md)。
+
+```html
+<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+     aria-valuenow="40" style="--progress-value: 40%">
+  <div class="progress__fill"></div>
+</div>
+```
+
+macOS 26 和 11–15 的确定进度是 `NSProgressIndicator` 离屏渲染实测的（26 是 8 高、轨道
+`#DEDEDE`；11–15 是 6 高、轨道 `#DBDBDB`）。不确定态统一用滑动的光带，macOS 的渐变光带 /
+条纹、Win11 的双 pill 这些原生动画没做。
+
+## 提示气泡
+
+`data-tooltip` 的元素自动绑定，同一主题容器里放一个 `[data-tooltip-layer]`：
+
+```html
+<div data-theme="win11">
+  <button type="button" data-tooltip="Saves your changes">Save</button>
+  <div class="tooltip" role="tooltip" data-tooltip-layer hidden></div>
+</div>
+```
+
+悬停后延迟出现（只有 Win11 主题在键盘聚焦时也显示），离开 / 失焦 / Esc / 滚动 / 缩放 /
+按下鼠标时关闭；上方放不下翻到下方，左右夹在视口内；显示时给触发元素加 `aria-describedby`。
+延迟和外观按平台给：macOS 浅色浮层、约 1s 延迟；GNOME 深色 80% 黑、圆角 9（上游 SCSS 值）；
+Win10 是白底灰字直角气泡，XP 是淡黄底黑边。
+
 ## 已知限制
 
 字体是替代品。Selawik 是微软官方的 Segoe 替代，Cantarell 是 GNOME 默认字体，用来在别的系统上看平台
 差异；真机上还是系统字体。字体渲染（次像素灰度、hinting）复刻不了。
 
-行为层只做了下拉框：能展开、能用键盘选、点外面或 Esc 关。菜单位置只在打开时算一次，滚动或缩放会
-关掉。其他控件还是浏览器原生行为。
+行为层做了下拉框和菜单：展开、收起、键盘导航、type-ahead、右键菜单、点外面关、焦点归还。其他控件
+还是浏览器原生行为，焦点顺序（Tab 依次经过哪些控件）还没统一处理。
 
 动画时长只有 macOS 实测过，Windows 160ms、GNOME 200ms 是估的。高 DPI 缩放没做。Mica、玻璃、模糊
 这类材质不做。
+
+菜单的分隔线内缩、禁用项文字色、快捷键颜色没有单独对过原生图，主题文件里逐项标了「估计」；只有
+Windows XP 的 `#808080` 是 `COLOR_GRAYTEXT` 系统常量。深色主题的这几项也是按浅色推的。
+
+分段控件里 Windows 三代都不是原生控件：Win11 用的是 CommunityToolkit 扩展控件的值，Win10 / XP 是
+按按钮组拼的，选中态没有原生像素可对。macOS 两代的悬停、按下、焦点环也是估计，离屏渲染拿不到这些
+状态。GNOME 47 的 `.linked` 外观和 macOS 11–15 的 `.separated` 样式都还没做。
+
+标签页的 macOS 两代没有原生对照，悬停 / 按下 / 焦点环是估计；Win11 的底部两段 4×4 反向肩膀
+圆弧没做；Win10 的选中标签抬高 2px 是近似；XP 没在真机复测，标签高度是估计；GNOME 只做
+AdwTabBar 观感，GtkNotebook 的下划线样式没做。可关闭标签、拖拽排序、溢出滚动、垂直标签都没做。
+
+进度条的不确定态统一成一条滑动光带，原生各家不同的动画没做；Win11 的进度条是源码值、
+Win10 是 uxtheme 实测色但尺寸是估计，XP 的分块宽和高度是估计。提示气泡只有 Win10 和 GNOME
+有实测 / 源码依据，其余平台的底色、圆角和延迟都是估计；没有箭头、跟随指针和多行富文本。
 
 覆盖的版本是定的：Windows 10 22H2、GNOME 47/48、macOS 26 和 11–15。参考图只有浅色，深色按同一套
 令牌推的，没和真机逐项对过。各平台细节差异见 `docs/*-notes.md`。
 
 ## 路线图
 
-先做行为层：键盘模型、焦点顺序、右键菜单、按下态。这些比配色更影响体感，现在只有视觉。然后补下拉
-展开层、分段控件、标签页、进度条、提示气泡。
+这一轮路线图上的组件都落地了：独立菜单与右键菜单、分段控件、标签页、进度条、提示气泡。
+接下来做的是收尾：
 
-Windows 11 要上真机跑 uxtheme 管线，或把 WinUI 3 离屏渲染跑通。GNOME 目前靠官方截图和上游 SCSS。
-
-最后拆包：主题按需引入，组件按需引，给桌面壳留一层封装。
+1. 焦点顺序与其余控件的键盘行为，把「Tab 到哪儿、空格按不按得动」补齐。
+2. 给标签页补「整块控件」的 verify 行类型，让 macOS / Win10 的标签页也能进原生对照链。
+3. Windows 11 要上真机跑 uxtheme 管线，或把 WinUI 3 离屏渲染跑通。GNOME 目前靠官方截图和上游 SCSS。
+4. 最后拆包：主题按需引入，组件按需引，给桌面壳留一层封装。
 
 ## 工程约定
 

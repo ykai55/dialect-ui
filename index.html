@@ -179,6 +179,81 @@
         </section>
 
         <section class="group">
+          <h3 class="group__title">Segmented</h3>
+          <div class="segmented" data-segmented role="radiogroup" aria-label="Interval">
+            <button type="button" class="segmented__item" role="radio" aria-checked="true" data-value="day">Day</button>
+            <button type="button" class="segmented__item" role="radio" aria-checked="false" data-value="week">Week</button>
+            <button type="button" class="segmented__item" role="radio" aria-checked="false" data-value="month">Month</button>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Tabs</h3>
+          <div class="tabs" data-tabs>
+            <div class="tabs__list" role="tablist" aria-label="Sections">
+              <button type="button" class="tabs__tab" role="tab" aria-selected="true">General</button>
+              <button type="button" class="tabs__tab" role="tab" aria-selected="false">Advanced</button>
+              <button type="button" class="tabs__tab" role="tab" aria-selected="false">About</button>
+            </div>
+            <div class="tabs__panel">
+              <p>General settings live here.</p>
+            </div>
+            <div class="tabs__panel" hidden>
+              <p>Advanced settings live here.</p>
+            </div>
+            <div class="tabs__panel" hidden>
+              <p>Version 1.0 · Dialect</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Progress</h3>
+          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+               aria-valuenow="40" style="--progress-value: 40%">
+            <div class="progress__fill"></div>
+          </div>
+          <div class="progress" role="progressbar" aria-valuetext="Loading" data-indeterminate>
+            <div class="progress__fill"></div>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Tooltip</h3>
+          <div class="row">
+            <button type="button" class="btn" data-tooltip="Saves your changes">Save changes</button>
+            <button type="button" class="btn" data-tooltip="Discard and close">Cancel</button>
+          </div>
+          <div class="tooltip" role="tooltip" data-tooltip-layer hidden></div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Menu</h3>
+
+          <div class="menu-demo" data-menu>
+            <button type="button" class="btn" data-menu-trigger>Actions</button>
+            <ul class="menu" popover="manual" role="menu">
+              <li class="menu__item" role="menuitem">New window</li>
+              <li class="menu__item" role="menuitem" aria-disabled="true">Duplicate</li>
+              <li class="menu__separator" role="separator"></li>
+              <li class="menu__item" role="menuitem">Rename<span class="menu__shortcut">F2</span></li>
+              <li class="menu__item" role="menuitem">Delete</li>
+            </ul>
+          </div>
+
+          <div class="menu-demo" data-menu>
+            <div class="menu-target" data-menu-context tabindex="0">Right-click here, or press Shift+F10</div>
+            <ul class="menu" popover="manual" role="menu">
+              <li class="menu__item" role="menuitem">Copy</li>
+              <li class="menu__item" role="menuitem">Paste</li>
+              <li class="menu__separator" role="separator"></li>
+              <li class="menu__item" role="menuitem" aria-disabled="true">Duplicate</li>
+              <li class="menu__item" role="menuitem">Delete<span class="menu__shortcut">Del</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="group">
           <h3 class="group__title">More</h3>
           <label class="field">
             <span class="field__label">Notes</span>
@@ -196,7 +271,7 @@
                   <span class="select__chevron-down"></span>
                 </span>
               </button>
-              <ul class="menu" popover>
+              <ul class="menu" popover="manual">
                 <li class="menu__item" aria-selected="true">Option A</li>
                 <li class="menu__item" aria-selected="false">Option B</li>
                 <li class="menu__item" aria-selected="false">Option C — longer label</li>
@@ -210,10 +285,27 @@
             <span class="slider__value">40</span>
           </div>
         </section>
+
+        <!-- 文本框右键菜单：右键输入框或多行输入时在指针处展开。
+             同一份 markup 每个面板各一份，主题跟着面板走。 -->
+        <ul class="menu" popover="manual" data-text-menu role="menu">
+          <li class="menu__item" role="menuitem" data-action="cut">Cut</li>
+          <li class="menu__item" role="menuitem" data-action="copy">Copy</li>
+          <li class="menu__item" role="menuitem" data-action="paste">Paste</li>
+          <li class="menu__separator" role="separator"></li>
+          <li class="menu__item" role="menuitem" data-action="delete">Delete</li>
+          <li class="menu__separator" role="separator"></li>
+          <li class="menu__item" role="menuitem" data-action="selectall">Select All</li>
+        </ul>
       </div>
     </template>
 
     <script src="js/app.js"></script>
+    <script src="js/menu.js"></script>
     <script src="js/select.js"></script>
+    <script src="js/text-menu.js"></script>
+    <script src="js/segmented.js"></script>
+    <script src="js/tabs.js"></script>
+    <script src="js/tooltip.js"></script>
   </body>
 </html>
