@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>segmented test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+  </head>
+  <body>
+    <div id="wrap" data-theme="macos" data-mode="light">
+      <div id="seg" class="segmented" data-segmented role="radiogroup" aria-label="Interval">
+        <button type="button" class="segmented__item" role="radio" aria-checked="true" data-value="day">Day</button>
+        <button type="button" class="segmented__item" role="radio" aria-checked="false" data-value="week">Week</button>
+        <button type="button" class="segmented__item" role="radio" aria-checked="false" data-value="month" disabled>Month</button>
+        <button type="button" class="segmented__item" role="radio" aria-checked="false" data-value="year">Year</button>
+      </div>
+    </div>
+
+    <pre id="result">RUNNING</pre>
+
+    <script src="../js/segmented.js"></script>
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+        function key(el, k) {
+          el.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
+        }
+        function checkedValue() {
+          var item = items.filter(function (it) {
+            return it.getAttribute("aria-checked") === "true";
+          })[0];
+          return item ? item.getAttribute("data-value") : null;
+        }
+
+        var seg = document.getElementById("seg");
+        var items = Array.prototype.slice.call(seg.querySelectorAll(".segmented__item"));
+        var changes = [];
+        seg.addEventListener("segmented:change", function (e) {
+          changes.push(e.detail.value);
+        });
+
+        (async function () {
+          try {
+            check("容器是 radiogroup，段是 radio", function () {
+              return seg.getAttribute("role") === "radiogroup" &&
+                items.every(function (it) { return it.getAttribute("role") === "radio"; });
+            });
+            check("初始只有一项 aria-checked", function () {
+              return items.filter(function (it) {
+                return it.getAttribute("aria-checked") === "true";
+              }).length === 1 && checkedValue() === "day";
+            });
+            check("roving tabindex 落在选中段", function () {
+              return items[0].tabIndex === 0 &&
+                items[1].tabIndex === -1 &&
+                items[3].tabIndex === -1;
+            });
+
+            /* 点击 */
+            items[1].click();
+            check("点击切换选中", function () { return checkedValue() === "week"; });
+            check("点击发 segmented:change", function () {
+              return changes.length === 1 && changes[0] === "week";
+            });
+            check("tabindex 跟随选中", function () {
+              return items[0].tabIndex === -1 && items[1].tabIndex === 0;
+            });
+            check("焦点移到点中的段", function () { return document.activeElement === items[1]; });
+
+            items[1].click();
+            check("重复点击同一项不重复发事件", function () { return changes.length === 1; });
+
+            /* 方向键 */
+            key(items[1], "ArrowRight");
+            check("右方向键选中并跳过禁用段", function () { return checkedValue() === "year"; });
+            check("右方向键焦点跟随", function () { return document.activeElement === items[3]; });
+
+            key(items[3], "ArrowRight");
+            check("右方向键循环回第一段", function () { return checkedValue() === "day"; });
+
+            key(items[0], "ArrowLeft");
+            check("左方向键循环到最后一段", function () { return checkedValue() === "year"; });
+
+            key(items[3], "ArrowLeft");
+            check("左方向键跳过禁用段", function () { return checkedValue() === "week"; });
+
+            /* Home / End */
+            key(items[1], "Home");
+            check("Home 到第一段", function () { return checkedValue() === "day"; });
+            key(items[0], "End");
+            check("End 到最后一段", function () { return checkedValue() === "year"; });
+
+            /* 空格 / 回车 */
+            items[0].focus();
+            key(items[0], " ");
+            check("空格选中当前段", function () { return checkedValue() === "day"; });
+
+            items[1].focus();
+            key(items[1], "Enter");
+            check("回车选中当前段", function () { return checkedValue() === "week"; });
+
+            /* 禁用段 */
+            items[2].click();
+            check("点禁用段无效", function () { return checkedValue() === "week"; });
+
+            /* 事件 detail */
+            check("事件 detail 带 index 和 value", function () {
+              var last = null;
+              seg.addEventListener("segmented:change", function (e) { last = e.detail; }, { once: true });
+              items[3].click();
+              return last && last.index === 3 && last.value === "year" && last.item === items[3];
+            });
+          } catch (e) {
+            lines.push("FAIL 测试中断 — " + e.message);
+          }
+
+          var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+          document.getElementById("result").textContent =
+            lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+          document.title = failed ? "FAIL" : "PASS";
+        })();
+      })();
+    </script>
+  </body>
+</html>
