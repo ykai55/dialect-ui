@@ -27,8 +27,13 @@ body.corridor {
 .rooms {
   height: 100vh;
   overflow-y: auto;
+  scrollbar-width: none;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+}
+
+.rooms::-webkit-scrollbar {
+  display: none;
 }
 
 .room {

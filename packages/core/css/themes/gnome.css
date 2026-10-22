@@ -279,3 +279,19 @@
   --tabs-selected-active-bg: rgba(255, 255, 255, 0.19);
   --progress-track: rgba(255, 255, 255, 0.15);
 }
+
+/* 滚动条：窗口内容区用，避免默认浏览器滚动条破坏平台观感 */
+[data-theme="gnome"] {
+  --scrollbar-size: 8px;
+  --scrollbar-width: thin;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.3);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.45);
+  --scrollbar-radius: 4px;
+  --scrollbar-border: 1px;
+}
+
+[data-theme="gnome"][data-mode="dark"] {
+  --scrollbar-thumb: rgba(255, 255, 255, 0.3);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.45);
+}

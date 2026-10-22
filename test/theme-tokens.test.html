@@ -87,6 +87,22 @@
           });
         });
 
+        /* 窗口滚动条：每个主题都要有尺寸/颜色令牌，Windows 和新平台的宽度不同 */
+        check("每个主题都有滚动条令牌", function () {
+          return THEMES.every(function (theme) {
+            var el = stage.querySelector('[data-theme="' + theme + '"]');
+            var cs = getComputedStyle(el);
+            return cs.getPropertyValue("--scrollbar-size").trim() !== "" &&
+              cs.getPropertyValue("--scrollbar-thumb").trim() !== "";
+          });
+        });
+        check("Win10 滚动条 17px、macOS 8px（不跨平台搬数值）", function () {
+          var w10 = stage.querySelector('[data-theme="win10"]');
+          var mac = stage.querySelector('[data-theme="macos"]');
+          return getComputedStyle(w10).getPropertyValue("--scrollbar-size").trim() === "17px" &&
+            getComputedStyle(mac).getPropertyValue("--scrollbar-size").trim() === "8px";
+        });
+
         var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
         document.getElementById("result").textContent =
           lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");

@@ -1,6 +1,6 @@
 {
   "name": "@dialect-ui/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Dialect 的设计令牌、平台主题和框架无关行为层。",
   "license": "MIT",
   "homepage": "https://ykai55.github.io/dialect-ui/",

@@ -1,6 +1,6 @@
 {
   "name": "@dialect-ui/vue",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Dialect 组件的 Vue 3 适配层：渲染同一套 DOM 契约，行为交给 @dialect-ui/core。",
   "license": "MIT",
   "homepage": "https://ykai55.github.io/dialect-ui/",

@@ -323,3 +323,19 @@
   --tooltip-fg: #ffffff;
   --tooltip-border: rgba(0, 0, 0, 0.2);
 }
+
+/* 滚动条：窗口内容区用，避免默认浏览器滚动条破坏平台观感 */
+[data-theme="win11"] {
+  --scrollbar-size: 12px;
+  --scrollbar-width: thin;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(0, 0, 0, 0.35);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.5);
+  --scrollbar-radius: 6px;
+  --scrollbar-border: 3px;
+}
+
+[data-theme="win11"][data-mode="dark"] {
+  --scrollbar-thumb: rgba(255, 255, 255, 0.35);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.5);
+}

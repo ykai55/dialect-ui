@@ -423,3 +423,20 @@
   --tabs-disabled-fg: #9b9b9b;
   /* Win32 进度条和 tooltip 都没有暗色资源，暗色模式沿用浅色值 */
 }
+
+/* 滚动条：窗口内容区用，避免默认浏览器滚动条破坏平台观感 */
+[data-theme="win10"] {
+  --scrollbar-size: 17px;
+  --scrollbar-width: auto;
+  --scrollbar-track: #f0f0f0;
+  --scrollbar-thumb: #cdcdcd;
+  --scrollbar-thumb-hover: #a6a6a6;
+  --scrollbar-radius: 0px;
+  --scrollbar-border: 0px;
+}
+
+[data-theme="win10"][data-mode="dark"] {
+  --scrollbar-track: #1f1f1f;
+  --scrollbar-thumb: #5a5a5a;
+  --scrollbar-thumb-hover: #7a7a7a;
+}

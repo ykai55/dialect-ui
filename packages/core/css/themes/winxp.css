@@ -364,3 +364,14 @@
   --tooltip-show-delay: 500ms;
   --tooltip-focus-show: 0;
 }
+
+/* 滚动条：窗口内容区用，避免默认浏览器滚动条破坏平台观感 */
+[data-theme="winxp"] {
+  --scrollbar-size: 16px;
+  --scrollbar-width: auto;
+  --scrollbar-track: #d4d0c8;
+  --scrollbar-thumb: #d4d0c8;
+  --scrollbar-thumb-hover: #c0c0c0;
+  --scrollbar-radius: 0px;
+  --scrollbar-border: 0px;
+}

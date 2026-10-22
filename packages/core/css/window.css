@@ -556,3 +556,37 @@
 .window {
   position: relative;
 }
+
+/* 窗口内容区滚动条：尺寸、颜色走主题的 --scrollbar-* 令牌 */
+.window__body {
+  scrollbar-width: var(--scrollbar-width, auto);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.window__body::-webkit-scrollbar {
+  width: var(--scrollbar-size, 0px);
+  height: var(--scrollbar-size, 0px);
+}
+
+.window__body::-webkit-scrollbar-track {
+  background: var(--scrollbar-track, transparent);
+}
+
+.window__body::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb, rgba(0, 0, 0, 0.35));
+  border-radius: var(--scrollbar-radius, 0px);
+  border: var(--scrollbar-border, 0px) solid transparent;
+  background-clip: padding-box;
+}
+
+.window__body::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover, var(--scrollbar-thumb));
+}
+
+.window__body::-webkit-scrollbar-button {
+  display: none;
+}
+
+.window__body::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track, transparent);
+}
