@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>回忆走廊 · Dialect</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-win11.css" />
+    <link rel="stylesheet" href="../css/theme-win10.css" />
+    <link rel="stylesheet" href="../css/theme-winxp.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+    <link rel="stylesheet" href="../css/theme-macos15.css" />
+    <link rel="stylesheet" href="../css/theme-gnome.css" />
+    <link rel="stylesheet" href="../css/corridor.css" />
+  </head>
+  <body class="corridor">
+    <div class="hud" id="hud">
+      <div class="hud__era">
+        <span class="hud__dot"></span>
+        <b id="hud-era">Windows XP</b>
+        <span id="hud-sub">Classic · 2001</span>
+      </div>
+      <span class="hud__index" id="hud-index">01 / 06</span>
+    </div>
+
+    <button class="corridor-nav corridor-nav--prev" id="nav-prev" type="button" aria-label="上一个时代">‹</button>
+    <button class="corridor-nav corridor-nav--next" id="nav-next" type="button" aria-label="下一个时代">›</button>
+
+    <nav class="dots" id="dots" aria-label="时代列表"></nav>
+
+    <main class="rooms" id="rooms">
+      <!-- Windows XP -->
+      <section class="room" data-era="winxp" data-theme="winxp" data-mode="light"
+               data-name="Windows XP" data-sub="Classic · 2001" aria-label="Windows XP">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Display Properties</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">_</span>
+                <span class="era-win__cap">□</span>
+                <span class="era-win__cap era-win__cap--close">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
+        </div>
+        <div class="shell shell--xp">
+          <span class="tb-start">start</span>
+          <span class="tb-quick"><i></i><i></i><i></i></span>
+          <span class="tb-clock">3:07 PM</span>
+        </div>
+      </section>
+
+      <!-- Windows 10 -->
+      <section class="room" data-era="win10" data-theme="win10" data-mode="light"
+               data-name="Windows 10" data-sub="Aero · 2015" aria-label="Windows 10">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Settings</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">–</span>
+                <span class="era-win__cap">□</span>
+                <span class="era-win__cap era-win__cap--close">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
+        </div>
+        <div class="shell shell--win10">
+          <span class="tb-start"></span>
+          <span class="tb-search"></span>
+          <span class="tb-icons"><i></i><i></i><i></i><i></i></span>
+          <span class="tb-clock">9:41</span>
+        </div>
+      </section>
+
+      <!-- Windows 11 -->
+      <section class="room" data-era="win11" data-theme="win11" data-mode="dark"
+               data-name="Windows 11" data-sub="Fluent · 2021" aria-label="Windows 11">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Settings</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">–</span>
+                <span class="era-win__cap">□</span>
+                <span class="era-win__cap era-win__cap--close">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
+        </div>
+        <div class="shell shell--win11">
+          <div class="tb-icons"><i></i><i></i><i></i><i></i></div>
+          <span class="tb-clock">9:41</span>
+        </div>
+      </section>
+
+      <!-- macOS 15 -->
+      <section class="room" data-era="macos15" data-theme="macos15" data-mode="dark"
+               data-name="macOS 15" data-sub="Sequoia · 2024" aria-label="macOS 15">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <span class="traffic"><i></i><i></i><i></i></span>
+              <div class="era-win__title">Settings</div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
+        </div>
+        <div class="shell shell--mac">
+          <div class="mb">
+            <b>Dialect</b>
+            <span>File</span><span>Edit</span><span>View</span><span>Window</span><span>Help</span>
+            <span class="clock">Wed 9:41 AM</span>
+          </div>
+          <div class="dock"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </section>
+
+      <!-- macOS 26 -->
+      <section class="room" data-era="macos" data-theme="macos" data-mode="light"
+               data-name="macOS 26" data-sub="Tahoe · 2025" aria-label="macOS 26">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <span class="traffic"><i></i><i></i><i></i></span>
+              <div class="era-win__title">Settings</div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
+        </div>
+        <div class="shell shell--mac">
+          <div class="mb">
+            <b>Dialect</b>
+            <span>File</span><span>Edit</span><span>View</span><span>Window</span><span>Help</span>
+            <span class="clock">Wed 9:41 AM</span>
+          </div>
+          <div class="dock"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </section>
+
+      <!-- GNOME -->
+      <section class="room" data-era="gnome" data-theme="gnome" data-mode="dark"
+               data-name="GNOME 48" data-sub="Adwaita · 2025" aria-label="GNOME 48">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Settings</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
+        </div>
+        <div class="shell shell--gnome">
+          <div class="topbar">
+            <span>Activities</span>
+            <span>9:41</span>
+            <span class="clock">Wed 22 Oct</span>
+          </div>
+          <div class="dock"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </section>
+    </main>
+
+    <canvas id="dust" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <div class="hint">滚动 · ← → 切换时代</div>
+
+    <template id="specimen">
+      <div class="panel">
+        <section class="group">
+          <h3 class="group__title">Buttons</h3>
+          <div class="row">
+            <button type="button" class="btn">Cancel</button>
+            <button type="button" class="btn btn--primary">Save changes</button>
+            <button type="button" class="btn" disabled>Disabled</button>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Text field</h3>
+          <label class="field">
+            <span class="field__label">Email address</span>
+            <span class="field__wrap">
+              <input class="field__input" type="text" placeholder="name@example.com" autocomplete="off" />
+            </span>
+          </label>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Selection</h3>
+          <div class="stack">
+            <label class="check">
+              <input type="checkbox" class="check__input" checked />
+              <span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>
+              <span class="check__label">Send me a copy</span>
+            </label>
+            <label class="check">
+              <input type="checkbox" class="check__input" />
+              <span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>
+              <span class="check__label">Remember this device</span>
+            </label>
+          </div>
+          <div class="row row--tight">
+            <label class="radio">
+              <input type="radio" class="radio__input" name="corridor-mode" checked />
+              <span class="radio__dot"></span>
+              <span class="radio__label">Light</span>
+            </label>
+            <label class="radio">
+              <input type="radio" class="radio__input" name="corridor-mode" />
+              <span class="radio__dot"></span>
+              <span class="radio__label">Dark</span>
+            </label>
+            <label class="radio">
+              <input type="radio" class="radio__input" name="corridor-mode" />
+              <span class="radio__dot"></span>
+              <span class="radio__label">Auto</span>
+            </label>
+          </div>
+          <div class="stack">
+            <label class="switch">
+              <input type="checkbox" class="switch__input" checked />
+              <span class="switch__track"><span class="switch__knob"></span></span>
+              <span class="switch__label">Wi-Fi</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" class="switch__input" />
+              <span class="switch__track"><span class="switch__knob"></span></span>
+              <span class="switch__label">Bluetooth</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">More</h3>
+          <div class="row">
+            <div class="select" data-select>
+              <button type="button" class="select__button">
+                <span class="select__value">Option A</span>
+                <span class="select__chevron">
+                  <span class="select__chevron-up"></span>
+                  <span class="select__chevron-down"></span>
+                </span>
+              </button>
+              <ul class="menu" popover="manual">
+                <li class="menu__item" aria-selected="true">Option A</li>
+                <li class="menu__item" aria-selected="false">Option B</li>
+                <li class="menu__item" aria-selected="false">Option C</li>
+              </ul>
+            </div>
+          </div>
+          <div class="slider-row">
+            <input class="slider" type="range" min="0" max="100" value="40" aria-label="Volume" />
+            <span class="slider__value">40</span>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Segmented</h3>
+          <div class="segmented" data-segmented role="radiogroup" aria-label="Interval">
+            <button type="button" class="segmented__item" role="radio" aria-checked="true" data-value="day">Day</button>
+            <button type="button" class="segmented__item" role="radio" aria-checked="false" data-value="week">Week</button>
+            <button type="button" class="segmented__item" role="radio" aria-checked="false" data-value="month">Month</button>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Tabs</h3>
+          <div class="tabs" data-tabs>
+            <div class="tabs__list" role="tablist" aria-label="Sections">
+              <button type="button" class="tabs__tab" role="tab" aria-selected="true">General</button>
+              <button type="button" class="tabs__tab" role="tab" aria-selected="false">Advanced</button>
+            </div>
+            <div class="tabs__panel"><p>General settings live here.</p></div>
+            <div class="tabs__panel" hidden><p>Advanced settings live here.</p></div>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">Progress</h3>
+          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+               aria-valuenow="40" style="--progress-value: 40%">
+            <div class="progress__fill"></div>
+          </div>
+          <div class="progress" role="progressbar" aria-valuetext="Loading" data-indeterminate>
+            <div class="progress__fill"></div>
+          </div>
+        </section>
+      </div>
+    </template>
+
+    <script src="../js/corridor.js"></script>
+    <script src="../js/menu.js"></script>
+    <script src="../js/select.js"></script>
+    <script src="../js/segmented.js"></script>
+    <script src="../js/tabs.js"></script>
+    <script src="../js/slider.js"></script>
+  </body>
+</html>

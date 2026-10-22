@@ -1,0 +1,987 @@
+/* ============================================================
+   corridor.css — 回忆走廊（demo/corridor.html 专用）
+   走廊本身是应用壳：一屏一个系统，整页换成那个时代的桌面。
+   组件仍用 css/components.css + 主题令牌；这里只管「桌面 / 窗口框 / 任务栏 /
+   菜单栏 / Dock / 壁纸」这些不属于控件库的东西。
+   壁纸是 CSS 渐变的抽象示意，不是系统自带壁纸。
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body.corridor {
+  overflow: hidden;
+  background: #111;
+  font-family: var(--ui-font);
+}
+
+/* ---------------- 走廊骨架 ---------------- */
+
+.rooms {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.room {
+  position: relative;
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.room__wall {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.room__stage {
+  position: relative;
+  z-index: 2;
+  width: min(760px, 86vw);
+  max-height: calc(100vh - 200px);
+  display: flex;
+  margin-bottom: 72px;
+}
+
+/* ---------------- 通用窗口框 ---------------- */
+
+.era-win {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: var(--win-radius, 8px);
+  border: var(--win-border-w, 1px) solid var(--win-border, transparent);
+  background: var(--win-body-bg, #fff);
+  box-shadow: var(--win-shadow, 0 24px 60px rgba(0, 0, 0, 0.35));
+}
+
+.era-win__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  height: var(--win-bar-h, 34px);
+  padding: 0 10px;
+  background: var(--win-bar-bg, #f3f3f3);
+  color: var(--win-bar-fg, #1a1a1a);
+  font-size: 12px;
+  user-select: none;
+}
+
+.era-win__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: var(--win-title-weight, 600);
+  letter-spacing: 0.01em;
+}
+
+.era-win__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px 18px 16px;
+  background: var(--win-body-bg, #fff);
+  color: var(--ui-text);
+}
+
+.era-win__body .panel {
+  padding: 0;
+  gap: 12px;
+  background: transparent;
+}
+
+.era-win__body .group {
+  gap: 8px;
+}
+
+/* 窗口按钮：默认是 Windows 那种扁平 caption */
+.era-win__caps {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.era-win__cap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: calc(var(--win-bar-h, 34px) - 8px);
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.75;
+}
+
+.era-win__cap--close {
+  opacity: 1;
+}
+
+.era-win__cap--close:hover {
+  background: #c42b1c;
+  color: #fff;
+}
+
+/* 红绿灯（macOS） */
+.traffic {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.traffic i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #c9c9c9;
+  display: block;
+}
+
+.traffic i:nth-child(1) {
+  background: #ff5f57;
+}
+
+.traffic i:nth-child(2) {
+  background: #febc2e;
+}
+
+.traffic i:nth-child(3) {
+  background: #28c840;
+}
+
+/* ---------------- Windows 11 ---------------- */
+
+.room[data-era="win11"] {
+  --win-radius: 8px;
+  --win-bar-h: 36px;
+  --win-bar-bg: #2b2b2b;
+  --win-bar-fg: #ffffff;
+  --win-border: rgba(255, 255, 255, 0.08);
+  --win-border-w: 1px;
+  --win-body-bg: var(--ui-surface);
+  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.room[data-era="win11"] .room__wall {
+  background:
+    radial-gradient(80% 70% at 18% 18%, rgba(96, 148, 255, 0.5), transparent 62%),
+    radial-gradient(70% 80% at 82% 78%, rgba(180, 120, 255, 0.42), transparent 60%),
+    radial-gradient(60% 60% at 50% 50%, rgba(40, 90, 190, 0.55), transparent 70%),
+    #0a1224;
+}
+
+.shell--win11 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(24, 27, 34, 0.82);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.shell--win11 .tb-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.shell--win11 .tb-icons i {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.shell--win11 .tb-icons i:nth-child(1) {
+  background: rgba(96, 205, 255, 0.75);
+}
+
+.shell--win11 .tb-icons i:nth-child(2) {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.shell--win11 .tb-clock {
+  position: absolute;
+  right: 16px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ---------------- Windows 10 ---------------- */
+
+.room[data-era="win10"] {
+  --win-radius: 0px;
+  --win-bar-h: 30px;
+  --win-bar-bg: #ffffff;
+  --win-bar-fg: #000000;
+  --win-border: #c8c8c8;
+  --win-border-w: 1px;
+  --win-body-bg: var(--ui-surface);
+  --win-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+.room[data-era="win10"] .room__wall {
+  background:
+    radial-gradient(90% 80% at 50% 15%, rgba(0, 120, 215, 0.65), transparent 65%),
+    linear-gradient(160deg, #0a4f8a 0%, #0a2f55 60%, #061a30 100%);
+}
+
+.shell--win10 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  background: #101820;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.shell--win10 .tb-start {
+  width: 26px;
+  height: 26px;
+  background: #0078d7;
+  border-radius: 2px;
+}
+
+.shell--win10 .tb-search {
+  width: 150px;
+  height: 24px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.shell--win10 .tb-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.shell--win10 .tb-icons i {
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.shell--win10 .tb-clock {
+  margin-left: auto;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ---------------- Windows XP ---------------- */
+
+.room[data-era="winxp"] {
+  --win-radius: 0px;
+  --win-bar-h: 26px;
+  --win-bar-bg: linear-gradient(180deg, #0058e6 0%, #3a93ff 8%, #0054e3 92%, #003bb5 100%);
+  --win-bar-fg: #ffffff;
+  --win-border: #0054e3;
+  --win-border-w: 3px;
+  --win-body-bg: var(--ui-surface);
+  --win-title-weight: 700;
+  --win-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+}
+
+.room[data-era="winxp"] .room__wall {
+  background:
+    radial-gradient(120% 62% at 50% 112%, #2f7a1f 0 38%, #4aa32b 52%, #8fce6a 64%, transparent 72%),
+    linear-gradient(180deg, #2f6cb3 0%, #6ea6dd 42%, #a8cdec 68%, #d9e8f5 100%);
+}
+
+.room[data-era="winxp"] .era-win {
+  --win-body-bg: #ece9d8;
+}
+
+.room[data-era="winxp"] .era-win__bar {
+  padding: 0 4px;
+}
+
+.room[data-era="winxp"] .era-win__title {
+  font-size: 11px;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.shell--xp {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  background: linear-gradient(180deg, #245edb 0%, #3f8cf3 10%, #245edb 88%, #1941a5 100%);
+  border-top: 1px solid #1a49b8;
+}
+
+.shell--xp .tb-start {
+  display: flex;
+  align-items: center;
+  padding: 0 14px 0 10px;
+  height: 28px;
+  border-radius: 0 10px 10px 0;
+  background: linear-gradient(180deg, #3fa32b 0%, #2f8b1f 60%, #1f6a13 100%);
+  color: #fff;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 700;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+.shell--xp .tb-quick {
+  display: flex;
+  gap: 6px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.shell--xp .tb-quick i {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.shell--xp .tb-clock {
+  margin-left: auto;
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(180deg, #0f8fe3 0%, #0a6fc0 100%);
+  color: #fff;
+  font-size: 11px;
+  border-left: 1px solid #1a49b8;
+}
+
+/* XP 的窗口按钮是 16×14 的凸起小方块 */
+.room[data-era="winxp"] .era-win__caps {
+  gap: 2px;
+}
+
+.room[data-era="winxp"] .era-win__cap {
+  width: 17px;
+  height: 15px;
+  border-radius: 0;
+  background: linear-gradient(180deg, #4a9bff 0%, #0a58d8 100%);
+  box-shadow: inset 1px 1px 0 #b8d9ff, inset -1px -1px 0 #00318a;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  opacity: 1;
+}
+
+.room[data-era="winxp"] .era-win__cap--close {
+  background: linear-gradient(180deg, #f08a68 0%, #c4320f 100%);
+  box-shadow: inset 1px 1px 0 #ffc9b8, inset -1px -1px 0 #7a1200;
+}
+
+/* ---------------- macOS 26 / 11–15 ---------------- */
+
+.room[data-era="macos"],
+.room[data-era="macos15"] {
+  --win-radius: 10px;
+  --win-bar-h: 28px;
+  --win-bar-bg: rgba(246, 246, 246, 0.92);
+  --win-bar-fg: #1a1a1a;
+  --win-border: rgba(0, 0, 0, 0.12);
+  --win-border-w: 1px;
+  --win-body-bg: var(--ui-surface);
+  --win-title-weight: 600;
+  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+}
+
+.room[data-era="macos"] .room__wall {
+  background:
+    radial-gradient(70% 60% at 22% 20%, rgba(255, 190, 220, 0.85), transparent 62%),
+    radial-gradient(80% 70% at 82% 30%, rgba(120, 170, 255, 0.9), transparent 65%),
+    radial-gradient(90% 80% at 50% 110%, rgba(255, 150, 80, 0.55), transparent 70%),
+    linear-gradient(180deg, #f6d8ec 0%, #b9d4ff 55%, #5e7fd8 100%);
+}
+
+.room[data-era="macos15"] {
+  --win-bar-bg: rgba(38, 38, 41, 0.94);
+  --win-bar-fg: #f5f5f7;
+  --win-border: rgba(255, 255, 255, 0.1);
+}
+
+.room[data-era="macos15"] .room__wall {
+  background:
+    radial-gradient(70% 60% at 20% 18%, rgba(120, 90, 200, 0.65), transparent 60%),
+    radial-gradient(80% 70% at 85% 25%, rgba(60, 120, 230, 0.6), transparent 65%),
+    linear-gradient(180deg, #191d33 0%, #0e1224 60%, #060814 100%);
+}
+
+.room[data-era="macos"] .era-win__bar,
+.room[data-era="macos15"] .era-win__bar {
+  justify-content: center;
+}
+
+.room[data-era="macos"] .era-win__title,
+.room[data-era="macos15"] .era-win__title {
+  text-align: center;
+  font-size: 12px;
+}
+
+.room[data-era="macos"] .traffic,
+.room[data-era="macos15"] .traffic {
+  position: absolute;
+  left: 12px;
+}
+
+.room[data-era="macos"] .era-win__bar,
+.room[data-era="macos15"] .era-win__bar {
+  position: relative;
+}
+
+.shell--mac {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shell--mac .dock,
+.shell--gnome .dock {
+  pointer-events: auto;
+}
+
+.shell--mac .mb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(14px);
+  color: #1a1a1a;
+  font-size: 12px;
+}
+
+.room[data-era="macos15"] .shell--mac .mb {
+  background: rgba(20, 22, 34, 0.55);
+  color: #f5f5f7;
+}
+
+.shell--mac .mb b {
+  font-weight: 600;
+}
+
+.shell--mac .mb .clock {
+  margin-left: auto;
+}
+
+.shell--mac .dock {
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.room[data-era="macos15"] .shell--mac .dock {
+  background: rgba(30, 32, 46, 0.5);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.shell--mac .dock i {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #7fc4ff, #2f7de0);
+}
+
+.shell--mac .dock i:nth-child(2) {
+  background: linear-gradient(180deg, #ffd27f, #e08c2f);
+}
+
+.shell--mac .dock i:nth-child(3) {
+  background: linear-gradient(180deg, #9ef0b0, #2fae5a);
+}
+
+.shell--mac .dock i:nth-child(4) {
+  background: linear-gradient(180deg, #ff9fb8, #d23f6b);
+}
+
+.shell--mac .dock i:nth-child(5) {
+  background: linear-gradient(180deg, #d7d7dd, #8b8b95);
+}
+
+/* ---------------- GNOME ---------------- */
+
+.room[data-era="gnome"] {
+  --win-radius: 12px;
+  --win-bar-h: 38px;
+  --win-bar-bg: #2b2b2f;
+  --win-bar-fg: #ffffff;
+  --win-border: rgba(255, 255, 255, 0.08);
+  --win-border-w: 1px;
+  --win-body-bg: var(--ui-surface);
+  --win-title-weight: 700;
+  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.room[data-era="gnome"] .room__wall {
+  background:
+    radial-gradient(70% 60% at 25% 20%, rgba(53, 132, 228, 0.35), transparent 62%),
+    radial-gradient(70% 60% at 78% 75%, rgba(145, 65, 172, 0.35), transparent 60%),
+    linear-gradient(180deg, #2b2b33 0%, #1c1c22 55%, #121216 100%);
+}
+
+.room[data-era="gnome"] .era-win__bar {
+  justify-content: center;
+  position: relative;
+}
+
+.room[data-era="gnome"] .era-win__title {
+  text-align: center;
+  font-size: 13px;
+}
+
+.room[data-era="gnome"] .era-win__caps {
+  position: absolute;
+  right: 8px;
+}
+
+.room[data-era="gnome"] .era-win__cap {
+  width: 24px;
+  height: 24px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 11px;
+}
+
+.shell--gnome .topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 14px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 12px;
+}
+
+.shell--gnome .topbar .clock {
+  margin-left: auto;
+}
+
+.shell--gnome .dock {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  padding: 7px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.shell--gnome .dock i {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.shell--gnome .dock i:nth-child(1) {
+  background: rgba(53, 132, 228, 0.9);
+}
+
+/* ---------------- 走廊 HUD ---------------- */
+
+.hud {
+  position: fixed;
+  top: 40px;
+  left: 24px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(20, 20, 24, 0.55);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.hud b {
+  color: #fff;
+  font-weight: 600;
+}
+
+.hud span {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.corridor-nav {
+  position: fixed;
+  top: 50%;
+  z-index: 20;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(20, 20, 24, 0.42);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+
+.corridor-nav:hover:not(:disabled) {
+  background: rgba(40, 40, 48, 0.7);
+}
+
+.corridor-nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.corridor-nav--prev {
+  left: 20px;
+}
+
+.corridor-nav--next {
+  right: 20px;
+}
+
+.dots {
+  position: fixed;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+}
+
+.dots button[aria-current="true"] {
+  background: #fff;
+  transform: scale(1.4);
+}
+
+.hint {
+  position: fixed;
+  right: 24px;
+  top: 42px;
+  z-index: 20;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(20, 20, 24, 0.45);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .hud {
+    top: 12px;
+    left: 12px;
+  }
+
+  .corridor-nav {
+    width: 38px;
+    height: 38px;
+    font-size: 17px;
+  }
+
+  .corridor-nav--prev {
+    left: 10px;
+  }
+
+  .corridor-nav--next {
+    right: 10px;
+  }
+
+  .dots {
+    display: none;
+  }
+
+  .room__stage {
+    width: 92vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rooms {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================================
+   炫酷层：滚动视差、壁纸漂移、鼠标光斑、尘埃粒子、入场动画
+   ============================================================ */
+
+.room[data-era="winxp"] { --era-accent: #3a93ff; }
+.room[data-era="win10"] { --era-accent: #0078d7; }
+.room[data-era="win11"] { --era-accent: #60cdff; }
+.room[data-era="macos15"] { --era-accent: #8b7bff; }
+.room[data-era="macos"] { --era-accent: #ff7ab6; }
+.room[data-era="gnome"] { --era-accent: #3584e4; }
+
+.room__wall {
+  background-size: 150% 150%;
+  background-position: center;
+  transform: translateY(var(--wall-y, 0px)) scale(1.06);
+  animation: wall-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes wall-drift {
+  0% { background-position: 42% 38%; }
+  50% { background-position: 56% 48%; }
+  100% { background-position: 48% 60%; }
+}
+
+/* 鼠标光斑：跟着指针在整屏上走，颜色取当前时代的强调色 */
+.room__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--era-accent) 34%, transparent),
+    transparent 70%
+  );
+  opacity: 0.85;
+  mix-blend-mode: screen;
+}
+
+.room__stage {
+  transform: translateY(var(--win-y, 0px)) scale(var(--win-scale, 1));
+  opacity: var(--win-opacity, 1);
+  filter: blur(var(--win-blur, 0px));
+  will-change: transform, opacity, filter;
+}
+
+.room.is-active .era-win {
+  animation: win-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes win-in {
+  from {
+    opacity: 0;
+    transform: translateY(34px) scale(0.955);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 窗口顶上的高光：悬浮着的那层玻璃感 */
+.era-win::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 120px;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.14),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.era-win {
+  position: relative;
+}
+
+/* 尘埃粒子画布 */
+#dust {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 镜头暗角 */
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 100% at 50% 45%,
+    transparent 55%,
+    rgba(0, 0, 0, 0.28) 100%
+  );
+}
+
+/* HUD 跟着时代强调色发光 */
+.hud {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--era-accent) 30%, transparent),
+    0 8px 30px color-mix(in srgb, var(--era-accent) 22%, transparent);
+  transition: box-shadow 260ms ease;
+}
+
+.hud__era {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.hud__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--era-accent, #fff);
+  box-shadow: 0 0 10px var(--era-accent, #fff);
+}
+
+.hud__index {
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* 右侧点轨 */
+.dots::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  bottom: -18px;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 255, 255, 0.18),
+    transparent
+  );
+}
+
+.dots {
+  position: fixed;
+}
+
+.dots button {
+  position: relative;
+  z-index: 1;
+  transition: background-color 180ms ease, transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.dots button[aria-current="true"] {
+  background: var(--era-accent, #fff);
+  box-shadow: 0 0 12px var(--era-accent, #fff);
+}
+
+/* 翻页按钮的霓虹圈 */
+.corridor-nav {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--era-accent) 35%, transparent),
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.corridor-nav:hover:not(:disabled) {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--era-accent) 70%, transparent),
+    0 0 24px color-mix(in srgb, var(--era-accent) 45%, transparent);
+}
+
+/* Dock / 任务栏图标悬浮时抬起来 */
+.shell--mac .dock i,
+.shell--gnome .dock i {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shell--mac .dock i:hover,
+.shell--gnome .dock i:hover {
+  transform: translateY(-8px) scale(1.12);
+}
+
+/* 时代氛围的额外光晕 */
+.room[data-era="winxp"] .room__wall::after,
+.room[data-era="macos"] .room__wall::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    60% 40% at 20% 10%,
+    rgba(255, 255, 255, 0.35),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .room__wall {
+    animation: none;
+    transform: none;
+  }
+
+  .room.is-active .era-win {
+    animation: none;
+  }
+
+  #dust {
+    display: none;
+  }
+}
