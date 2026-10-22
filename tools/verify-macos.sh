@@ -36,7 +36,7 @@ for mode in light dark; do
   "$CHROME" \
     --headless=new --no-sandbox --disable-gpu --hide-scrollbars \
     --force-device-scale-factor=2 \
-    --window-size=324,672 \
+    --window-size=324,720 \
     --user-data-dir="$PROFILE" \
     --virtual-time-budget=1500 \
     --screenshot="$WORK/css-$mode.png" \

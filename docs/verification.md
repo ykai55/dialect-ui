@@ -49,21 +49,23 @@ TMPDIR=/tmp/ak CLANG_MODULE_CACHE_PATH=/tmp/ak/mc \
 3. **半透明材质不可信**。按钮这类材质在真窗口里会和背后内容混合，离屏渲染没有背后内容，
    颜色只是近似值。所以按钮的读数只当参考，输入框这种不透明的才算准。
 
+分段控件的两代差异和实现取舍单独记在 [docs/segmented-notes.md](segmented-notes.md)。
+
 ## 第二步：截 CSS 版本
 
-`verify/verify.html?mode=light|dark` 按同样的 14 行、同样的单元格尺寸（324×48）画出对应控件，
+`verify/verify.html?mode=light|dark` 按同样的 15 行、同样的单元格尺寸（324×48）画出对应控件，
 控件尺寸和原生对齐（按钮宽 200、输入框宽 300）。
 
 ```bash
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
   --headless=new --disable-gpu --hide-scrollbars \
   --force-device-scale-factor=2 \
-  --window-size=324,672 \
+  --window-size=324,720 \
   --screenshot=/tmp/css-light.png \
   "http://127.0.0.1:4173/verify/verify.html?mode=light"
 ```
 
-`324×672` 就是 14 行 × 48px。行高必须严格一致，否则拼图会错位。
+`324×720` 就是 15 行 × 48px。行高必须严格一致，否则拼图会错位。
 
 ## 第三步：一个组件一张对照图
 
@@ -389,11 +391,12 @@ AppKit 的 bezel 比控件 frame 小一圈：按钮 frame 200×32 只画 188×21
 | 开关 | 38×22 胶囊；knob 20×20 圆形、距边 1px；关轨 `#D8D8D8`、开轨渐变 `#0B7CF8 → #218DFF` | 关轨 `#4D4D4D`、开轨 `#1560D2 → #1669E3`、knob `#D3D3D3` |
 | 下拉框 | 175×21；白底、0.5px 描边、圆角约 6、双 chevron `#323232`（两段各约 4.5 高） | `#6F6F6F` 底、双 chevron `#ECECEC` |
 | 滑块 | 轨道 4px `#E2E2E2`、左填充 `#0A82FF`、knob 20×20 白圆 + 约 1.5px 落影 | 轨道 `#4D4D4D`、填充 `#166AE6` |
+| 分段控件 | 159×24；轨道 `#D5D5D5` 无描边、圆角约 5–6；选中段实心强调色 `#095DF8` + 白字；分隔线 1px `#C0C0C0` 只在两个未选中段之间 | 轨道 `#29292A`、选中 `#1064FE`、分隔线 `#3E3E3F` |
 | 中性色 | 窗口底 `#ECECEC`、文字 `#000`、强调色约 `#0A82FF` | 窗口底 `#323232`、文字 `#FCFCFC`、强调色约 `#166AE6` |
 
-### 跑完这一轮的结论（28 张对照图）
+### 跑完这一轮的结论（30 张对照图）
 
-14 个控件 × 明暗 = 28 张对照图全出，切片行数与 verify 页的 ROWS 顺序逐项对齐（脚本校验行高，另外人工核对过一遍）。几何：输入框 bbox 差 0；浅色其它行 0–1px；
+15 个控件 × 明暗 = 30 张对照图全出，切片行数与 verify 页的 ROWS 顺序逐项对齐（脚本校验行高，另外人工核对过一遍）。几何：输入框 bbox 差 0；浅色其它行 0–1px；
 深色多数 0–2px；选中态复选框 / 单选框高 −1.5~−2px，是原生蓝色填充的 1px 抗锯齿外扩，盒子本身
 仍是 14。颜色（统一 sRGB）：浅色所有采样点 Δ≤4（多数 0–2），深色多数 ≤2，最大 Δ6 出现在禁用
 勾选框——盒内是很弱的渐变，CSS 用纯色近似。

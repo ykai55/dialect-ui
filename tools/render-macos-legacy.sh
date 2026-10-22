@@ -94,7 +94,7 @@ ROWS = [
     "check-off", "check-on", "check-disabled",
     "radio-off", "radio-on",
     "switch-off", "switch-on",
-    "select", "slider",
+    "select", "slider", "segmented",
     "window-bg",
 ]
 
@@ -342,6 +342,21 @@ def main():
         w("  轨道 4px；填充 %s；未填充 %s；knob 20×20 白色圆 + 1.5px 落影"
           % (hx(px[bb[0] + 30, cy]), hx(px[bb[2] - 30, cy])))
         w("  横剖面（y=1x %s）: %s" % (one(cy), h_narrow(im, cy, bb[0] - 6, bb[2] + 6, maxw=12)))
+        w("")
+
+        im = imgs[(mode, "segmented")]
+        bb = bbox(im)
+        px = im.load()
+        cy = (bb[1] + bb[3]) // 2
+        # 选中段是第二段（Week），颜色取段中心；轨道取第一段里避开文字的位置
+        track = hx(px[bb[0] + 6, bb[1] + 4])
+        sel_x = bb[0] + int((bb[2] - bb[0]) * 0.42)
+        w("[%s] segmented  frame 139×24  可见 %s（.rounded regular，中间段选中）"
+          % (mode, box1(bb)))
+        w("  轨道 %s  选中段底 %s  圆角约 5–6px（旧版：白色 pill 浮起，不用强调色）"
+          % (track, hx(px[sel_x, cy])))
+        w("  圆角剖面（自上而下每 0.5px 的左沿，1x）: %s" % corner_profile(im, bb))
+        w("  横向剖面（y=1x %s）: %s" % (one(cy), h_narrow(im, cy, bb[0] - 6, bb[2] + 6, maxw=8)))
         w("")
 
     w("## 没渲染到的状态（主题里标了「估计」）")

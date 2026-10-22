@@ -193,6 +193,9 @@ sunken 边框和文字，没有画滚动条（滚动条不在这套矩阵的范�
 - 没有刻度：`TBS_NOTICKS` 创建，抓图里也没有 tick。
 - 真控件里刻度、通道颜色、滑块斜面都和 `DrawFrameControl` 画出来的按钮不完全一样（滑块 21px 高、
   通道 4px、底边只有 1px 阴影），所以这里不能用近似。
+- **焦点框没有单独实测**：matrix 里没有 trackbar 的焦点态，主题里沿用按钮那套
+  `DrawFocusRect` 1px 点线（`--slider-focus-mouse-outline`，鼠标点完也画，因为 classic 没有
+  focus-visible）。这一条是估计，等补抓 trackbar 焦点再改。
 
 ### 菜单
 

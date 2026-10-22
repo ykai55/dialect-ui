@@ -58,6 +58,14 @@
         return '<input class="slider" type="range" min="0" max="100" value="40" ' +
           'style="--slider-pct:40%" aria-label="slider">';
       }
+      /* 原生渲染选的是中间段（Week），这里保持一致 */
+      function segmented() {
+        return '<div class="segmented">' +
+          '<button type="button" class="segmented__item" aria-checked="false">Day</button>' +
+          '<button type="button" class="segmented__item" aria-checked="true">Week</button>' +
+          '<button type="button" class="segmented__item" aria-checked="false">Month</button>' +
+          '</div>';
+      }
       function toggle(state) {
         return '<label class="switch">' +
           '<input type="checkbox" class="switch__input" ' + (state ? "checked" : "") + ">" +
@@ -79,7 +87,8 @@
         cell(toggle(false)),
         cell(toggle(true)),
         cell(select()),
-        cell(slider())
+        cell(slider()),
+        cell(segmented())
       ];
       document.getElementById("rows").innerHTML = rows.join("");
     </script>

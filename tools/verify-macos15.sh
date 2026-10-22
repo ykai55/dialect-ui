@@ -23,10 +23,10 @@ BASE="${BASE:-http://127.0.0.1:4173}"
 WORK="${WORK:-/tmp/dialect-ui-macos15-verify}"
 PROFILE="$WORK/chrome-profile"
 
-# 页面：14 行 × 48px = 672（1x），截图 2x = 648×1344。
+# 页面：15 行 × 48px = 720（1x），截图 2x = 648×1440。
 # 和 verify/verify-macos15.html 的 .cell、tools/compare-macos15.py 的 ROWS/CELL_H 同步。
 PAGE_W=324
-PAGE_H=672
+PAGE_H=720
 
 PYTHON="${PYTHON:-python3}"
 if ! "$PYTHON" -c 'import PIL' >/dev/null 2>&1; then

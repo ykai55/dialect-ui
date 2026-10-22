@@ -246,6 +246,30 @@ func toggle(_ state: NSControl.StateValue) -> NSView {
     return s
 }
 
+// 分段控件：默认 rounded 样式，中间段选中。imagePosition 保持默认，让 AppKit
+// 按当前外观（26 或 legacy）自己画；这里只固定段数和选中项。
+func segmented() -> NSSegmentedControl {
+    let labels = ["Day", "Week", "Month"]
+    let s = NSSegmentedControl(labels: labels, trackingMode: .selectOne, target: nil, action: nil)
+    s.segmentStyle = .rounded
+    s.selectedSegment = 1
+    s.controlSize = .regular
+    s.sizeToFit()
+    return s
+}
+
+// 进度条：bar 样式、确定进度 40%。AppKit 的 bar 是 6pt 高；这里固定宽 200。
+func progress() -> NSProgressIndicator {
+    let p = NSProgressIndicator(frame: NSRect(x: 0, y: 0, width: 200, height: 6))
+    p.style = .bar
+    p.isIndeterminate = false
+    p.minValue = 0
+    p.maxValue = 100
+    p.doubleValue = 40
+    p.controlSize = .regular
+    return p
+}
+
 var specs: [Spec] = [
     Spec(row: "button") { _ in pushButton("Save changes") },
     Spec(row: "button-accent") { _ in accentButton("Save changes") },
@@ -261,6 +285,8 @@ var specs: [Spec] = [
     Spec(row: "switch-on") { _ in toggle(.on) },
     Spec(row: "select") { _ in popup() },
     Spec(row: "slider") { _ in slider() },
+    Spec(row: "segmented") { _ in segmented() },
+    Spec(row: "progress") { _ in progress() },
 ]
 
 if legacy {

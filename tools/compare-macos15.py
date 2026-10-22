@@ -40,6 +40,7 @@ ROWS = [
     "switch-on",
     "select",
     "slider",
+    "segmented",
 ]
 MODES = ("light", "dark")
 CELL_W = 648          # 324 @2x

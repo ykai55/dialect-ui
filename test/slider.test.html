@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>slider focus test</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/theme-win11.css" />
+    <link rel="stylesheet" href="../css/theme-win10.css" />
+    <link rel="stylesheet" href="../css/theme-winxp.css" />
+    <link rel="stylesheet" href="../css/theme-macos.css" />
+    <link rel="stylesheet" href="../css/theme-macos15.css" />
+    <link rel="stylesheet" href="../css/theme-gnome.css" />
+  </head>
+  <body>
+    <div id="stage"></div>
+    <pre id="result">RUNNING</pre>
+
+    <script>
+      (function () {
+        var lines = [];
+        function check(name, fn) {
+          var ok = false;
+          try { ok = !!fn(); } catch (e) { lines.push("FAIL " + name + " — " + e.message); return; }
+          lines.push((ok ? "PASS " : "FAIL ") + name);
+        }
+
+        var THEMES = ["win11", "win10", "winxp", "macos", "macos15", "gnome"];
+        var stage = document.getElementById("stage");
+
+        function makeSlider(theme) {
+          var wrap = document.createElement("div");
+          wrap.setAttribute("data-theme", theme);
+          wrap.setAttribute("data-mode", "light");
+          var input = document.createElement("input");
+          input.className = "slider s-focus";
+          input.type = "range";
+          input.min = "0";
+          input.max = "100";
+          input.value = "40";
+          input.style.setProperty("--slider-pct", "40%");
+          input.setAttribute("aria-label", theme);
+          wrap.appendChild(input);
+          stage.appendChild(wrap);
+          return input;
+        }
+
+        var styles = {};
+        THEMES.forEach(function (theme) {
+          var el = makeSlider(theme);
+          var cs = getComputedStyle(el);
+          styles[theme] = {
+            outlineStyle: cs.outlineStyle,
+            outlineWidth: cs.outlineWidth,
+            outlineOffset: cs.outlineOffset,
+            boxShadow: cs.boxShadow,
+            mouseOutline: cs.getPropertyValue("--slider-focus-mouse-outline").trim()
+          };
+        });
+
+        check("XP 焦点是点线框", function () {
+          return styles.winxp.outlineStyle === "dotted" && styles.winxp.outlineWidth === "1px";
+        });
+        check("Win10 焦点是点线框", function () {
+          return styles.win10.outlineStyle === "dotted";
+        });
+        check("Win11 焦点是 2px 实线框", function () {
+          return styles.win11.outlineStyle === "solid" && styles.win11.outlineWidth === "2px";
+        });
+        check("macOS 不画描边、用外发光", function () {
+          return styles.macos.outlineStyle === "none" && styles.macos.boxShadow !== "none";
+        });
+        check("macOS 15 不画描边、用外发光", function () {
+          return styles.macos15.outlineStyle === "none" && styles.macos15.boxShadow !== "none";
+        });
+        check("GNOME 焦点是 2px 半透明强调色描边", function () {
+          return styles.gnome.outlineStyle === "solid" && styles.gnome.outlineWidth === "2px";
+        });
+        check("六个主题的焦点样式不全一样", function () {
+          var seen = {};
+          THEMES.forEach(function (t) {
+            seen[styles[t].outlineStyle + "|" + styles[t].outlineWidth + "|" + styles[t].boxShadow] = 1;
+          });
+          return Object.keys(seen).length >= 4;
+        });
+        check("Win10 / XP 的焦点框贴着控件边缘，不被内缩压小", function () {
+          return styles.win10.outlineOffset === "-1px" && styles.winxp.outlineOffset === "-1px";
+        });
+        check("Win11 焦点框在控件外侧", function () {
+          return styles.win11.outlineOffset === "1px";
+        });
+        check("XP 鼠标点完也画焦点框（classic 没有 focus-visible）", function () {
+          return styles.winxp.mouseOutline.indexOf("dotted") > -1;
+        });
+        check("其它平台的鼠标焦点保持关闭", function () {
+          return ["win11", "win10", "macos", "macos15", "gnome"].every(function (t) {
+            return styles[t].mouseOutline === "none" || styles[t].mouseOutline === "";
+          });
+        });
+
+        var failed = lines.filter(function (l) { return l.indexOf("FAIL") === 0; }).length;
+        document.getElementById("result").textContent =
+          lines.join("\n") + "\n\n" + (failed ? "FAILED " + failed : "ALL PASS (" + lines.length + ")");
+        document.title = failed ? "FAIL" : "PASS";
+      })();
+    </script>
+  </body>
+</html>

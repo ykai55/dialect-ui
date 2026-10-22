@@ -80,6 +80,12 @@
         margin-left: 14px;
         margin-top: 11.5px;
       }
+      /* 原生 segmented 的 frame 139×24 放在 (12,12)，可见 ink 是 135×22.5，
+         所以 CSS 盒子按 ink 做，位置也按 ink 的左上角对（12.75,12.75） */
+      .cell .segmented {
+        margin-left: 12.75px;
+        margin-top: 12.75px;
+      }
       /* 原生 NSSwitch 没有文字，比对时把这一侧的标签藏掉 */
       .switch__label {
         display: none;
@@ -159,6 +165,16 @@
           '<span class="switch__label">Label</span></label>'
         );
       }
+      /* 原生渲染选的是中间段（Week），这里保持一致 */
+      function segmented() {
+        return (
+          '<div class="segmented">' +
+          '<button type="button" class="segmented__item" aria-checked="false">Day</button>' +
+          '<button type="button" class="segmented__item" aria-checked="true">Week</button>' +
+          '<button type="button" class="segmented__item" aria-checked="false">Month</button>' +
+          "</div>"
+        );
+      }
 
       // 顺序必须和 tools/compare-macos15.py 的 ROWS 逐项一致：
       // 截图按行高累加切片，错一行后面全错位。
@@ -176,7 +192,8 @@
         cell(toggle(false)), //                                                  switch-off
         cell(toggle(true)), //                                                   switch-on
         cell(select()), //                                                       select
-        cell(slider()) //                                                        slider
+        cell(slider()), //                                                       slider
+        cell(segmented()) //                                                     segmented
       ];
       document.getElementById("rows").innerHTML = rows.join("");
     </script>
