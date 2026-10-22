@@ -19,9 +19,8 @@ cd ~/src/dialect-ui
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-打开 `http://127.0.0.1:4173/index.html`——默认是回忆走廊，一屏一个系统。想看全部控件和并排对比，
-进 `demo/playground.html`。需要通过 HTTP 打开：`file://` 下浏览器拒绝加载 `fonts/` 里的 woff2，
-字体退回系统默认，平台差异就没了。
+打开 `http://127.0.0.1:4173/index.html`——回忆走廊，一屏一个系统。需要通过 HTTP 打开：
+`file://` 下浏览器拒绝加载 `fonts/` 里的 woff2，字体退回系统默认，平台差异就没了。
 
 ## 主题切换
 
@@ -52,8 +51,7 @@ macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26
 
 | 页面 | 用途 |
 | --- | --- |
-| `index.html` | 回忆走廊（默认页）。一屏一个系统，整页换成那个时代的桌面、窗口框和任务栏 / Dock；HUD 里可切明暗，可进交互版。 |
-| `demo/playground.html` | 交互版。切换平台、明暗与并排对比；并排时是横向画廊（每张卡片最小 360px），可用头部左右按钮翻页。 |
+| `index.html` | 回忆走廊（默认页）。一屏一个系统，整页换成那个时代的桌面、窗口框和任务栏 / Dock；HUD 里可切明暗，滚动或方向键切换。 |
 | `demo/harness.html` | 状态矩阵。以类名固定五种状态，便于整体查看。 |
 | `demo/compare.html` | 参考图画廊。左侧为系统原生截图，右侧为 CSS 复刻。 |
 | `demo/frames.html` | 动效逐帧定格，供 `tools/frames.sh` 使用。 |
@@ -87,9 +85,7 @@ bash tools/test.sh            # 交互测试
 与六平台高度差异，提示气泡的延迟出现、翻转、Esc / 滚动关闭，以及六个主题下复选框禁用态的悬停、按下不变
 和焦点框可见性。键盘模型和焦点顺序的完整说明见 [docs/keyboard-notes.md](docs/keyboard-notes.md)。
 
-`demo/playground.html` 带 `?theme=macos&mode=dark` 固定平台和明暗，带 `?open=1` 展开第一个下拉框，
-带 `?menu=1` 展开第一个菜单，方便截图；根 `index.html`（走廊）带 `?era=winxp&mode=dark` 可直接进某个
-时代、固定明暗。
+根 `index.html`（走廊）带 `?era=winxp&mode=dark` 可直接进某个时代、固定明暗，方便截图。
 
 ## 数值来源
 
@@ -165,8 +161,7 @@ Win10 / WinXP / macOS 的「方向键不循环」只是估计，没有为估计�
 弹层用 `popover="manual"`，关不关由脚本判断：点菜单外、滚动、窗口缩放都直接关，位置只在打开时算
 一次。贴着视口边缘打开会夹回可视区，盖住触发器时翻到上方。
 
-演示页在窗口内关掉了浏览器默认右键菜单（`js/app.js` 里一行 `contextmenu` 的 `preventDefault`），
-和原生窗口一致。组件本身不关，宿主自己决定。
+组件本身不接管浏览器默认右键菜单，宿主自己决定。
 
 输入框和多行输入接了自己的右键菜单：[js/text-menu.js](js/text-menu.js) 复用 `.menu` 外观，右键时按
 选区状态决定哪些项可用。Cut / Copy / Paste / Delete / Select All 五项，没选中时前三项变灰，只读字段

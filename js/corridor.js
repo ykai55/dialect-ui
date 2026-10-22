@@ -172,6 +172,42 @@
     go(current + 1);
   });
 
+  // 滚轮/触控板：累计到阈值才切一页，然后锁一小段时间。
+  // 窗口内容自己能滚的时候先让它滚，滚到底再交给走廊。
+  var wheelAccum = 0;
+  var wheelTimer = 0;
+  var wheelLocked = false;
+
+  roomsEl.addEventListener(
+    "wheel",
+    function (e) {
+      if (e.ctrlKey) return; // 触控板捏合缩放，不拦
+      var body = e.target.closest && e.target.closest(".era-win__body");
+      if (body && body.scrollHeight > body.clientHeight + 1) {
+        var canDown =
+          e.deltaY > 0 && body.scrollTop + body.clientHeight < body.scrollHeight - 1;
+        var canUp = e.deltaY < 0 && body.scrollTop > 0;
+        if (canDown || canUp) return;
+      }
+      e.preventDefault();
+      if (wheelLocked) return;
+      wheelAccum += e.deltaY;
+      window.clearTimeout(wheelTimer);
+      wheelTimer = window.setTimeout(function () {
+        wheelAccum = 0;
+      }, 160);
+      if (Math.abs(wheelAccum) >= 45) {
+        go(current + (wheelAccum > 0 ? 1 : -1));
+        wheelAccum = 0;
+        wheelLocked = true;
+        window.setTimeout(function () {
+          wheelLocked = false;
+        }, 820);
+      }
+    },
+    { passive: false }
+  );
+
   document.addEventListener("keydown", function (e) {
     // 焦点在控件里时不抢方向键 / 字母键，免得打字或操作组件时切房间
     if (e.target.closest && e.target.closest("input, textarea, select, button, a, [contenteditable]")) return;
@@ -204,22 +240,6 @@
         break;
     }
   });
-
-  /* ---------- 4. 鼠标光斑 ---------- */
-
-  window.addEventListener(
-    "pointermove",
-    function (e) {
-      if (reduced) return;
-      rooms.forEach(function (room) {
-        var r = room.getBoundingClientRect();
-        if (r.bottom < 0 || r.top > window.innerHeight) return;
-        room.style.setProperty("--mx", (((e.clientX - r.left) / r.width) * 100).toFixed(1) + "%");
-        room.style.setProperty("--my", (((e.clientY - r.top) / r.height) * 100).toFixed(1) + "%");
-      });
-    },
-    { passive: true }
-  );
 
   /* ---------- 5. 尘埃粒子 ---------- */
 

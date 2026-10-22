@@ -701,7 +701,7 @@ body.corridor {
 
 .dots {
   position: fixed;
-  right: 26px;
+  right: 84px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 20;
@@ -777,12 +777,30 @@ body.corridor {
    炫酷层：滚动视差、壁纸漂移、鼠标光斑、尘埃粒子、入场动画
    ============================================================ */
 
-.room[data-era="winxp"] { --era-accent: #3a93ff; }
-.room[data-era="win10"] { --era-accent: #0078d7; }
-.room[data-era="win11"] { --era-accent: #60cdff; }
-.room[data-era="macos15"] { --era-accent: #8b7bff; }
-.room[data-era="macos"] { --era-accent: #ff7ab6; }
-.room[data-era="gnome"] { --era-accent: #3584e4; }
+.room[data-era="winxp"] {
+  --era-accent: #3a93ff;
+  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.2'/></svg>") 3 2, default;
+}
+.room[data-era="win10"] {
+  --era-accent: #0078d7;
+  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.2'/></svg>") 3 2, default;
+}
+.room[data-era="win11"] {
+  --era-accent: #60cdff;
+  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23ffffff' stroke='%23000000' stroke-width='1.2'/></svg>") 3 2, default;
+}
+.room[data-era="macos15"] {
+  --era-accent: #8b7bff;
+  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23000000' stroke='%23ffffff' stroke-width='1.4'/></svg>") 3 2, default;
+}
+.room[data-era="macos"] {
+  --era-accent: #ff7ab6;
+  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23000000' stroke='%23ffffff' stroke-width='1.4'/></svg>") 3 2, default;
+}
+.room[data-era="gnome"] {
+  --era-accent: #3584e4;
+  --era-cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><path d='M3 2 L3 18.5 L7.3 14.4 L10.4 20.5 L13.2 19.2 L10.2 13.2 L16.5 13 Z' fill='%23000000' stroke='%23ffffff' stroke-width='1.4'/></svg>") 3 2, default;
+}
 
 .room__wall {
   background-size: 150% 150%;
@@ -796,21 +814,6 @@ body.corridor {
   0% { background-position: 42% 38%; }
   50% { background-position: 56% 48%; }
   100% { background-position: 48% 60%; }
-}
-
-/* 鼠标光斑：跟着指针在整屏上走，颜色取当前时代的强调色 */
-.room__glow {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: radial-gradient(
-    380px circle at var(--mx, 50%) var(--my, 50%),
-    color-mix(in srgb, var(--era-accent) 34%, transparent),
-    transparent 70%
-  );
-  opacity: 0.85;
-  mix-blend-mode: screen;
 }
 
 .room__stage {
@@ -912,18 +915,6 @@ body.corridor {
   font-weight: 600;
 }
 
-.hud__link {
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  font-size: 11px;
-  border-left: 1px solid rgba(255, 255, 255, 0.18);
-  padding-left: 10px;
-}
-
-.hud__link:hover {
-  color: #fff;
-}
-
 /* 右侧点轨 */
 .dots::before {
   content: "";
@@ -1006,4 +997,27 @@ body.corridor {
   #dust {
     display: none;
   }
+}
+
+/* 时代鼠标：桌面区域用各系统的箭头；输入框保留文本光标 */
+.room {
+  cursor: var(--era-cursor, default);
+}
+
+.room input:not([type="range"]),
+.room textarea {
+  cursor: text;
+}
+
+.room button,
+.room .btn,
+.room .tabs__tab,
+.room .segmented__item,
+.room .select__button,
+.room .menu__item,
+.room .check,
+.room .radio,
+.room .switch,
+.room input[type="range"] {
+  cursor: inherit;
 }

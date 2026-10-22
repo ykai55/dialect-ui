@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 用本机 Chrome 的无头模式把各个主题 × 明暗截成图，方便和参考图比对。
-# 用法：bash tools/shoot.sh [play|harness|corridor|all]
+# 用法：bash tools/shoot.sh [harness|corridor|all]
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -26,16 +26,6 @@ shot() {
     "$BASE/$url" >/dev/null 2>&1
   echo "  $OUT/$file"
 }
-
-if [ "$WHAT" = "all" ] || [ "$WHAT" = "play" ]; then
-  echo "playground"
-  for theme in win11 win10 winxp macos macos15 gnome; do
-    for mode in light dark; do
-      shot "demo/playground.html?theme=${theme}&mode=${mode}" "play-${theme}-${mode}.png" 860 1080
-    done
-  done
-  shot "demo/playground.html?theme=macos&mode=light&compare=1" "play-compare-light.png" 3060 860
-fi
 
 if [ "$WHAT" = "all" ] || [ "$WHAT" = "corridor" ]; then
   echo "corridor"
