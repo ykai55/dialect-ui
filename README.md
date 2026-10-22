@@ -51,7 +51,7 @@ macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26
 
 | 页面 | 用途 |
 | --- | --- |
-| `index.html` | 交互版。切换平台、明暗与并排对比；悬停、按下、焦点状态可交互。 |
+| `index.html` | 交互版。切换平台、明暗与并排对比；并排时是横向画廊（每张卡片最小 360px），可用头部左右按钮翻页。 |
 | `demo/harness.html` | 状态矩阵。以类名固定五种状态，便于整体查看。 |
 | `demo/compare.html` | 参考图画廊。左侧为系统原生截图，右侧为 CSS 复刻。 |
 | `demo/frames.html` | 动效逐帧定格，供 `tools/frames.sh` 使用。 |

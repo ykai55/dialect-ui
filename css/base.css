@@ -194,11 +194,81 @@ body.mode-dark .bar__repo {
   padding: 24px 20px 48px;
 }
 
+/* 并排：每张卡片有最小宽度，放不下就横向滚动，像画廊一样翻 */
 body.is-compare .stage {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  justify-content: stretch;
-  max-width: 3060px;
-  margin: 0 auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(360px, 1fr);
+  grid-template-columns: none;
+  justify-content: start;
+  max-width: none;
+  margin: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 20px;
+  scroll-behavior: smooth;
+  padding-bottom: 20px;
+}
+
+body.is-compare .board {
+  scroll-snap-align: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.is-compare .stage {
+    scroll-behavior: auto;
+  }
+}
+
+/* 翻页按钮，只在并排时显示 */
+.bar__nav {
+  gap: 4px;
+}
+
+.bar__nav[hidden] {
+  display: none;
+}
+
+.bar__navbtn {
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #e4e4e7;
+  border-radius: 7px;
+  background: #fff;
+  color: #52525b;
+  font: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bar__navbtn:hover:not(:disabled) {
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+.bar__navbtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.bar__navbtn:focus-visible {
+  outline: 2px solid #3584e4;
+  outline-offset: 2px;
+}
+
+body.mode-dark .bar__navbtn {
+  background: #232327;
+  border-color: #3a3a40;
+  color: #d4d4d8;
+}
+
+body.mode-dark .bar__navbtn:hover:not(:disabled) {
+  background: #2c2c31;
+  color: #fff;
 }
 
 .board {

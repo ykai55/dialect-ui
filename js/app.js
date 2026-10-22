@@ -114,6 +114,15 @@
       btn.setAttribute("aria-pressed", String(btn.dataset.pickMode === mode));
     });
 
+    if (compare !== wasCompare) {
+      stage.scrollLeft = 0;
+      wasCompare = compare;
+    }
+    // 布局切换后 scrollWidth 要等一帧才准
+    window.requestAnimationFrame(function () {
+      updateNav();
+    });
+
     var hint = document.getElementById("hint");
     if (detected) {
       hint.textContent = "检测到 " + labelOf(detected) + " · 已预选";
@@ -171,6 +180,44 @@
     compare = compareBox.checked;
     render();
   });
+
+  /* ---------- 5.5 并排画廊的左右翻页 ---------- */
+
+  var stage = document.getElementById("stage");
+  var wasCompare = null;
+  var boardNav = document.getElementById("board-nav");
+  var navPrev = document.getElementById("nav-prev");
+  var navNext = document.getElementById("nav-next");
+
+  function visibleBoards() {
+    return boards.filter(function (b) {
+      return !b.hidden;
+    });
+  }
+
+  function scrollBoards(dir) {
+    var list = visibleBoards();
+    if (!list.length) return;
+    var gap = parseFloat(getComputedStyle(stage).columnGap) || 18;
+    var step = list[0].getBoundingClientRect().width + gap;
+    stage.scrollBy({ left: dir * step, behavior: "smooth" });
+  }
+
+  function updateNav() {
+    boardNav.hidden = !compare;
+    if (!compare) return;
+    navPrev.disabled = stage.scrollLeft <= 1;
+    navNext.disabled = stage.scrollLeft + stage.clientWidth >= stage.scrollWidth - 1;
+  }
+
+  navPrev.addEventListener("click", function () {
+    scrollBoards(-1);
+  });
+  navNext.addEventListener("click", function () {
+    scrollBoards(1);
+  });
+  stage.addEventListener("scroll", updateNav, { passive: true });
+  window.addEventListener("resize", updateNav);
 
   /* ---------- 6. 右键 ----------
      演示页按原生窗口处理：浏览器默认菜单不再弹出来，右键留给组件。
