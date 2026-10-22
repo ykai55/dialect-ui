@@ -19,6 +19,7 @@
       .btn { width: 200px; }
       .cell .field { width: 300px; }
       .cell .select { width: 180px; }
+      .cell .progress { width: 200px; }
       /* 原生 NSSwitch 没有文字，比对时先把我们这一侧的标签藏掉 */
       .switch__label { display: none; }
     </style>
@@ -58,6 +59,10 @@
         return '<input class="slider" type="range" min="0" max="100" value="40" ' +
           'style="--slider-pct:40%" aria-label="slider">';
       }
+      function progress() {
+        return '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" ' +
+          'aria-valuenow="40" style="--progress-value: 40%"><div class="progress__fill"></div></div>';
+      }
       /* 原生渲染选的是中间段（Week），这里保持一致 */
       function segmented() {
         return '<div class="segmented">' +
@@ -88,7 +93,8 @@
         cell(toggle(true)),
         cell(select()),
         cell(slider()),
-        cell(segmented())
+        cell(segmented()),
+        cell(progress())
       ];
       document.getElementById("rows").innerHTML = rows.join("");
     </script>

@@ -19,6 +19,7 @@ ROWS = [
     "switch-off", "switch-on",
     "select", "slider",
     "segmented",
+    "progress",
 ]
 MODES = ("light", "dark")
 PAD = 14

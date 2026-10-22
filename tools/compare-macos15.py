@@ -41,6 +41,7 @@ ROWS = [
     "select",
     "slider",
     "segmented",
+    "progress",
 ]
 MODES = ("light", "dark")
 CELL_W = 648          # 324 @2x

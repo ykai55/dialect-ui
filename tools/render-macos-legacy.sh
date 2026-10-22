@@ -94,7 +94,7 @@ ROWS = [
     "check-off", "check-on", "check-disabled",
     "radio-off", "radio-on",
     "switch-off", "switch-on",
-    "select", "slider", "segmented",
+    "select", "slider", "segmented", "progress",
     "window-bg",
 ]
 
@@ -356,6 +356,15 @@ def main():
         w("  轨道 %s  选中段底 %s  圆角约 5–6px（旧版：白色 pill 浮起，不用强调色）"
           % (track, hx(px[sel_x, cy])))
         w("  圆角剖面（自上而下每 0.5px 的左沿，1x）: %s" % corner_profile(im, bb))
+        w("  横向剖面（y=1x %s）: %s" % (one(cy), h_narrow(im, cy, bb[0] - 6, bb[2] + 6, maxw=8)))
+        w("")
+
+        im = imgs[(mode, "progress")]
+        bb = bbox(im)
+        px = im.load()
+        cy = (bb[1] + bb[3]) // 2
+        w("[%s] progress  可见 %s（NSProgressIndicator.bar 6pt）" % (mode, box1(bb)))
+        w("  轨道 %s  填充 %s  圆角约 3px" % (hx(px[bb[2] - 20, cy]), hx(px[bb[0] + 30, cy])))
         w("  横向剖面（y=1x %s）: %s" % (one(cy), h_narrow(im, cy, bb[0] - 6, bb[2] + 6, maxw=8)))
         w("")
 

@@ -86,6 +86,12 @@
         margin-left: 12.75px;
         margin-top: 12.75px;
       }
+      /* 原生 progress 可见 200×6，放在 (12,21) */
+      .cell .progress {
+        width: 200px;
+        margin-left: 12px;
+        margin-top: 21px;
+      }
       /* 原生 NSSwitch 没有文字，比对时把这一侧的标签藏掉 */
       .switch__label {
         display: none;
@@ -165,6 +171,13 @@
           '<span class="switch__label">Label</span></label>'
         );
       }
+      function progress() {
+        return (
+          '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" ' +
+          'aria-valuenow="40" style="--progress-value: 40%">' +
+          '<div class="progress__fill"></div></div>'
+        );
+      }
       /* 原生渲染选的是中间段（Week），这里保持一致 */
       function segmented() {
         return (
@@ -193,7 +206,8 @@
         cell(toggle(true)), //                                                   switch-on
         cell(select()), //                                                       select
         cell(slider()), //                                                       slider
-        cell(segmented()) //                                                     segmented
+        cell(segmented()), //                                                    segmented
+        cell(progress()) //                                                      progress
       ];
       document.getElementById("rows").innerHTML = rows.join("");
     </script>
