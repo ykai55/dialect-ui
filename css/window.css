@@ -243,8 +243,10 @@
 }
 
 .window__traffic-glyph svg {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
+  padding: 1px;
+  box-sizing: border-box;
   display: block;
 }
 
@@ -488,8 +490,9 @@
 }
 
 .window[data-window-frame="macos"] .window__traffic-glyph svg {
-  width: 10px;
-  height: 10px;
+  width: 13px;
+  height: 13px;
+  padding: 1.5px;
 }
 
 .window[data-window-frame="macos"] .window__traffic-dot--close .window__traffic-glyph {
