@@ -1197,3 +1197,82 @@
 .tooltip[hidden] {
   display: none;
 }
+
+/* ---------------- 自定义滚动条（Firefox 兜底） ---------------- */
+/* Firefox 不能用 ::-webkit-scrollbar；macOS 的 overlay 也不受宽度/圆角控制。
+   行为在 packages/core/src/behavior/scrollbar.js，只在 Firefox 里挂载。 */
+
+.dsb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  width: var(--scrollbar-size, 8px);
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.dsb--fixed {
+  position: fixed;
+  height: 100vh;
+}
+
+.dsb[hidden] {
+  display: none;
+}
+
+.dsb__track {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--scrollbar-track, transparent);
+  pointer-events: auto;
+}
+
+.dsb__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: var(--scrollbar-thumb, rgba(0, 0, 0, 0.35));
+  border-radius: var(--scrollbar-radius, 0px);
+  border: var(--scrollbar-border, 0px) solid transparent;
+  background-clip: padding-box;
+  box-shadow: var(--scrollbar-thumb-shadow, none);
+  pointer-events: auto;
+}
+
+.dsb--dragging .dsb__thumb,
+.dsb__thumb:hover {
+  background: var(--scrollbar-thumb-hover, var(--scrollbar-thumb));
+}
+
+.dsb__btn {
+  display: var(--scrollbar-buttons, none);
+  flex: 0 0 var(--scrollbar-size, 0px);
+  width: 100%;
+  height: var(--scrollbar-size, 0px);
+  padding: 0;
+  border: 0;
+  background-color: var(--scrollbar-button-bg, var(--scrollbar-track));
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: var(--scrollbar-button-shadow, none);
+  pointer-events: auto;
+}
+
+.dsb__btn--up {
+  background-image: var(--scrollbar-arrow-up, none);
+}
+
+.dsb__btn--down {
+  background-image: var(--scrollbar-arrow-down, none);
+}
+
+@supports (-moz-appearance: none) {
+  [data-dialect-scrollbar].dsb-on {
+    scrollbar-width: none;
+  }
+}

@@ -22,6 +22,7 @@ import { initSegmenteds } from "./behavior/segmented.js";
 import { initTabs } from "./behavior/tabs.js";
 import { initSliders } from "./behavior/slider.js";
 import { initTooltips } from "./behavior/tooltip.js";
+import { initScrollbars } from "./behavior/scrollbar.js";
 
 export { createMenu, createMenuBox, initMenuBox, initMenus } from "./behavior/menu.js";
 export { createTextMenu, initTextMenus } from "./behavior/text-menu.js";
@@ -31,6 +32,7 @@ export { createSegmented, initSegmenteds } from "./behavior/segmented.js";
 export { createTabs, initTabs } from "./behavior/tabs.js";
 export { createSlider, initSliders } from "./behavior/slider.js";
 export { createTooltip, initTooltips } from "./behavior/tooltip.js";
+export { initScrollbars, destroyScrollbars } from "./behavior/scrollbar.js";
 
 export function initAll(root = document) {
   initMenus(root);
@@ -41,4 +43,5 @@ export function initAll(root = document) {
   initTabs(root);
   initSliders(root);
   initTooltips(root);
+  initScrollbars(root);
 }

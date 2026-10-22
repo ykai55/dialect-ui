@@ -31,7 +31,7 @@ body.corridor {
   scroll-behavior: smooth;
 }
 
-@supports not selector(::-webkit-scrollbar) {
+@supports (-moz-appearance: none) {
   .rooms {
     scrollbar-width: var(--scrollbar-width, auto);
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
