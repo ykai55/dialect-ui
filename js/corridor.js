@@ -17,7 +17,7 @@
   var hudEra = document.getElementById("hud-era");
   var hudSub = document.getElementById("hud-sub");
   var hudIndex = document.getElementById("hud-index");
-  var dotsEl = document.getElementById("dots");
+  var stepsEl = document.getElementById("steps");
   var navPrev = document.getElementById("nav-prev");
   var navNext = document.getElementById("nav-next");
   var dust = document.getElementById("dust");
@@ -50,14 +50,15 @@
 
   /* ---------- 2. 导航与状态 ---------- */
 
-  var dots = rooms.map(function (room, i) {
+  var steps = rooms.map(function (room, i) {
     var btn = document.createElement("button");
     btn.type = "button";
+    btn.className = "hud__step";
     btn.setAttribute("aria-label", room.dataset.name || "第 " + (i + 1) + " 个时代");
     btn.addEventListener("click", function () {
       go(i);
     });
-    dotsEl.appendChild(btn);
+    stepsEl.appendChild(btn);
     return btn;
   });
 
@@ -117,7 +118,7 @@
     refreshHudSub();
     hudIndex.textContent =
       String(i + 1).padStart(2, "0") + " / " + String(rooms.length).padStart(2, "0");
-    dots.forEach(function (btn, n) {
+    steps.forEach(function (btn, n) {
       btn.setAttribute("aria-current", n === i ? "true" : "false");
     });
     document.body.style.setProperty("--era-accent", accentOf(room));

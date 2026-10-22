@@ -51,7 +51,7 @@ macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26
 
 | 页面 | 用途 |
 | --- | --- |
-| `index.html` | 回忆走廊（默认页）。一屏一个系统，整页换成那个时代的桌面、窗口框和任务栏 / Dock；HUD 里可切明暗，滚动或方向键切换。 |
+| `index.html` | 回忆走廊（默认页）。一屏一个系统，整页换成那个时代的桌面、窗口框和任务栏 / Dock；顶部 HUD 里是时代进度和明暗切换，滚动或方向键切换。 |
 | `demo/harness.html` | 状态矩阵。以类名固定五种状态，便于整体查看。 |
 | `demo/compare.html` | 参考图画廊。左侧为系统原生截图，右侧为 CSS 复刻。 |
 | `demo/frames.html` | 动效逐帧定格，供 `tools/frames.sh` 使用。 |
