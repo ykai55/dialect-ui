@@ -478,7 +478,12 @@
   background: #34c759;
 }
 
+/* 26 的符号和 15 一样，默认不显示，悬停整组才出现；之前把 hover 态做成了常显 */
 .window[data-window-frame="macos"] .window__traffic-glyph {
+  opacity: 0;
+}
+
+.window[data-window-frame="macos"] .window__traffic:hover .window__traffic-glyph {
   opacity: 1;
 }
 

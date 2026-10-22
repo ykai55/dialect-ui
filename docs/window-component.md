@@ -34,7 +34,7 @@
 - **禁用控件**：窗口用捕获阶段监听，禁用按钮上的右键也走同一条路径，不会漏出浏览器菜单。
 - **窗口按钮**：悬停有底色，按下有 pressed 态。Windows 10 关闭键悬停 `#E81123`、按下 `#F1707A`；
   Windows 11 悬停 `#C42B1C`、按下 `#B22F22`；XP 按下斜面翻向（内阴影）；GNOME 按下底色加深；
-  macOS 26 红绿灯 13px、10px 间距，符号常显，颜色取自本机 AppKit 截屏
+  macOS 26 红绿灯 13px、10px 间距，符号默认隐藏、悬停整组才显示，颜色取自本机 AppKit 截屏
   （红 `#FF5C5F`、黄 `#FAC800`、绿 `#34C759`）；macOS 15 保持 12px，悬停整组才显示符号。
   符号用 SVG 画（X / 横线 / 双三角缩放），按下整体压暗。
 - **事件**：`window:contextmenu`（带 target / 坐标）和 `window:action`（`data-window-action` 按钮点击，
