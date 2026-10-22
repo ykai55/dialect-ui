@@ -3,7 +3,7 @@
 
    做四件事：
    1. 把控件样本复制进每个时代的窗口；
-   2. 滚动 / 方向键 / 左右按钮 / 右侧点轨切换时代；
+   2. 滚动 / 方向键 / 顶部进度切换时代；
    3. 滚动视差：窗口上下错位、缩放、淡出，壁纸反向漂移；
    4. 氛围层：鼠标光斑、尘埃粒子、按时代换强调色。
    ============================================================ */
@@ -18,8 +18,6 @@
   var hudSub = document.getElementById("hud-sub");
   var hudIndex = document.getElementById("hud-index");
   var stepsEl = document.getElementById("steps");
-  var navPrev = document.getElementById("nav-prev");
-  var navNext = document.getElementById("nav-next");
   var dust = document.getElementById("dust");
   var tpl = document.getElementById("specimen");
   var reduced =
@@ -46,6 +44,9 @@
       input.name = "corridor-" + i + "-" + n;
     });
     body.appendChild(frag);
+    // fixed 定位的 tooltip 不能留在带 transform 的 window 里，否则会以窗口为包含块
+    var layer = room.querySelector(".window__body [data-tooltip-layer]");
+    if (layer) room.appendChild(layer);
   });
 
   /* ---------- 2. 导航与状态 ---------- */
@@ -122,8 +123,6 @@
       btn.setAttribute("aria-current", n === i ? "true" : "false");
     });
     document.body.style.setProperty("--era-accent", accentOf(room));
-    navPrev.disabled = i === 0;
-    navNext.disabled = i === rooms.length - 1;
   }
 
   /* ---------- 3. 滚动视差 ---------- */
@@ -165,13 +164,6 @@
   );
 
   window.addEventListener("resize", update);
-
-  navPrev.addEventListener("click", function () {
-    go(current - 1);
-  });
-  navNext.addEventListener("click", function () {
-    go(current + 1);
-  });
 
   // 滚轮/触控板：累计到阈值才切一页，然后锁一小段时间。
   // 窗口内容自己能滚的时候先让它滚，滚到底再交给走廊。

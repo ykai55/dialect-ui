@@ -31,9 +31,6 @@
       </div>
     </div>
 
-    <button class="corridor-nav corridor-nav--prev" id="nav-prev" type="button" aria-label="上一个时代">‹</button>
-    <button class="corridor-nav corridor-nav--next" id="nav-next" type="button" aria-label="下一个时代">›</button>
-
     <main class="rooms" id="rooms">
       <!-- Windows XP -->
       <section class="room" data-era="winxp" data-theme="winxp" data-mode="light"
@@ -190,7 +187,7 @@
     <canvas id="dust" aria-hidden="true"></canvas>
     <div class="vignette" aria-hidden="true"></div>
 
-    <div class="hint">滚动 / ← → 切换时代 · D 切明暗</div>
+    <div class="hint">滚动或方向键切换时代 · D 切明暗</div>
 
     <template id="specimen">
       <div class="panel">
@@ -201,6 +198,16 @@
             <button type="button" class="btn btn--primary">Save changes</button>
             <button type="button" class="btn" disabled>Disabled</button>
           </div>
+        </section>
+
+
+        <section class="group">
+          <h3 class="group__title">Tooltip</h3>
+          <div class="row">
+            <button type="button" class="btn" data-tooltip="Saves your changes">Save changes</button>
+            <button type="button" class="btn" data-tooltip="Deletes this item">Delete</button>
+          </div>
+          <div class="tooltip" data-tooltip-layer hidden></div>
         </section>
 
         <section class="group">
