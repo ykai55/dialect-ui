@@ -32,6 +32,9 @@
 - **右键**：窗口内一律不弹浏览器菜单；右键落在 `input` / `textarea` 上时懒创建一个文本菜单
   （Cut / Copy / Paste / Delete / Select All），复用 `js/text-menu.js`；右键落在别处只拦截浏览器菜单。
 - **禁用控件**：窗口用捕获阶段监听，禁用按钮上的右键也走同一条路径，不会漏出浏览器菜单。
+- **窗口按钮**：悬停有底色，按下有 pressed 态。Windows 10 关闭键悬停 `#E81123`、按下 `#F1707A`；
+  Windows 11 悬停 `#C42B1C`、按下 `#B22F22`；XP 按下斜面翻向（内阴影）；GNOME 按下底色加深；
+  macOS 红绿灯悬停显示 × / − / +，按下整体压暗。
 - **事件**：`window:contextmenu`（带 target / 坐标）和 `window:action`（`data-window-action` 按钮点击，
   detail 里有 `action`）。最小化 / 最大化 / 关闭具体做什么由宿主自己处理。
 - 窗口外不拦截浏览器菜单。

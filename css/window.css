@@ -75,6 +75,15 @@
   color: var(--window-caption-close-hover-fg, #ffffff);
 }
 
+.window__caption:active {
+  background: var(--window-caption-active-bg, rgba(0, 0, 0, 0.16));
+}
+
+.window__caption--close:active {
+  background: var(--window-caption-close-active-bg, #a32618);
+  color: #ffffff;
+}
+
 .window__body {
   flex: 1;
   min-height: 0;
@@ -203,29 +212,56 @@
 
 
 
-.window__traffic i {
+.window__traffic-dot {
+  appearance: none;
   width: 12px;
   height: 12px;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
   background: #c9c9c9;
-  display: block;
+  display: grid;
+  place-items: center;
+  cursor: inherit;
+}
+
+.window__traffic-dot:active {
+  filter: brightness(0.82);
+}
+
+.window__traffic-dot:focus-visible {
+  outline: 2px solid #4c9ffe;
+  outline-offset: 1px;
+}
+
+.window__traffic-glyph {
+  opacity: 0;
+  font-family: system-ui, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.window__traffic-dot:hover .window__traffic-glyph {
+  opacity: 1;
 }
 
 
 
-.window__traffic i:nth-child(1) {
+.window__traffic-dot--close {
   background: #ff5f57;
 }
 
 
 
-.window__traffic i:nth-child(2) {
+.window__traffic-dot--min {
   background: #febc2e;
 }
 
 
 
-.window__traffic i:nth-child(3) {
+.window__traffic-dot--zoom {
   background: #28c840;
 }
 
@@ -266,6 +302,15 @@
   color: #fff;
 }
 
+.window[data-window-frame="win11"] .window__caption:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.window[data-window-frame="win11"] .window__caption--close:active {
+  background: #b22f22;
+  color: #fff;
+}
+
 
 
 /* Win10 的标题栏按钮是 46px 宽、贴满高度的直角命中区，只有悬停才变灰 / 变红 */
@@ -301,6 +346,15 @@
 
 .window[data-window-frame="win10"] .window__caption--close:hover {
   background: #e81123;
+  color: #fff;
+}
+
+.window[data-window-frame="win10"] .window__caption:active {
+  background: #cccccc;
+}
+
+.window[data-window-frame="win10"] .window__caption--close:active {
+  background: #f1707a;
   color: #fff;
 }
 
@@ -349,6 +403,17 @@
 .window[data-window-frame="winxp"] .window__caption--close {
   background: linear-gradient(180deg, #f08a68 0%, #c4320f 100%);
   box-shadow: inset 1px 1px 0 #ffc9b8, inset -1px -1px 0 #7a1200;
+}
+
+/* XP 按下去斜面翻向，按钮看起来是凹进去的 */
+.window[data-window-frame="winxp"] .window__caption:active {
+  background: linear-gradient(180deg, #0a58d8 0%, #4a9bff 100%);
+  box-shadow: inset 1px 1px 0 #00318a, inset -1px -1px 0 #b8d9ff;
+}
+
+.window[data-window-frame="winxp"] .window__caption--close:active {
+  background: linear-gradient(180deg, #c4320f 0%, #f08a68 100%);
+  box-shadow: inset 1px 1px 0 #7a1200, inset -1px -1px 0 #ffc9b8;
 }
 
 
@@ -410,6 +475,10 @@
   border-radius: 99px;
   background: rgba(255, 255, 255, 0.12);
   font-size: 11px;
+}
+
+.window[data-window-frame="gnome"] .window__caption:active {
+  background: rgba(255, 255, 255, 0.24);
 }
 
 
