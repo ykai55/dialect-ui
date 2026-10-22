@@ -650,7 +650,6 @@ body.corridor {
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.85);
   font-size: 12px;
-  pointer-events: none;
 }
 
 .hud b {
@@ -836,21 +835,6 @@ body.corridor {
   }
 }
 
-/* 窗口顶上的高光：悬浮着的那层玻璃感 */
-.era-win::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 120px;
-  border-radius: inherit;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.14),
-    transparent 70%
-  );
-  pointer-events: none;
-}
-
 .era-win {
   position: relative;
 }
@@ -900,6 +884,44 @@ body.corridor {
 .hud__index {
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, 0.45);
+}
+
+.hud__modes {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hud__mode {
+  appearance: none;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.hud__mode[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--era-accent) 60%, #ffffff 20%);
+  color: #0a0a12;
+  font-weight: 600;
+}
+
+.hud__link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 11px;
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+  padding-left: 10px;
+}
+
+.hud__link:hover {
+  color: #fff;
 }
 
 /* 右侧点轨 */

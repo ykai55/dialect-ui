@@ -1049,7 +1049,7 @@
   padding: 0 var(--tabs-pad-x);
   border: var(--tabs-tab-border-w) solid var(--tabs-tab-border);
   border-bottom: 0;
-  border-radius: var(--tabs-tab-radius) var(--tabs-tab-radius) 0 0;
+  border-radius: var(--tabs-tab-radius);
   background: transparent;
   box-shadow: var(--tabs-tab-shadow);
   color: var(--tabs-fg);
@@ -1115,7 +1115,8 @@
   margin: 0 var(--tabs-panel-inset-x, 0);
   background: var(--tabs-panel-bg);
   border: var(--tabs-panel-border-w) solid var(--tabs-panel-border);
-  border-radius: 0 0 var(--tabs-panel-radius) var(--tabs-panel-radius);
+  border-radius: var(--tabs-panel-radius-top, 0) var(--tabs-panel-radius-top, 0)
+    var(--tabs-panel-radius) var(--tabs-panel-radius);
   box-shadow: var(--tabs-panel-shadow);
   padding: var(--tabs-panel-pad);
   color: var(--ui-text);

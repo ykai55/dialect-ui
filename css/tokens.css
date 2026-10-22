@@ -254,7 +254,7 @@
      none = 方向键不动（macOS 的 NSTabView 就是这样） */
   --tabs-arrow-mode: select;
   --tabs-list-focus: none;
-  --tabs-tab-radius: 6px;
+  --tabs-tab-radius: 0px;
   --tabs-pad-x: 12px;
   --tabs-font-size: 13px;
   --tabs-font-weight: 400;
@@ -279,6 +279,7 @@
   --tabs-panel-border-w: 0px;
   --tabs-panel-shadow: none;
   --tabs-panel-radius: 0px;
+  --tabs-panel-radius-top: 0px;
   --tabs-panel-pad: 14px;
   --tabs-focus-outline: none;
   --tabs-focus-offset: -2px;

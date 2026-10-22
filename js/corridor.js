@@ -26,6 +26,15 @@
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  var params = new URLSearchParams(window.location.search);
+  var mode = params.get("mode");
+  if (mode !== "light" && mode !== "dark") {
+    mode =
+      window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+  }
+
   /* ---------- 1. 控件样本 ---------- */
 
   rooms.forEach(function (room, i) {
@@ -59,6 +68,39 @@
     rooms[next].scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
   }
 
+  var modeButtons = Array.prototype.slice.call(document.querySelectorAll("[data-mode-pick]"));
+
+  function refreshHudSub() {
+    var room = rooms[current];
+    if (!room) return;
+    var note = room.dataset.era === "winxp" && mode === "dark" ? " · 经典无暗色" : "";
+    hudSub.textContent = room.dataset.sub + note;
+  }
+
+  function applyMode(next) {
+    mode = next === "dark" ? "dark" : "light";
+    rooms.forEach(function (room) {
+      room.dataset.mode = room.dataset.era === "winxp" ? "light" : mode;
+    });
+    modeButtons.forEach(function (btn) {
+      btn.setAttribute("aria-pressed", String(btn.dataset.modePick === mode));
+    });
+    try {
+      var url = new URL(window.location.href);
+      url.searchParams.set("mode", mode);
+      history.replaceState(null, "", url);
+    } catch (e) {
+      /* file:// 下忽略 */
+    }
+    refreshHudSub();
+  }
+
+  modeButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applyMode(btn.dataset.modePick);
+    });
+  });
+
   function accentOf(room) {
     var raw = getComputedStyle(room).getPropertyValue("--era-accent").trim();
     return raw || "#ffffff";
@@ -72,7 +114,7 @@
       r.classList.toggle("is-active", n === i);
     });
     hudEra.textContent = room.dataset.name;
-    hudSub.textContent = room.dataset.sub;
+    refreshHudSub();
     hudIndex.textContent =
       String(i + 1).padStart(2, "0") + " / " + String(rooms.length).padStart(2, "0");
     dots.forEach(function (btn, n) {
@@ -131,6 +173,8 @@
   });
 
   document.addEventListener("keydown", function (e) {
+    // 焦点在控件里时不抢方向键 / 字母键，免得打字或操作组件时切房间
+    if (e.target.closest && e.target.closest("input, textarea, select, button, a, [contenteditable]")) return;
     switch (e.key) {
       case "ArrowRight":
       case "ArrowDown":
@@ -151,6 +195,10 @@
       case "End":
         e.preventDefault();
         go(rooms.length - 1);
+        break;
+      case "d":
+      case "D":
+        applyMode(mode === "dark" ? "light" : "dark");
         break;
       default:
         break;
@@ -264,5 +312,6 @@
     update();
   }
 
+  applyMode(mode);
   startRoom();
 })();

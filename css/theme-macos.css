@@ -200,6 +200,7 @@
   --tabs-panel-bg: #e8e8e8;
   --tabs-panel-border-w: 0px;
   --tabs-panel-radius: 5px;
+  --tabs-panel-radius-top: 5px;
   --tabs-panel-pad: 12px;
   --tabs-arrow-mode: none;
   --tabs-focus-outline: none;

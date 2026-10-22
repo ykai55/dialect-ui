@@ -170,7 +170,7 @@
   --tabs-h: 32px;
   --tabs-gap: 0px;
   --tabs-list-pad-top: 8px;
-  --tabs-tab-radius: 8px;
+  --tabs-tab-radius: 8px 8px 0 0;
   --tabs-pad-x: 8px;
   --tabs-font-size: 12px;
   --tabs-fg: rgba(0, 0, 0, 0.62);

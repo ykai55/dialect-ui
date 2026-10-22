@@ -19,8 +19,9 @@ cd ~/src/dialect-ui
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-打开 `http://127.0.0.1:4173/index.html`。需要通过 HTTP 打开：`file://` 下浏览器拒绝加载 `fonts/`
-里的 woff2，字体退回系统默认，平台差异就没了。
+打开 `http://127.0.0.1:4173/index.html`——默认是回忆走廊，一屏一个系统。想看全部控件和并排对比，
+进 `demo/playground.html`。需要通过 HTTP 打开：`file://` 下浏览器拒绝加载 `fonts/` 里的 woff2，
+字体退回系统默认，平台差异就没了。
 
 ## 主题切换
 
@@ -51,8 +52,8 @@ macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26
 
 | 页面 | 用途 |
 | --- | --- |
-| `index.html` | 交互版。切换平台、明暗与并排对比；并排时是横向画廊（每张卡片最小 360px），可用头部左右按钮翻页。 |
-| `demo/corridor.html` | 回忆走廊。一屏一个系统，整页换成那个时代的桌面、窗口框和任务栏 / Dock，窗口里是真实组件。 |
+| `index.html` | 回忆走廊（默认页）。一屏一个系统，整页换成那个时代的桌面、窗口框和任务栏 / Dock；HUD 里可切明暗，可进交互版。 |
+| `demo/playground.html` | 交互版。切换平台、明暗与并排对比；并排时是横向画廊（每张卡片最小 360px），可用头部左右按钮翻页。 |
 | `demo/harness.html` | 状态矩阵。以类名固定五种状态，便于整体查看。 |
 | `demo/compare.html` | 参考图画廊。左侧为系统原生截图，右侧为 CSS 复刻。 |
 | `demo/frames.html` | 动效逐帧定格，供 `tools/frames.sh` 使用。 |
@@ -86,8 +87,9 @@ bash tools/test.sh            # 交互测试
 与六平台高度差异，提示气泡的延迟出现、翻转、Esc / 滚动关闭，以及六个主题下复选框禁用态的悬停、按下不变
 和焦点框可见性。键盘模型和焦点顺序的完整说明见 [docs/keyboard-notes.md](docs/keyboard-notes.md)。
 
-`index.html` 带 `?theme=macos&mode=dark` 固定平台和明暗，带 `?open=1` 展开第一个下拉框，带 `?menu=1`
-展开第一个菜单，方便截图。
+`demo/playground.html` 带 `?theme=macos&mode=dark` 固定平台和明暗，带 `?open=1` 展开第一个下拉框，
+带 `?menu=1` 展开第一个菜单，方便截图；根 `index.html`（走廊）带 `?era=winxp&mode=dark` 可直接进某个
+时代、固定明暗。
 
 ## 数值来源
 

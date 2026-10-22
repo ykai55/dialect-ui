@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dialect · 跨平台原生观感组件库</title>
+    <title>回忆走廊 · Dialect</title>
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/tokens.css" />
     <link rel="stylesheet" href="css/components.css" />
@@ -13,90 +13,183 @@
     <link rel="stylesheet" href="css/theme-macos.css" />
     <link rel="stylesheet" href="css/theme-macos15.css" />
     <link rel="stylesheet" href="css/theme-gnome.css" />
+    <link rel="stylesheet" href="css/corridor.css" />
   </head>
-  <body>
-    <header class="bar">
-      <div class="bar__brand">Dialect <span>跨平台原生观感组件库</span></div>
-
-      <div class="bar__group" role="group" aria-label="平台主题">
-        <button class="seg" type="button" data-pick-theme="win11">Windows 11</button>
-        <button class="seg" type="button" data-pick-theme="win10">Windows 10</button>
-        <button class="seg" type="button" data-pick-theme="winxp">Windows XP</button>
-        <button class="seg" type="button" data-pick-theme="macos">macOS 26</button>
-        <button class="seg" type="button" data-pick-theme="macos15">macOS 15</button>
-        <button class="seg" type="button" data-pick-theme="gnome">GNOME</button>
+  <body class="corridor">
+    <div class="hud" id="hud">
+      <div class="hud__era">
+        <span class="hud__dot"></span>
+        <b id="hud-era">Windows XP</b>
+        <span id="hud-sub">Classic · 2001</span>
       </div>
-
-      <div class="bar__group" role="group" aria-label="明暗">
-        <button class="seg" type="button" data-pick-mode="light">浅色</button>
-        <button class="seg" type="button" data-pick-mode="dark">深色</button>
+      <span class="hud__index" id="hud-index">01 / 06</span>
+      <div class="hud__modes" role="group" aria-label="明暗">
+        <button type="button" class="hud__mode" data-mode-pick="light" aria-pressed="true">明</button>
+        <button type="button" class="hud__mode" data-mode-pick="dark" aria-pressed="false">暗</button>
       </div>
+      <a class="hud__link" href="demo/playground.html">交互版 ↗</a>
+    </div>
 
-      <label class="bar__toggle">
-        <input type="checkbox" id="compare" />
-        全部平台并排
-      </label>
+    <button class="corridor-nav corridor-nav--prev" id="nav-prev" type="button" aria-label="上一个时代">‹</button>
+    <button class="corridor-nav corridor-nav--next" id="nav-next" type="button" aria-label="下一个时代">›</button>
 
-      <div class="bar__group bar__nav" id="board-nav" role="group" aria-label="平台翻页" hidden>
-        <button type="button" class="bar__navbtn" id="nav-prev" aria-label="上一个平台">‹</button>
-        <button type="button" class="bar__navbtn" id="nav-next" aria-label="下一个平台">›</button>
-      </div>
+    <nav class="dots" id="dots" aria-label="时代列表"></nav>
 
-      <div class="bar__spacer"></div>
-      <div class="bar__hint" id="hint"></div>
-      <a class="bar__repo" href="demo/corridor.html">回忆走廊 ↗</a>
-      <a class="bar__repo" href="https://github.com/ykai55/dialect-ui" target="_blank" rel="noreferrer">GitHub ↗</a>
-    </header>
-
-    <main class="stage" id="stage">
-      <section class="board" data-board="win11">
-        <div class="board__cap">
-          <b>Windows 11</b> Fluent / WinUI 3
-          <code>data-theme="win11"</code>
+    <main class="rooms" id="rooms">
+      <!-- Windows XP -->
+      <section class="room" data-era="winxp" data-theme="winxp" data-mode="light"
+               data-name="Windows XP" data-sub="Classic · 2001" aria-label="Windows XP">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Display Properties</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">_</span>
+                <span class="era-win__cap">□</span>
+                <span class="era-win__cap era-win__cap--close">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
         </div>
-        <div class="board__body" data-slot></div>
+        <div class="shell shell--xp">
+          <span class="tb-start">start</span>
+          <span class="tb-quick"><i></i><i></i><i></i></span>
+          <span class="tb-clock">3:07 PM</span>
+        </div>
       </section>
 
-      <section class="board" data-board="win10">
-        <div class="board__cap">
-          <b>Windows 10</b> Aero / Win32
-          <code>data-theme="win10"</code>
+      <!-- Windows 10 -->
+      <section class="room" data-era="win10" data-theme="win10" data-mode="light"
+               data-name="Windows 10" data-sub="Aero · 2015" aria-label="Windows 10">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Settings</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">–</span>
+                <span class="era-win__cap">□</span>
+                <span class="era-win__cap era-win__cap--close">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
         </div>
-        <div class="board__body" data-slot></div>
+        <div class="shell shell--win10">
+          <span class="tb-start"></span>
+          <span class="tb-search"></span>
+          <span class="tb-icons"><i></i><i></i><i></i><i></i></span>
+          <span class="tb-clock">9:41</span>
+        </div>
       </section>
 
-      <section class="board" data-board="winxp">
-        <div class="board__cap">
-          <b>Windows XP</b> 经典外观（2000 / XP classic）
-          <code>data-theme="winxp"</code>
+      <!-- Windows 11 -->
+      <section class="room" data-era="win11" data-theme="win11" data-mode="dark"
+               data-name="Windows 11" data-sub="Fluent · 2021" aria-label="Windows 11">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Settings</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">–</span>
+                <span class="era-win__cap">□</span>
+                <span class="era-win__cap era-win__cap--close">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
         </div>
-        <div class="board__body" data-slot></div>
+        <div class="shell shell--win11">
+          <div class="tb-icons"><i></i><i></i><i></i><i></i></div>
+          <span class="tb-clock">9:41</span>
+        </div>
       </section>
 
-      <section class="board" data-board="macos">
-        <div class="board__cap">
-          <b>macOS</b> Tahoe (26) 起
-          <code>data-theme="macos"</code>
+      <!-- macOS 15 -->
+      <section class="room" data-era="macos15" data-theme="macos15" data-mode="dark"
+               data-name="macOS 15" data-sub="Sequoia · 2024" aria-label="macOS 15">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <span class="traffic"><i></i><i></i><i></i></span>
+              <div class="era-win__title">Settings</div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
         </div>
-        <div class="board__body" data-slot></div>
+        <div class="shell shell--mac">
+          <div class="mb">
+            <b>Dialect</b>
+            <span>File</span><span>Edit</span><span>View</span><span>Window</span><span>Help</span>
+            <span class="clock">Wed 9:41 AM</span>
+          </div>
+          <div class="dock"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
       </section>
 
-      <section class="board" data-board="macos15">
-        <div class="board__cap">
-          <b>macOS</b> 15 Sequoia 及更早（26 之前）
-          <code>data-theme="macos15"</code>
+      <!-- macOS 26 -->
+      <section class="room" data-era="macos" data-theme="macos" data-mode="light"
+               data-name="macOS 26" data-sub="Tahoe · 2025" aria-label="macOS 26">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <span class="traffic"><i></i><i></i><i></i></span>
+              <div class="era-win__title">Settings</div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
         </div>
-        <div class="board__body" data-slot></div>
+        <div class="shell shell--mac">
+          <div class="mb">
+            <b>Dialect</b>
+            <span>File</span><span>Edit</span><span>View</span><span>Window</span><span>Help</span>
+            <span class="clock">Wed 9:41 AM</span>
+          </div>
+          <div class="dock"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
       </section>
 
-      <section class="board" data-board="gnome">
-        <div class="board__cap">
-          <b>GNOME</b> Adwaita / GTK4
-          <code>data-theme="gnome"</code>
+      <!-- GNOME -->
+      <section class="room" data-era="gnome" data-theme="gnome" data-mode="dark"
+               data-name="GNOME 48" data-sub="Adwaita · 2025" aria-label="GNOME 48">
+        <div class="room__wall"></div>
+        <div class="room__glow"></div>
+        <div class="room__stage">
+          <div class="era-win">
+            <div class="era-win__bar">
+              <div class="era-win__title">Settings</div>
+              <div class="era-win__caps">
+                <span class="era-win__cap">✕</span>
+              </div>
+            </div>
+            <div class="era-win__body" data-specimen></div>
+          </div>
         </div>
-        <div class="board__body" data-slot></div>
+        <div class="shell shell--gnome">
+          <div class="topbar">
+            <span>Activities</span>
+            <span>9:41</span>
+            <span class="clock">Wed 22 Oct</span>
+          </div>
+          <div class="dock"><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
       </section>
     </main>
+
+    <canvas id="dust" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <div class="hint">滚动 / ← → 切换时代 · D 切明暗</div>
 
     <template id="specimen">
       <div class="panel">
@@ -106,7 +199,6 @@
             <button type="button" class="btn">Cancel</button>
             <button type="button" class="btn btn--primary">Save changes</button>
             <button type="button" class="btn" disabled>Disabled</button>
-            <button type="button" class="btn btn--primary" disabled>Disabled</button>
           </div>
         </section>
 
@@ -115,25 +207,13 @@
           <label class="field">
             <span class="field__label">Email address</span>
             <span class="field__wrap">
-              <input
-                class="field__input"
-                type="text"
-                placeholder="name@example.com"
-                autocomplete="off"
-              />
-            </span>
-          </label>
-          <label class="field">
-            <span class="field__label">Disabled</span>
-            <span class="field__wrap">
-              <input class="field__input" type="text" value="Not editable" disabled />
+              <input class="field__input" type="text" placeholder="name@example.com" autocomplete="off" />
             </span>
           </label>
         </section>
 
         <section class="group">
           <h3 class="group__title">Selection</h3>
-
           <div class="stack">
             <label class="check">
               <input type="checkbox" class="check__input" checked />
@@ -145,31 +225,24 @@
               <span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>
               <span class="check__label">Remember this device</span>
             </label>
-            <label class="check">
-              <input type="checkbox" class="check__input" checked disabled />
-              <span class="check__box"><svg class="check__mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.2 10.3 L8 14 L13.5 5.7" /></svg></span>
-              <span class="check__label">Disabled</span>
-            </label>
           </div>
-
           <div class="row row--tight">
             <label class="radio">
-              <input type="radio" class="radio__input" name="appearance" checked />
+              <input type="radio" class="radio__input" name="corridor-mode" checked />
               <span class="radio__dot"></span>
               <span class="radio__label">Light</span>
             </label>
             <label class="radio">
-              <input type="radio" class="radio__input" name="appearance" />
+              <input type="radio" class="radio__input" name="corridor-mode" />
               <span class="radio__dot"></span>
               <span class="radio__label">Dark</span>
             </label>
             <label class="radio">
-              <input type="radio" class="radio__input" name="appearance" disabled />
+              <input type="radio" class="radio__input" name="corridor-mode" />
               <span class="radio__dot"></span>
               <span class="radio__label">Auto</span>
             </label>
           </div>
-
           <div class="stack">
             <label class="switch">
               <input type="checkbox" class="switch__input" checked />
@@ -181,6 +254,30 @@
               <span class="switch__track"><span class="switch__knob"></span></span>
               <span class="switch__label">Bluetooth</span>
             </label>
+          </div>
+        </section>
+
+        <section class="group">
+          <h3 class="group__title">More</h3>
+          <div class="row">
+            <div class="select" data-select>
+              <button type="button" class="select__button">
+                <span class="select__value">Option A</span>
+                <span class="select__chevron">
+                  <span class="select__chevron-up"></span>
+                  <span class="select__chevron-down"></span>
+                </span>
+              </button>
+              <ul class="menu" popover="manual">
+                <li class="menu__item" aria-selected="true">Option A</li>
+                <li class="menu__item" aria-selected="false">Option B</li>
+                <li class="menu__item" aria-selected="false">Option C</li>
+              </ul>
+            </div>
+          </div>
+          <div class="slider-row">
+            <input class="slider" type="range" min="0" max="100" value="40" aria-label="Volume" />
+            <span class="slider__value">40</span>
           </div>
         </section>
 
@@ -199,17 +296,9 @@
             <div class="tabs__list" role="tablist" aria-label="Sections">
               <button type="button" class="tabs__tab" role="tab" aria-selected="true">General</button>
               <button type="button" class="tabs__tab" role="tab" aria-selected="false">Advanced</button>
-              <button type="button" class="tabs__tab" role="tab" aria-selected="false">About</button>
             </div>
-            <div class="tabs__panel">
-              <p>General settings live here.</p>
-            </div>
-            <div class="tabs__panel" hidden>
-              <p>Advanced settings live here.</p>
-            </div>
-            <div class="tabs__panel" hidden>
-              <p>Version 1.0 · Dialect</p>
-            </div>
+            <div class="tabs__panel"><p>General settings live here.</p></div>
+            <div class="tabs__panel" hidden><p>Advanced settings live here.</p></div>
           </div>
         </section>
 
@@ -223,96 +312,14 @@
             <div class="progress__fill"></div>
           </div>
         </section>
-
-        <section class="group">
-          <h3 class="group__title">Tooltip</h3>
-          <div class="row">
-            <button type="button" class="btn" data-tooltip="Saves your changes">Save changes</button>
-            <button type="button" class="btn" data-tooltip="Discard and close">Cancel</button>
-          </div>
-          <div class="tooltip" role="tooltip" data-tooltip-layer hidden></div>
-        </section>
-
-        <section class="group">
-          <h3 class="group__title">Menu</h3>
-
-          <div class="menu-demo" data-menu>
-            <button type="button" class="btn" data-menu-trigger>Actions</button>
-            <ul class="menu" popover="manual" role="menu">
-              <li class="menu__item" role="menuitem">New window</li>
-              <li class="menu__item" role="menuitem" aria-disabled="true">Duplicate</li>
-              <li class="menu__separator" role="separator"></li>
-              <li class="menu__item" role="menuitem">Rename<span class="menu__shortcut">F2</span></li>
-              <li class="menu__item" role="menuitem">Delete</li>
-            </ul>
-          </div>
-
-          <div class="menu-demo" data-menu>
-            <div class="menu-target" data-menu-context tabindex="0">Right-click here, or press Shift+F10</div>
-            <ul class="menu" popover="manual" role="menu">
-              <li class="menu__item" role="menuitem">Copy</li>
-              <li class="menu__item" role="menuitem">Paste</li>
-              <li class="menu__separator" role="separator"></li>
-              <li class="menu__item" role="menuitem" aria-disabled="true">Duplicate</li>
-              <li class="menu__item" role="menuitem">Delete<span class="menu__shortcut">Del</span></li>
-            </ul>
-          </div>
-        </section>
-
-        <section class="group">
-          <h3 class="group__title">More</h3>
-          <label class="field">
-            <span class="field__label">Notes</span>
-            <span class="field__wrap">
-              <textarea class="field__input field__input--multiline" rows="2" placeholder="Write something…"></textarea>
-            </span>
-          </label>
-
-          <div class="row">
-            <div class="select" data-select>
-              <button type="button" class="select__button">
-                <span class="select__value">Option A</span>
-                <span class="select__chevron">
-                  <span class="select__chevron-up"></span>
-                  <span class="select__chevron-down"></span>
-                </span>
-              </button>
-              <ul class="menu" popover="manual">
-                <li class="menu__item" aria-selected="true">Option A</li>
-                <li class="menu__item" aria-selected="false">Option B</li>
-                <li class="menu__item" aria-selected="false">Option C — longer label</li>
-                <li class="menu__item" aria-selected="false">Option D</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="slider-row">
-            <input class="slider" type="range" min="0" max="100" value="40" aria-label="Volume" />
-            <span class="slider__value">40</span>
-          </div>
-        </section>
-
-        <!-- 文本框右键菜单：右键输入框或多行输入时在指针处展开。
-             同一份 markup 每个面板各一份，主题跟着面板走。 -->
-        <ul class="menu" popover="manual" data-text-menu role="menu">
-          <li class="menu__item" role="menuitem" data-action="cut">Cut</li>
-          <li class="menu__item" role="menuitem" data-action="copy">Copy</li>
-          <li class="menu__item" role="menuitem" data-action="paste">Paste</li>
-          <li class="menu__separator" role="separator"></li>
-          <li class="menu__item" role="menuitem" data-action="delete">Delete</li>
-          <li class="menu__separator" role="separator"></li>
-          <li class="menu__item" role="menuitem" data-action="selectall">Select All</li>
-        </ul>
       </div>
     </template>
 
-    <script src="js/app.js"></script>
+    <script src="js/corridor.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/select.js"></script>
-    <script src="js/text-menu.js"></script>
     <script src="js/segmented.js"></script>
     <script src="js/tabs.js"></script>
-    <script src="js/tooltip.js"></script>
     <script src="js/slider.js"></script>
   </body>
 </html>
