@@ -187,6 +187,7 @@
 .check,
 .radio,
 .switch {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--choice-gap, 8px);

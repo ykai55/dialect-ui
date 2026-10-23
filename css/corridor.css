@@ -26,7 +26,6 @@ body.corridor {
 
 .rooms {
   height: 100vh;
-  overflow-anchor: none;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;

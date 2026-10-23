@@ -75,6 +75,13 @@
           ].join(" / ");
         }
 
+        (function () {
+          var probe = makeCheck("win11", "light", false, "", false);
+          check("隐藏复选框 input 的定位祖先在 label 内", function () {
+            return probe.label.querySelector(".check__input").offsetParent === probe.label;
+          });
+        })();
+
         /* 禁用控件在各平台原生都没有悬停/按下反馈。悬停和按下用类名定格，
            和真实 :hover / :active 走同一批选择器（README 的状态矩阵约定）。 */
         THEMES.forEach(function (theme) {

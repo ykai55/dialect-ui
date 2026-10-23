@@ -174,36 +174,6 @@
 
   window.addEventListener("resize", update);
 
-  /* Chrome 在窗口内容里聚焦控件时，偶尔会把外层 .rooms 也滚一下，表现为
-     点复选框时整个窗口被顶出视口。Firefox / Safari 不会。这里在焦点进入
-     窗口后的短时间内守住页面滚动位置。 */
-  var focusGuard = null;
-  document.addEventListener(
-    "focusin",
-    function (e) {
-      if (!e.target.closest || !e.target.closest(".window")) return;
-      focusGuard = { top: roomsEl.scrollTop, until: performance.now() + 500 };
-    },
-    true
-  );
-  roomsEl.addEventListener(
-    "scroll",
-    function () {
-      if (!focusGuard) return;
-      if (performance.now() > focusGuard.until) {
-        focusGuard = null;
-        return;
-      }
-      if (Math.abs(roomsEl.scrollTop - focusGuard.top) > 0.5) {
-        var oldBehavior = roomsEl.style.scrollBehavior;
-        roomsEl.style.scrollBehavior = "auto";
-        roomsEl.scrollTop = focusGuard.top;
-        roomsEl.style.scrollBehavior = oldBehavior;
-      }
-    },
-    true
-  );
-
   // 滚轮/触控板：累计到阈值才切一页，然后锁一小段时间。
   // 窗口内部滚动到底也不穿透到走廊：窗口范围永远只滚窗口内容。
   var wheelAccum = 0;
