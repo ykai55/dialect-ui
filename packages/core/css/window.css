@@ -89,6 +89,7 @@
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
+  overflow-anchor: none;
   padding: var(--window-body-padding, 16px);
   background: var(--window-body-bg, #ffffff);
   color: var(--window-fg, var(--ui-text, #1a1a1a));
