@@ -321,22 +321,59 @@
 
   /* ---------- 6. 启动 ---------- */
 
-  function startRoom() {
-    var params = new URLSearchParams(window.location.search);
-    var wanted = params.get("era");
-    if (!wanted) {
-      var ua = navigator.userAgent || "";
-      if (/Mac OS X/.test(ua)) wanted = "macos";
-      else if (/Windows/.test(ua)) wanted = "win11";
-      else if (/Linux|X11/.test(ua)) wanted = "gnome";
+  // 第一次进入：轻轻下滑一点再回弹，提示这一页可以继续往下滚。
+  function introNudge() {
+    if (reduced || params.get("era")) return;
+    var down = 72;
+    var outMs = 620;
+    var backMs = 520;
+    var oldSnap = roomsEl.style.scrollSnapType;
+    var oldBehavior = roomsEl.style.scrollBehavior;
+    roomsEl.style.scrollSnapType = "none";
+    roomsEl.style.scrollBehavior = "auto";
+
+    function back() {
+      var b0 = performance.now();
+      function frameBack(now) {
+        var t = Math.min(1, (now - b0) / backMs);
+        var e = 1 - Math.pow(1 - t, 3);
+        roomsEl.scrollTop = down * (1 - e);
+        if (t < 1) {
+          window.requestAnimationFrame(frameBack);
+        } else {
+          roomsEl.scrollTop = 0;
+          roomsEl.style.scrollSnapType = oldSnap;
+          roomsEl.style.scrollBehavior = oldBehavior;
+          update();
+        }
+      }
+      window.requestAnimationFrame(frameBack);
     }
-    var idx = rooms.findIndex(function (r) {
-      return r.dataset.era === wanted;
-    });
-    if (idx < 0) idx = 0;
+
+    var t0 = performance.now();
+    function frame(now) {
+      var t = Math.min(1, (now - t0) / outMs);
+      var e = 1 - Math.pow(1 - t, 3);
+      roomsEl.scrollTop = down * e;
+      if (t < 1) window.requestAnimationFrame(frame);
+      else window.setTimeout(back, 120);
+    }
+    window.requestAnimationFrame(frame);
+  }
+
+  function startRoom() {
+    var wanted = params.get("era");
+    var idx = 0;
+    if (wanted) {
+      var found = rooms.findIndex(function (r) {
+        return r.dataset.era === wanted;
+      });
+      if (found >= 0) idx = found;
+    }
     roomsEl.scrollTop = idx * window.innerHeight;
     setCurrent(idx);
     update();
+    if (!wanted) window.setTimeout(introNudge, 420);
   }
 
   applyMode(mode);
