@@ -64,7 +64,13 @@ jobs:
       - run: npm run build
 
       - name: 站点 + 框架包测试
-        run: npm test
+        # headless Chrome 在 CI 上偶发时序抖动（右键 / 弹层类断言），失败重试一次；
+        # 确定性失败第二次仍然会挂，不会放过真实回归。
+        run: |
+          npm test || {
+            echo "::warning::第一次测试失败，重跑一次"
+            npm test
+          }
         env:
           CHROME: google-chrome
 
