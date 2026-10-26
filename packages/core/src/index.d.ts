@@ -144,6 +144,8 @@ export function initSegmenteds(root?: ParentNode): void;
 export function initTabs(root?: ParentNode): void;
 export function initSliders(root?: ParentNode): void;
 export function initTooltips(root?: ParentNode): void;
+export function initScrollbars(root?: ParentNode): void;
+export function destroyScrollbars(root?: ParentNode): void;
 
 export function createMenu(menuEl: HTMLElement, options?: MenuOptions): MenuController;
 export function createMenuBox(box: Element, options?: MenuBoxOptions): MenuController | null;
