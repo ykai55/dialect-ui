@@ -354,6 +354,49 @@ ContextMenu 的右键打开；Window 的窗口按钮派发 action、右键拦截
   `0.0.0-stage`；bypass-2FA 的 granular token 不允许 unpublish（npm 已限制），要清理只能用网页端
   登录后删版本。
 
+### 用 Trusted Publishing 发布（推荐，不需要长期 token）
+
+npm 从 2025 年 11 月起只支持 granular token；要长期发版，更稳的是 Trusted Publishing（OIDC）：
+npm 信任「某个 CI workflow」而不是某个人手里的 token，每次发布用 CI 现场换来的短期凭据，
+发布记录还能带 provenance。前置是 npm CLI ≥ 11.5.1、Node ≥ 22.14。
+
+1. **npm 端配置（每个包一次）**：npmjs.com → 包 → Settings → Trusted Publisher → GitHub Actions，
+   填 user/org `ykai55`、repo `dialect-ui`、workflow `publish.yml`，并在 Allowed actions 里**显式勾上
+   `npm publish`**（2026-09 之后新建的配置默认只允许 `npm stage publish`）。三个包各配一次。
+   也可以用 CLI（需要本机已登录 npm）：
+
+   ```bash
+   for p in core react vue; do
+     npm trust github "@dialect-ui/$p" --file publish.yml --repo ykai55/dialect-ui \
+       --allow-publish --allow-stage-publish -y
+   done
+   ```
+
+   注意：新建的 trusted publisher 配置**必须在 2 天内完成第一次成功发布**，否则会过期作废。
+
+2. **仓库端**：`.github/workflows/publish.yml` 已经就位。tag 触发 → `npm install` → `npm run build` →
+   `npm test` → 校验 tag 和三个包版本一致 → 按 core / react / vue 顺序 `npm publish`。workflow 里
+   `permissions: id-token: write` 是 OIDC 的关键，`NODE_AUTH_TOKEN` 一个都不需要。
+
+3. **发版**：三个包 bump 同一版本 → commit → 打 tag 并推送：
+
+   ```bash
+   git tag v0.1.3
+   git push origin main --tags
+   ```
+
+   CI 发完会在 Actions 里看到 provenance 记录；npm 上 `latest` 自动指向新版本。
+
+4. **收尾（建议）**：三个包都验证一次 OIDC 发布成功后，到 npmjs.com 每个包的
+   Settings → Publishing access 选「Require two-factor authentication and disallow tokens」，
+   从此 token 直发全部禁用，只剩 CI 和网页端带 2FA 的操作能发。
+
+注意：
+- workflow 文件必须在被打 tag 的那个 commit 里（先推 main，再打 tag）。
+- 只支持 GitHub-hosted runner；自建 runner 不支持。
+- 仓库的 `package-lock.json` 按约定不入库（本机走内部源），所以 CI 用 `npm install` 而不是 `npm ci`。
+- 测试脚本默认找 macOS 的 Chrome 路径，workflow 里用 `CHROME: google-chrome` 覆盖。
+
 ## 测试
 
 - 行为层原测试不动：`bash tools/test.sh` 继续跑 `test/*.test.html`，页面改成 `<script type="module">`

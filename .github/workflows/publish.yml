@@ -1,0 +1,62 @@
+# 用 npm Trusted Publishing（OIDC）发布三个包：不需要 NPM_TOKEN，也没有长期凭据。
+# 前置（一次性，npmjs.com 上给三个包各配一个 GitHub Actions trusted publisher）：
+#   仓库 ykai55/dialect-ui，workflow 填 publish.yml，允许 npm publish。
+# 更省事的方式见 docs/framework-packages.md「发布」一节。
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # OIDC：npm CLI 用它换短期发布 token
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false # 发布构建不使用缓存
+
+      # package-lock.json 按约定不入库（本机源是内部 npm），所以这里用 install 而不是 ci。
+      - run: npm install --no-audit --no-fund
+
+      - name: 校验 tag 和三个包版本一致
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          node -e '
+            const tag = process.env.GITHUB_REF_NAME.replace(/^v/, "");
+            const pkgs = ["core", "react", "vue"];
+            let bad = false;
+            for (const p of pkgs) {
+              const v = require("./packages/" + p + "/package.json").version;
+              console.log("@dialect-ui/" + p + " " + v + " (tag " + tag + ")");
+              if (v !== tag) bad = true;
+            }
+            if (bad) process.exit(1);
+          '
+
+      - run: npm run build
+
+      - name: 站点 + 框架包测试
+        run: npm test
+        env:
+          CHROME: google-chrome
+
+      # 顺序固定：先 core，再两个适配层。
+      # npm CLI 在 OIDC 环境里会自动用 GitHub 的 id-token 换发布凭据，不需要 NODE_AUTH_TOKEN。
+      - run: npm publish -w @dialect-ui/core
+      - run: npm publish -w @dialect-ui/react
+      - run: npm publish -w @dialect-ui/vue
