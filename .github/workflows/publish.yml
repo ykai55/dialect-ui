@@ -31,13 +31,17 @@ jobs:
           node-version: 24
           package-manager-cache: false # 发布构建不使用缓存
 
-      - name: 确认没有 token、npm 版本够 OIDC
+      - name: 确认 OIDC 环境
         run: |
           npm -v
           if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
             echo "NODE_AUTH_TOKEN 不该出现（会让 npm 走 token 而不是 OIDC）" >&2
             exit 1
           fi
+          echo "GITHUB_ACTIONS=${GITHUB_ACTIONS:-<empty>}"
+          echo "id-token-url=$([ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] && echo yes || echo no)"
+          echo "id-token-request-token=$([ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ] && echo yes || echo no)"
+          echo "repo=${GITHUB_REPOSITORY:-<empty>} ref=${GITHUB_REF_NAME:-<empty>}"
 
       # package-lock.json 按约定不入库（本机源是内部 npm），所以这里用 install 而不是 ci。
       - run: npm install --no-audit --no-fund
@@ -66,6 +70,7 @@ jobs:
 
       # 顺序固定：先 core，再两个适配层。
       # npm CLI 在 OIDC 环境里会自动用 GitHub 的 id-token 换发布凭据，不需要 NODE_AUTH_TOKEN。
-      - run: npm publish -w @dialect-ui/core
+      # 第一次调试 OIDC 时打开 verbose，日志里能看到 exchange 失败原因
+      - run: npm publish -w @dialect-ui/core --loglevel verbose
       - run: npm publish -w @dialect-ui/react
       - run: npm publish -w @dialect-ui/vue
