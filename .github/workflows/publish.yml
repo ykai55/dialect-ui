@@ -1,35 +1,58 @@
-# 用 npm Trusted Publishing（OIDC）发布三个包：不需要 NPM_TOKEN，也没有长期凭据。
-# 前置（一次性，npmjs.com 上给三个包各配一个 GitHub Actions trusted publisher）：
-#   仓库 ykai55/dialect-ui，workflow 填 publish.yml，允许 npm publish。
-# 更省事的方式见 docs/framework-packages.md「发布」一节。
+# 发布三个包，全部走 npm Trusted Publishing（OIDC），不需要 NPM_TOKEN。
+#
+# 三种触发：
+#   1. 推 tag（v*）        → 正式版，发布到 latest
+#   2. 手动 workflow_dispatch（channel=stable）→ 正式版，发布 main 当前版本
+#   3. 每天 01:00 UTC（09:00 Asia/Shanghai）→ canary 快照，发到 canary tag，不动 latest
+# 手动 dispatch 也可以选 channel=canary，立刻打一个 canary。
+#
+# 前提：npmjs.com 上三个包都配了 trusted publisher（workflow 填 publish.yml），
+# 并勾选 Allow npm publish。canary 和正式版共用同一个 workflow 文件，所以不用另配。
 name: publish
 
 on:
   push:
     tags:
       - "v*"
+  schedule:
+    - cron: "0 1 * * *"
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "stable = 发当前 main 的正式版；canary = 立刻打一个 canary"
+        type: choice
+        options:
+          - stable
+          - canary
+        default: stable
 
 permissions:
   contents: read
-  id-token: write # OIDC：npm CLI 用它换短期发布 token
+  id-token: write # OIDC：npm CLI 用它换短期发布凭据
 
 concurrency:
-  group: publish-${{ github.ref }}
+  group: publish-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: false
 
+env:
+  NODE_VERSION: "24"
+
 jobs:
-  publish:
+  # ---------------- 正式版：tag 或手动 dispatch ----------------
+  stable:
+    if: >-
+      startsWith(github.ref, 'refs/tags/') ||
+      (github.event_name == 'workflow_dispatch' && inputs.channel == 'stable')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      # 注意：这里不要传 registry-url。actions/setup-node 会因此写一个带
-      # NODE_AUTH_TOKEN 占位符的 .npmrc，npm CLI 就不会走 OIDC，publish 会 404。
+      # 不要传 registry-url：setup-node 会写带占位 NODE_AUTH_TOKEN 的 .npmrc，
+      # npm 就会走 token 而不是 OIDC，publish 会 404/ENEEDAUTH。
       - uses: actions/setup-node@v6
         with:
-          node-version: 24
-          package-manager-cache: false # 发布构建不使用缓存
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
 
       - name: 确认 OIDC 环境（没有 token 才会走 OIDC）
         run: |
@@ -38,12 +61,9 @@ jobs:
             echo "NODE_AUTH_TOKEN 不该出现（会让 npm 走 token 而不是 OIDC）" >&2
             exit 1
           fi
-          echo "GITHUB_ACTIONS=${GITHUB_ACTIONS:-<empty>}"
           echo "id-token-url=$([ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] && echo yes || echo no)"
-          echo "id-token-request-token=$([ -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ] && echo yes || echo no)"
-          echo "repo=${GITHUB_REPOSITORY:-<empty>} ref=${GITHUB_REF_NAME:-<empty>}"
 
-      # package-lock.json 按约定不入库（本机源是内部 npm），所以这里用 install 而不是 ci。
+      # package-lock.json 按约定不入库（本机走内部源），所以用 install 而不是 ci。
       - run: npm install --no-audit --no-fund
 
       - name: 校验 tag 和三个包版本一致
@@ -74,8 +94,74 @@ jobs:
         env:
           CHROME: google-chrome
 
-      # 顺序固定：先 core，再两个适配层。
-      # npm CLI 在 OIDC 环境里会自动用 GitHub 的 id-token 换发布凭据，不需要 NODE_AUTH_TOKEN。
+      # 顺序固定：先 core，再两个适配层。npm CLI 在 OIDC 环境里自动换发布凭据。
       - run: npm publish -w @dialect-ui/core
       - run: npm publish -w @dialect-ui/react
       - run: npm publish -w @dialect-ui/vue
+
+  # ---------------- canary：每天定时或手动 ----------------
+  canary:
+    if: >-
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' && inputs.channel == 'canary')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      - name: 确认 OIDC 环境（没有 token 才会走 OIDC）
+        run: |
+          npm -v
+          if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "NODE_AUTH_TOKEN 不该出现（会让 npm 走 token 而不是 OIDC）" >&2
+            exit 1
+          fi
+          echo "id-token-url=$([ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] && echo yes || echo no)"
+
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+
+      - name: 站点 + 框架包测试
+        run: |
+          npm test || {
+            echo "::warning::第一次测试失败，重跑一次"
+            npm test
+          }
+        env:
+          CHROME: google-chrome
+
+      - name: 计算并写入 canary 版本
+        id: version
+        run: |
+          node -e '
+            const fs = require("fs");
+            const { execSync } = require("child_process");
+            const core = JSON.parse(fs.readFileSync("packages/core/package.json", "utf8"));
+            const [major, minor, patch] = core.version.split(".").map(Number);
+            const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+            const sha = execSync("git rev-parse --short HEAD").toString().trim();
+            const version = `${major}.${minor}.${patch + 1}-canary.${date}.${sha}`;
+            for (const p of ["core", "react", "vue"]) {
+              const file = `packages/${p}/package.json`;
+              const j = JSON.parse(fs.readFileSync(file, "utf8"));
+              j.version = version;
+              if (j.dependencies && j.dependencies["@dialect-ui/core"]) {
+                // canary 的适配层必须依赖同一个 canary core，不能落到稳定版
+                j.dependencies["@dialect-ui/core"] = version;
+              }
+              fs.writeFileSync(file, JSON.stringify(j, null, 2) + "\n");
+            }
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
+            console.log("canary version:", version);
+          '
+
+      - name: 发布 canary（只动 canary dist-tag，不动 latest）
+        run: |
+          echo "publishing ${{ steps.version.outputs.version }} to canary tag"
+          npm publish -w @dialect-ui/core --tag canary
+          npm publish -w @dialect-ui/react --tag canary
+          npm publish -w @dialect-ui/vue --tag canary
