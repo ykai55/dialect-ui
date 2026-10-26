@@ -24,11 +24,20 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # 注意：这里不要传 registry-url。actions/setup-node 会因此写一个带
+      # NODE_AUTH_TOKEN 占位符的 .npmrc，npm CLI 就不会走 OIDC，publish 会 404。
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
           package-manager-cache: false # 发布构建不使用缓存
+
+      - name: 确认没有 token、npm 版本够 OIDC
+        run: |
+          npm -v
+          if [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "NODE_AUTH_TOKEN 不该出现（会让 npm 走 token 而不是 OIDC）" >&2
+            exit 1
+          fi
 
       # package-lock.json 按约定不入库（本机源是内部 npm），所以这里用 install 而不是 ci。
       - run: npm install --no-audit --no-fund
