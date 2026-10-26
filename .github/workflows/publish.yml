@@ -144,7 +144,8 @@ jobs:
             const [major, minor, patch] = core.version.split(".").map(Number);
             const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
             const sha = execSync("git rev-parse --short HEAD").toString().trim();
-            const version = `${major}.${minor}.${patch + 1}-canary.${date}.${sha}`;
+            const run = process.env.GITHUB_RUN_NUMBER;
+            const version = `${major}.${minor}.${patch + 1}-canary.${date}.${sha}.${run}`;
             for (const p of ["core", "react", "vue"]) {
               const file = `packages/${p}/package.json`;
               const j = JSON.parse(fs.readFileSync(file, "utf8"));

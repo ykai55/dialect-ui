@@ -72,6 +72,10 @@ macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26
 ```bash
 npm install @dialect-ui/core @dialect-ui/react   # React
 npm install @dialect-ui/core @dialect-ui/vue     # Vue 3
+
+# 每日 canary：自动构建、可能不稳定，latest 仍是正式版
+npm install @dialect-ui/react@canary
+npm install @dialect-ui/vue@canary
 ```
 
 适配层只渲染和静态站一模一样的 DOM 契约，行为（打开、定位、键盘、焦点）全部交给 core 的控制器，

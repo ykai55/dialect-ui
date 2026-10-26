@@ -356,6 +356,12 @@ ContextMenu 的右键打开；Window 的窗口按钮派发 action、右键拦截
   不允许 unpublish（npm 已限制），要清理只能用网页端登录后删版本。
 - 发版流程固定为：三个包 bump 同一版本 → commit → `git tag vX.Y.Z && git push origin vX.Y.Z`，
   workflow 会校验 tag 和版本一致，跑测试（偶发抖动会重试一次）后按 core → react → vue 发布。
+- **canary**：同一个 `publish.yml` 里还有一个 canary job。每天 01:00 UTC（09:00 北京时间）自动跑，
+  版本写成 `<下一个 patch>-canary.<日期>.<sha>.<run>`，只推 `canary` dist-tag，`latest` 不动；
+  适配层的 `@dialect-ui/core` 依赖会改成同一个 canary 版本，保证三个包一致。手动想立刻打一个：
+  `gh workflow run publish.yml -f channel=canary`。canary 和正式版共用同一个 workflow 文件，
+  trusted publisher 不需要额外配置。
+- **正式版是手动阀**：只有推 `v*` tag 或手动 dispatch（`channel=stable`）才会动 `latest`。
 
 ### 用 Trusted Publishing 发布（推荐，不需要长期 token）
 
