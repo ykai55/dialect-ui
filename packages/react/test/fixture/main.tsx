@@ -116,6 +116,16 @@ function wait(ms = 40): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** 轮询等待条件成立（CI 比本地慢，固定 sleep 不够稳）。 */
+async function waitFor(fn: () => boolean, timeout = 2000, step = 20): Promise<boolean> {
+  const start = performance.now();
+  while (performance.now() - start < timeout) {
+    if (fn()) return true;
+    await wait(step);
+  }
+  return fn();
+}
+
 function key(el: Element, k: string): void {
   el.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
 }
@@ -1046,6 +1056,7 @@ async function main(): Promise<void> {
   const tipTarget = tipRef.current as HTMLButtonElement;
   const tipHost = hostTip.querySelector(".tooltip-host") as HTMLElement;
   const tipLayer = hostTip.querySelector(".tooltip") as HTMLElement;
+  await waitFor(() => !!(tipLayer as unknown as { _tooltip?: unknown })._tooltip);
   check("TooltipProvider DOM = .tooltip-host[display:contents] + 子节点 + .tooltip 层", () =>
     !!tipHost &&
     tipHost.style.display === "contents" &&
@@ -1059,7 +1070,7 @@ async function main(): Promise<void> {
     tipTarget.className === "btn");
   check("Tooltip forwardRef 指向子元素", () => tipRef.current === document.getElementById("tip-target"));
   hover(tipTarget);
-  await wait(30);
+  await waitFor(() => tipLayer.hidden === false);
   check("Tooltip 悬停出现并写 aria-describedby", () =>
     tipLayer.hidden === false &&
     tipLayer.getAttribute("data-open") === "" &&
@@ -1067,14 +1078,14 @@ async function main(): Promise<void> {
     !!tipLayer.id &&
     tipTarget.getAttribute("aria-describedby") === tipLayer.id);
   document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
-  await wait(40);
+  await waitFor(() => tipLayer.hidden === true);
   check("Tooltip Esc 关闭并清 aria-describedby", () =>
     tipLayer.hidden === true && !tipTarget.hasAttribute("aria-describedby"));
   hover(tipTarget);
-  await wait(30);
+  await waitFor(() => tipLayer.hidden === false);
   check("Tooltip 再次悬停能重新出现", () => tipLayer.hidden === false);
   scrollWindow();
-  await wait(40);
+  await waitFor(() => tipLayer.hidden === true);
   check("Tooltip 滚动关闭", () => tipLayer.hidden === true);
   tipRoot.unmount();
   hostTip.remove();
@@ -1121,8 +1132,9 @@ async function main(): Promise<void> {
     menuTrigger.getAttribute("aria-haspopup") === "menu" &&
     menuTrigger.getAttribute("aria-expanded") === "false" &&
     menuTrigger.getAttribute("aria-controls") === menuEl.id);
+  await waitFor(() => menuEl.hasAttribute("tabindex"));
   menuTrigger.click();
-  await wait(20);
+  await waitFor(() => menuEl.matches(":popover-open"));
   check("Menu 点击触发器展开", () =>
     menuEl.matches(":popover-open") && menuTrigger.getAttribute("aria-expanded") === "true");
   key(menuEl, "ArrowDown");
@@ -1173,8 +1185,9 @@ async function main(): Promise<void> {
   await wait(40);
   const menuTrigger2 = document.getElementById("menu-trigger-2") as HTMLButtonElement;
   const menuEl2 = hostMenu.querySelector("ul.menu") as HTMLElement;
+  await waitFor(() => menuEl2.hasAttribute("tabindex"));
   menuTrigger2.click();
-  await wait(20);
+  await waitFor(() => menuEl2.matches(":popover-open"));
   check("Menu 重新挂载后单击只展开一次（无残留双绑）", () =>
     menuEl2.matches(":popover-open") && menuTrigger2.getAttribute("aria-expanded") === "true");
   menuRoot2.unmount();
@@ -1208,13 +1221,15 @@ async function main(): Promise<void> {
     ctxArea.parentElement === ctxContent &&
     ctxMenuEl.getAttribute("popover") === "manual" &&
     !ctxBox.hasAttribute("data-menu"));
+  // 控制器是 useEffect 里建的，CI 上可能比固定 sleep 慢：等 createMenu 补的 tabindex。
+  await waitFor(() => ctxMenuEl.hasAttribute("tabindex"));
   const ctxNotPrevented = rightClick(ctxArea);
-  await wait(20);
+  await waitFor(() => ctxMenuEl.matches(":popover-open"));
   check("ContextMenu 右键打开菜单", () => ctxMenuEl.matches(":popover-open"));
   check("ContextMenu 右键拦截浏览器菜单（contextmenu 被 preventDefault）", () =>
     ctxNotPrevented === false);
   ctxEntries[0].click();
-  await wait(20);
+  await waitFor(() => ctxSelections.length > 0);
   check("ContextMenu 选择回调", () => {
     const entry = ctxSelections[ctxSelections.length - 1];
     return ctxSelections.length === 1 && !("separator" in entry) && entry.value === "new";
@@ -1336,6 +1351,7 @@ async function main(): Promise<void> {
   );
   await wait(40);
   const win2 = hostWin2.querySelector(".window") as HTMLElement;
+  await waitFor(() => win2.hasAttribute("data-window-ready"));
   check("createWindow 挂载后写 data-window-ready", () => win2.hasAttribute("data-window-ready"));
   (win2.querySelector('[data-window-action="close"]') as HTMLElement).click();
   await wait(20);

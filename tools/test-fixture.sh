@@ -34,7 +34,7 @@ echo "== 构建验收页 $FIXTURE"
 probe() {
   "$CHROME" --headless=new --no-sandbox --disable-gpu \
     --allow-file-access-from-files \
-    --user-data-dir="$PROFILE" --virtual-time-budget=5000 \
+    --user-data-dir="$PROFILE" --virtual-time-budget=10000 \
     --dump-dom "$PAGE" 2>/dev/null |
     python3 -c "
 import sys, re, html
