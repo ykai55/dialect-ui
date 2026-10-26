@@ -63,7 +63,7 @@ macOS 两代在 Chromium 下按 UA 高熵值的 `platformVersion` 自动选：26
 | `@dialect-ui/react` | React 适配层，peer `react >= 18` |
 | `@dialect-ui/vue` | Vue 3 适配层，peer `vue ^3.4` |
 
-已发布到公共 npm（MIT，当前 `0.1.2`）：
+已发布到公共 npm（MIT，当前 `0.1.3`）：
 
 - [@dialect-ui/core](https://www.npmjs.com/package/@dialect-ui/core)
 - [@dialect-ui/react](https://www.npmjs.com/package/@dialect-ui/react)

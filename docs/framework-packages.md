@@ -350,9 +350,12 @@ ContextMenu 的右键打开；Window 的窗口按钮派发 action、右键拦截
   这期间 `npm view` / registry packument 可能 404，重复 publish 会报
   `409 Cannot publish over previously staged version`（npm 已知问题，见 npm/cli#9889）。
   遇到时等几分钟或直接 bump 一个新版本，不要反复重发同一版本。
-- `0.1.2` 已发布为 `latest`（2026-10）。npm 上还留有首轮发布产生的 `0.1.0` 和占位版本
-  `0.0.0-stage`；bypass-2FA 的 granular token 不允许 unpublish（npm 已限制），要清理只能用网页端
-  登录后删版本。
+- `0.1.3` 已通过 GitHub Actions + Trusted Publishing（OIDC）发布为 `latest`（2026-10），三个包都带
+  provenance。`npm publish` 前不再需要 token，workflow 里也没有 `NODE_AUTH_TOKEN`。
+- npm 上还留有首轮发布产生的 `0.1.0` / `0.1.1` 和占位版本 `0.0.0-stage`；bypass-2FA 的 granular token
+  不允许 unpublish（npm 已限制），要清理只能用网页端登录后删版本。
+- 发版流程固定为：三个包 bump 同一版本 → commit → `git tag vX.Y.Z && git push origin vX.Y.Z`，
+  workflow 会校验 tag 和版本一致，跑测试（偶发抖动会重试一次）后按 core → react → vue 发布。
 
 ### 用 Trusted Publishing 发布（推荐，不需要长期 token）
 
