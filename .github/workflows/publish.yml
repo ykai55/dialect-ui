@@ -122,10 +122,32 @@ jobs:
           fi
           echo "id-token-url=$([ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] && echo yes || echo no)"
 
+      - name: 判断 main 是否有新提交（schedule 时）
+        id: changed
+        if: github.event_name == 'schedule'
+        run: |
+          head_sha=$(git rev-parse --short HEAD)
+          last_canary=$(npm view @dialect-ui/core dist-tags.canary --registry https://registry.npmjs.org/ 2>/dev/null || true)
+          echo "HEAD=$head_sha  last canary=${last_canary:-<none>}"
+          skip=$(node -e '
+            const last = process.argv[1] || "";
+            const head = process.argv[2];
+            const m = last.match(/-canary\.\d+\.([0-9a-f]+)\.\d+$/);
+            console.log(m && m[1] === head ? "true" : "false");
+          ' "$last_canary" "$head_sha")
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+
+      - name: 没有新提交，跳过今天的 canary
+        if: github.event_name == 'schedule' && steps.changed.outputs.skip == 'true'
+        run: echo "main 自上次 canary 后没有新提交，今天不发。"
+
       - run: npm install --no-audit --no-fund
+        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.skip != 'true'
       - run: npm run build
+        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.skip != 'true'
 
       - name: 站点 + 框架包测试
+        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.skip != 'true'
         run: |
           npm test || {
             echo "::warning::第一次测试失败，重跑一次"
@@ -136,6 +158,7 @@ jobs:
 
       - name: 计算并写入 canary 版本
         id: version
+        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.skip != 'true' 
         run: |
           node -e '
             const fs = require("fs");
@@ -161,6 +184,7 @@ jobs:
           '
 
       - name: 发布 canary（只动 canary dist-tag，不动 latest）
+        if: github.event_name == 'workflow_dispatch' || steps.changed.outputs.skip != 'true'
         run: |
           echo "publishing ${{ steps.version.outputs.version }} to canary tag"
           npm publish -w @dialect-ui/core --tag canary

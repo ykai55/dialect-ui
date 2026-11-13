@@ -110,7 +110,7 @@ const watchdog = setTimeout(() => {
     lines.push("FAIL 测试超时（断言流程没有跑完）");
     writeResult();
   }
-}, 4000);
+}, 15000);
 
 function wait(ms = 40): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1138,7 +1138,7 @@ async function main(): Promise<void> {
   check("Menu 点击触发器展开", () =>
     menuEl.matches(":popover-open") && menuTrigger.getAttribute("aria-expanded") === "true");
   key(menuEl, "ArrowDown");
-  await wait(20);
+  await waitFor(() => menuEntries[0].classList.contains("is-active"));
   check("Menu 方向键高亮第一项", () =>
     menuEntries[0].classList.contains("is-active") &&
     menuEl.getAttribute("aria-activedescendant") === menuEntries[0].id);

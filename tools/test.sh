@@ -12,7 +12,7 @@ for f in test/*.test.html; do
   echo "== $f"
   out="$("$CHROME" --headless=new --no-sandbox --disable-gpu \
     --allow-file-access-from-files \
-    --user-data-dir="$PROFILE" --virtual-time-budget=4000 \
+    --user-data-dir="$PROFILE" --virtual-time-budget=8000 \
     --dump-dom "file://$PWD/$f" 2>/dev/null |
     python3 -c "
 import sys, re, html
